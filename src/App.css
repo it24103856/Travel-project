@@ -1,0 +1,12 @@
+.home{
+  background-color: red;
+  height: 100px;
+  width: 100px;
+
+}
+.border{
+  border: 2px solid black;
+}
+.shadow{
+  box-shadow: 5px 10px 8px #888888;
+}
