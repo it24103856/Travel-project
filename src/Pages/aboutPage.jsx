@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaGlobe, FaShieldAlt, FaUsers, FaAward } from 'react-icons/fa';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function About() {
   return (
     <main className="w-full min-h-screen bg-white">
-      <Header />
+      
 
       {/* 1. Hero Section with Background Image */}
       <section className="relative h-[60vh] flex items-center justify-center bg-fixed bg-center bg-cover" 

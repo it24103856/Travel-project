@@ -44,7 +44,8 @@ async function login(e) {
     
     //  check user role form backend
     console.log("Logged in user role:", res.data.role);
-
+localStorage.setItem("token", res.data.token);
+localStorage.setItem("role", res.data.role);
     if (res.data.role === "admin") {
       navigate("/admin");
     } else {

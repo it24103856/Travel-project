@@ -2,6 +2,8 @@ import { toast } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { uploadFile } from '../utils/meadiaUpload';
+import { BiCamera } from "react-icons/bi";
 
 export default function RegisterPage() {
     const [firstName, setFirstName] = useState('');
@@ -12,6 +14,18 @@ export default function RegisterPage() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
+    // New state for  image file
+    const[imageFile, setImageFile] = useState(null);
+    const[preview,setPreview] = useState(null);
+
+    // Handle image selection
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if(file){
+            setImageFile(file);
+            setPreview(URL.createObjectURL(file));
+        }
+    }
     async function HandleRegister(e) {
         if (e) e.preventDefault();
 
@@ -30,19 +44,40 @@ export default function RegisterPage() {
 
         setIsLoading(true);
         try {
-            const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/create", {
-                firstName,
-                lastName,
-                email,
-                password,
-            });
-            toast.success("Registration successful! Please login.");
-            navigate("/login");
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Registration failed");
-        } finally {
-            setIsLoading(false);
+    let imageUrl = "/default-profile.png"; 
+
+    if (imageFile) {
+        // Upload වෙන්න යන වෙලාවේ toast එකක් පෙන්වමු
+        const uploadToast = toast.loading("Uploading image...");
+        try {
+            const uploadedUrl = await uploadFile(imageFile);
+            if (uploadedUrl) {
+                imageUrl = uploadedUrl;
+                toast.success("Image uploaded!", { id: uploadToast });
+            }
+        } catch (uploadErr) {
+            toast.error("Image upload failed!", { id: uploadToast });
+            console.error(uploadErr);
+            // Image එක වැරදුණත් registration එක නවත්වන්න ඕනේ නැත්නම් මෙතන return කරන්න එපා
         }
+    }
+
+    const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/create", {
+        firstName,
+        lastName,
+        email,
+        password,
+        image: imageUrl
+    });
+    
+    toast.success("Registration successful!");
+    navigate("/login");
+} catch (error) {
+    toast.error(error.response?.data?.message || "Registration failed");
+} finally {
+    setIsLoading(false);
+}
+
     }
 
     return (
@@ -70,6 +105,24 @@ export default function RegisterPage() {
                 <form onSubmit={HandleRegister} className="w-full max-w-[480px] bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-10 flex flex-col items-center">
                     <h2 className="text-3xl font-bold text-white mb-2 self-start">Create Account</h2>
                     <p className="text-white/60 text-sm mb-8 self-start">Sign up to get started on your journey.</p>
+
+                    {/* --- Profile Image Picker --- */}
+                    <div className="relative mb-8 group">
+                        <div className="w-24 h-24 rounded-full border-4 border-cyan-400 overflow-hidden bg-white/20 shadow-xl">
+                            {preview ? (
+                                <img src={preview} alt="preview" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-white/40 text-[10px] text-center p-2 uppercase">
+                                    Upload Photo
+                                </div>
+                            )}
+                        </div>
+                        <label className="absolute bottom-0 right-0 bg-cyan-500 p-2 rounded-full cursor-pointer hover:bg-cyan-400 transition-all shadow-lg border-2 border-white/50">
+                            <BiCamera size={20} className="text-white" />
+                            <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                        </label>
+                    </div>
+
 
                     <div className="w-full space-y-4">
                         <div className="flex gap-4">

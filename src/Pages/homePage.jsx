@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Link එක import කරන්න
-import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Footer from "../components/Footer";
 import { Routes, Route } from "react-router-dom";
@@ -8,8 +7,7 @@ import { Routes, Route } from "react-router-dom";
 export default function HomePage() {
   return (
     <main className="w-full min-h-screen bg-gray-50 flex flex-col">
-      {/* 1. Navbar */}
-      <Header />
+      
       
       {/* 2. Hero Section (වීඩියෝ එක සහිත) */}
       <Hero />

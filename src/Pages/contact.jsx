@@ -3,7 +3,6 @@ import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ContactForm from "../components/ContactForm";
 
@@ -24,7 +23,7 @@ export default function Contact() {
   return (
     <main className="w-full min-h-screen bg-white font-poppins">
       <Toaster position="top-right" />
-      <Header />
+      
 
       {/* 1. Hero Section  */}
       <section className="relative h-[50vh] flex items-center justify-center bg-fixed bg-center bg-cover" 
@@ -62,7 +61,7 @@ export default function Contact() {
   </div>
 
   {/* විස්තර සහිත Box එක */}
-  <div className="bg-gray-50 p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 hover:shadow-md transition-shadow duration-300">
+  <div className="bg-orange-50 p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 hover:shadow-md transition-shadow duration-300">
     
     <div className="flex items-center gap-5 group">
       <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
@@ -80,7 +79,7 @@ export default function Contact() {
       </div>
       <div>
         <p className="text-sm text-gray-400 font-semibold uppercase tracking-wider">Phone</p>
-        <p className="text-gray-800 text-lg font-bold">{adminDetails.phone || "0788316997"}</p>
+        <p className="text-gray-800 text-lg font-bold">{adminDetails.phone }</p>
       </div>
     </div>
 
@@ -91,7 +90,7 @@ export default function Contact() {
       <div>
         <p className="text-sm text-gray-400 font-semibold uppercase tracking-wider">Location</p>
         <p className="text-gray-800 text-lg font-medium leading-tight">
-          {adminDetails.address || "40/a, wlaassna wilage yalabowa"}
+          {adminDetails.address }
         </p>
       </div>
     </div>
@@ -103,7 +102,7 @@ export default function Contact() {
       <div>
         <p className="text-sm text-gray-400 font-semibold uppercase tracking-wider">Mail Us</p>
         <p className="text-orange-600 text-lg font-bold hover:underline cursor-pointer">
-          {adminDetails.email || "kavunduminsara@gmail.com"}
+          {adminDetails.email }
         </p>
       </div>
     </div>
@@ -125,19 +124,19 @@ export default function Contact() {
               className="w-full h-full object-cover"
             />
           </div>
-          {/* Background Decor Element (About Page එකේ වගේ) */}
+          {/* Background Decor Element  */}
           <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-orange-100 rounded-full -z-0 opacity-60 blur-3xl"></div>
         </motion.div>
       </section>
 
       {/* 3. Info Boxes with Hover Animation */}
       <section className="bg-gray-50 py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1  md:grid-cols-3 gap-8">
           
           {/* Call Us Box */}
           <motion.div 
             whileHover={{ y: -10, scale: 1.02 }}
-            className="bg-[#E5D5C8] p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all hover:shadow-xl"
+            className="bg-[#E5D5C8] border p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all border-accent hover:shadow-xl"
           >
             <div className="text-3xl text-gray-900 mb-4 flex justify-center">
               <Phone />
@@ -150,7 +149,7 @@ export default function Contact() {
           {/* Location Box */}
           <motion.div 
             whileHover={{ y: -10, scale: 1.02 }}
-            className="bg-[#E5D5C8] p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all hover:shadow-xl"
+            className="bg-[#E5D5C8] border border-accent p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all border-accent hover:shadow-xl"
           >
             <div className="text-3xl text-gray-900 mb-4 flex justify-center">
               <MapPin />
@@ -164,7 +163,7 @@ export default function Contact() {
           {/* Hours Box */}
           <motion.div 
             whileHover={{ y: -10, scale: 1.02 }}
-            className="bg-[#E5D5C8] p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all hover:shadow-xl"
+            className="bg-[#E5D5C8] border border-accent p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all hover:shadow-xl"
           >
             <div className="text-3xl text-gray-900 mb-4 flex justify-center">
               <Clock />
