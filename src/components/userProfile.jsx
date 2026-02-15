@@ -1,27 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Package, LogOut, User as UserIcon, Settings } from "lucide-react";
+import { ChevronDown, Package, LogOut, User as UserIcon } from "lucide-react";
 
 export default function UserData() {
     const [user, setUser] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    useEffect(() => {
+    // Function to fetch user data from backend
+    const fetchUserData = useCallback(async () => {
         const token = localStorage.getItem("token");
-        if (token != null) {
-            axios.get(import.meta.env.VITE_BACKEND_URL + "/users/", {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then((response) => {
+        if (token) {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setUser(response.data);
-            })
-            .catch((err) => {
+            } catch (err) {
                 setUser(null);
                 console.error("Auth error:", err);
-            });
+            }
         }
     }, []);
+
+    useEffect(() => {
+        // Initial fetch
+        fetchUserData();
+
+        // Listen for the custom "userProfileUpdated" event from the Edit Modal
+        window.addEventListener("userProfileUpdated", fetchUserData);
+
+        // Cleanup listener on unmount
+        return () => {
+            window.removeEventListener("userProfileUpdated", fetchUserData);
+        };
+    }, [fetchUserData]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -32,16 +45,20 @@ export default function UserData() {
         window.location.href = "/orders";
     };
 
+    const handleProfile = () => {
+        window.location.href = "/profile";
+    };
+
     if (!user) return null;
 
-    // Google Photo එකක්ද නැද්ද යන්න පරීක්ෂා කර නිවැරදි URL එක ලබා දීම
+    // Logic to determine the correct Profile Image URL
     const profileImg = user.image && (user.image.includes("googleusercontent") || user.image.startsWith("http"))
         ? user.image 
         : `${import.meta.env.VITE_BACKEND_URL}/${user.image || 'default.png'}`;
 
     return (
         <div className="relative font-poppins z-50">
-            {/* User Trigger Button */}
+            {/* User Profile Trigger Button */}
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-3 p-1.5 pr-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full transition-all border border-white/20 shadow-md group"
@@ -52,7 +69,8 @@ export default function UserData() {
                         referrerPolicy='no-referrer'
                         className='w-10 h-10 rounded-full object-cover border-2 border-cyan-400 shadow-sm'
                         alt="user"
-                        onError={(e) => e.target.src = "https://ui-avatars.com/api/?name=" + user.firstName}
+                        // Fallback to UI Avatars if image fails to load
+                        onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${user.firstName}`}
                     />
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                 </div>
@@ -72,11 +90,11 @@ export default function UserData() {
                 />
             </button>
 
-            {/* Dropdown Menu Content */}
+            {/* Dropdown Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <>
-                        {/* Outside Click Close Layer */}
+                        {/* Overlay to handle closing when clicking outside */}
                         <div className="fixed inset-0 z-[-1]" onClick={() => setIsOpen(false)} />
                         
                         <motion.div
@@ -85,14 +103,12 @@ export default function UserData() {
                             exit={{ opacity: 0, y: 15, scale: 0.95 }}
                             className="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
                         >
-                            {/* User Header Info */}
                             <div className="p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-b border-gray-100">
                                 <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Active Profile</p>
                                 <p className="text-sm font-bold text-gray-800 truncate">{user.email}</p>
                             </div>
 
                             <div className="p-2">
-                                {/* My Orders Link */}
                                 <button 
                                     onClick={handleOrders}
                                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-all group"
@@ -101,8 +117,8 @@ export default function UserData() {
                                     <span className="font-medium">My Orders</span>
                                 </button>
 
-                                {/* Profile Settings Link */}
                                 <button 
+                                    onClick={handleProfile}
                                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-all group"
                                 >
                                     <UserIcon size={18} className="group-hover:scale-110 transition-transform" />
@@ -111,7 +127,6 @@ export default function UserData() {
 
                                 <div className="h-px bg-gray-100 my-2 mx-2"></div>
 
-                                {/* Logout Button */}
                                 <button 
                                     onClick={handleLogout}
                                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-all group"

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { uploadFile } from '../utils/meadiaUpload';
 import { BiCamera } from "react-icons/bi";
+import { address } from 'framer-motion/client';
+import { Phone } from 'lucide-react';
 
 export default function RegisterPage() {
     const [firstName, setFirstName] = useState('');
@@ -11,6 +13,8 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -37,7 +41,7 @@ export default function RegisterPage() {
             toast.error("Password must be at least 6 characters long");
             return;
         }
-        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        if (!firstName || !lastName || !email || !password || !confirmPassword || !address || !phone) {
             toast.error("All fields are required");
             return;
         }
@@ -47,7 +51,7 @@ export default function RegisterPage() {
     let imageUrl = "/default-profile.png"; 
 
     if (imageFile) {
-        // Upload වෙන්න යන වෙලාවේ toast එකක් පෙන්වමු
+        // Upload the image and get the URL
         const uploadToast = toast.loading("Uploading image...");
         try {
             const uploadedUrl = await uploadFile(imageFile);
@@ -58,7 +62,6 @@ export default function RegisterPage() {
         } catch (uploadErr) {
             toast.error("Image upload failed!", { id: uploadToast });
             console.error(uploadErr);
-            // Image එක වැරදුණත් registration එක නවත්වන්න ඕනේ නැත්නම් මෙතන return කරන්න එපා
         }
     }
 
@@ -67,7 +70,10 @@ export default function RegisterPage() {
         lastName,
         email,
         password,
-        image: imageUrl
+        image: imageUrl,
+        address,
+        phone
+
     });
     
     toast.success("Registration successful!");
@@ -143,6 +149,22 @@ export default function RegisterPage() {
                                 className="w-1/2 p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                             />
                         </div>
+                        <input
+                            required
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            type="number"
+                            placeholder="Phone Number"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                        />
+                            <input
+                            required
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            type="text"
+                            placeholder="Address"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                        />
 
                         <input
                             required
