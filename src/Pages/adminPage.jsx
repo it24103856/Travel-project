@@ -1,11 +1,33 @@
 import { Routes, Route, useNavigate, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaPhoneAlt, FaEnvelope, FaThLarge, FaUserShield, FaSignOutAlt, FaHome } from "react-icons/fa";
+// අවශ්‍ය සියලුම Icons නිවැරදිව Import කර ඇත
+import {
+    FaUser,
+    FaEnvelope,
+    FaPhone,
+    FaMapMarkerAlt,
+    FaEdit,
+    FaTrash,
+    FaSave,
+    FaTimes,
+    FaPlus,
+    FaCar,
+    FaIdCard,
+    FaThLarge,       // Dashboard Icon
+    FaPhoneAlt,      // Contact Icon
+    FaUserShield,    // Users Icon
+    FaHome,          // Home Icon
+    FaSignOutAlt     // Logout Icon
+} from "react-icons/fa";
+
 // Pages
 import AdminContactPage from "./Admin/adminContactPage";
 import AdminMessages from "./Admin/AdminMessages";
 import AdminUserPage from "./Admin/adminUserPage";
+import AddDriverPage from "./Admin/addDriverPage";
+import AdminDriverPage from "./Admin/adminDriverPage";
+import EditDriverPage from "./Admin/EditDriverPage";
 
 export default function AdminPage() {
     const [user, setUser] = useState(null);
@@ -22,7 +44,7 @@ export default function AdminPage() {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/users/`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then((response) => {
-            const userData = response.data; 
+            const userData = response.data;
             if (userData && userData.role === "admin") {
                 setUser(userData);
                 setIsLoading(false);
@@ -44,13 +66,14 @@ export default function AdminPage() {
         </div>
     );
 
+    // Sidebar Link Component
     const SidebarLink = ({ to, icon, label }) => {
         const isActive = location.pathname === to;
         return (
             <Link to={to} className={`flex items-center gap-4 px-6 py-4 transition-all ${
                 isActive ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:bg-gray-800 hover:text-white"
             }`}>
-                {icon}
+                <span className="text-lg">{icon}</span>
                 <span className="font-medium">{label}</span>
             </Link>
         );
@@ -59,18 +82,20 @@ export default function AdminPage() {
     return (
         <div className="w-full h-screen flex overflow-hidden bg-gray-50 font-poppins">
             {/* Sidebar */}
-            <aside className="w-72 bg-[#1A1C1E] h-full flex flex-col shadow-2xl">
+            <aside className="w-72 bg-[#1A1C1E] h-full flex flex-col shadow-2xl z-20">
                 <div className="p-8">
                     <img src="/logo.png" alt="Logo" className="w-32 mb-2" />
                     <p className="text-orange-500 text-[10px] font-bold uppercase tracking-widest">Control Panel</p>
                 </div>
 
-                <nav className="flex-1 mt-4">
-                    {/* මෙතන icon={<FaThLarge />} ලෙස වෙනස් කළා */}
+                <nav className="flex-1 mt-4 overflow-y-auto">
                     <SidebarLink to="/admin" icon={<FaThLarge />} label="Dashboard" />
                     <SidebarLink to="/admin/contact" icon={<FaPhoneAlt />} label="Contact Info" />
                     <SidebarLink to="/admin/messages" icon={<FaEnvelope />} label="User Messages" />
                     <SidebarLink to="/admin/users" icon={<FaUserShield />} label="Users" />
+                    <SidebarLink to="/admin/drivers" icon={<FaCar />} label="Drivers" />
+                    
+                    
                     
                     <div className="mt-10 px-6 text-gray-500 text-[10px] uppercase font-bold tracking-widest border-t border-gray-800 pt-6">Quick Links</div>
                     <Link to="/" className="flex items-center gap-4 px-6 py-4 text-gray-400 hover:text-white transition-all italic text-sm">
@@ -112,6 +137,9 @@ export default function AdminPage() {
                         <Route path="/contact" element={<AdminContactPage />} />
                         <Route path="/messages" element={<AdminMessages />} />
                         <Route path="/users" element={<AdminUserPage />} />
+                        <Route path="/drivers" element={<AdminDriverPage />} /> 
+                        <Route path="/add-drivers" element={<AddDriverPage />} />
+                        <Route path="/drivers/edit/:email" element={<EditDriverPage />} />
                         <Route path="/" element={
                             <div className="bg-white p-10 rounded-[2rem] shadow-sm border border-gray-100">
                                 <h1 className="text-3xl font-black text-gray-800">Welcome, {user?.firstName}! 👋</h1>
