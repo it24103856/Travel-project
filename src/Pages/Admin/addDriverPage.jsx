@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaCar, FaSave, FaCamera } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; 
+import { 
+  FaUser, 
+  FaEnvelope, 
+  FaPhone, 
+  FaIdCard, 
+  FaCar, 
+  FaSave, 
+  FaCamera, 
+  FaMapMarkerAlt, 
+  FaFileAlt 
+} from "react-icons/fa";import { useNavigate } from "react-router-dom"; 
 import { uploadFile } from "../../utils/meadiaUpload.js";
+
 const AddDriverPage = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,11 +22,12 @@ const AddDriverPage = () => {
     address: "",
     licenseNumber: "",
     vehicleType: "",
+    description: "" 
   });
   
   const [loading, setLoading] = useState(false);
-  const [imageFile, setImageFile] = useState(null); // File එක තබා ගැනීමට
-  const [preview, setPreview] = useState(null);   // Preview එක පෙන්වීමට
+  const [imageFile, setImageFile] = useState(null); 
+  const [preview, setPreview] = useState(null);   
   
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -121,16 +132,35 @@ const AddDriverPage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Residential Address</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-orange-500" size={14} /> Residential Address
+              </label>
               <textarea
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 required
-                rows="3"
-                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all"
+                rows="2"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all resize-none"
                 placeholder="Enter the full address here..."
               ></textarea>
+            </div>
+
+            {/* --- Description Section (New) --- */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
+                <FaFileAlt className="text-orange-500" size={14} /> Driver Description / Bio
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+                rows="4"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all"
+                placeholder="Tell something about the driver's experience, languages spoken, or special skills..."
+              ></textarea>
+              <p className="text-[10px] text-gray-400 mt-2 ml-2 italic">This information will be displayed on the driver's public profile.</p>
             </div>
           </div>
 
@@ -140,7 +170,17 @@ const AddDriverPage = () => {
               disabled={loading}
               className="w-full bg-gray-900 hover:bg-black text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl active:scale-[0.98] disabled:bg-gray-400"
             >
-              {loading ? "Processing..." : <><FaSave className="text-orange-500" /> Confirm & Register Driver</>}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                <><FaSave className="text-orange-500" /> Confirm & Register Driver</>
+              )}
             </button>
           </div>
         </form>
@@ -148,6 +188,8 @@ const AddDriverPage = () => {
     </div>
   );
 };
+
+// ... InputGroup component remains same ...
 
 function InputGroup({ icon, label, ...props }) {
   return (

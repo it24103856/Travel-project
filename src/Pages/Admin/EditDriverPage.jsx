@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaCar, FaSave, FaCamera, FaArrowLeft } from "react-icons/fa";
+import { 
+  FaUser, FaEnvelope, FaPhone, FaIdCard, FaCar, FaSave, 
+  FaCamera, FaArrowLeft, FaMapMarkerAlt, FaFileAlt 
+} from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom"; 
 import { uploadFile } from "../../utils/meadiaUpload.js";
 
 const EditDriverPage = () => {
-  const { email: driverEmail } = useParams(); // URL එකෙන් email එක ලබා ගැනීම
+  const { email: driverEmail } = useParams();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -16,7 +19,8 @@ const EditDriverPage = () => {
     address: "",
     licenseNumber: "",
     vehicleType: "",
-    profileImage: ""
+    profileImage: "",
+    description: "" 
   });
   
   const [loading, setLoading] = useState(false);
@@ -27,7 +31,6 @@ const EditDriverPage = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
 
-  // 1. මුලින්ම රියදුරාගේ තොරතුරු ලබා ගනිමු
   useEffect(() => {
     const fetchDriverData = async () => {
       try {
@@ -36,7 +39,7 @@ const EditDriverPage = () => {
         });
         const driver = response.data.data;
         setFormData(driver);
-        setPreview(driver.profileImage); // පැරණි පින්තූරය preview එකට දමමු
+        setPreview(driver.profileImage);
       } catch (error) {
         toast.error("Failed to load driver details");
         navigate("/admin/drivers");
@@ -45,7 +48,7 @@ const EditDriverPage = () => {
       }
     };
     fetchDriverData();
-  }, [driverEmail]);
+  }, [driverEmail, backendUrl, token, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,7 +70,6 @@ const EditDriverPage = () => {
     try {
       let finalImageUrl = formData.profileImage;
 
-      // 2. අලුත් පින්තූරයක් තෝරාගෙන තිබේ නම් පමණක් Upload කරන්න
       if (imageFile) {
         toast.loading("Uploading new image...", { id: "uploading" });
         finalImageUrl = await uploadFile(imageFile);
@@ -76,7 +78,6 @@ const EditDriverPage = () => {
 
       const updatedData = { ...formData, profileImage: finalImageUrl };
 
-      // 3. Backend එකට Update Request එක යැවීම
       await axios.put(`${backendUrl}/driver/update/${driverEmail}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -91,60 +92,69 @@ const EditDriverPage = () => {
     }
   };
 
-  if (fetching) return <div className="text-center mt-20 animate-pulse text-gray-500">Loading driver details...</div>;
+  if (fetching) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-500 font-medium animate-pulse">Fetching driver details...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto px-6 py-12">
       <Toaster position="top-center" />
       
-      <div className="flex items-center justify-between mb-10">
-        <div className="text-center md:text-left">
+      {/* Header with Back Button */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
           <h1 className="text-4xl font-bold text-gray-900">
             Edit <span className="text-orange-500">Driver</span>
           </h1>
-          <p className="text-gray-500 mt-2 text-lg">Modify information for {formData.name}</p>
-          <div className="w-24 h-1.5 bg-orange-500 mt-4 rounded-full mx-auto md:mx-0"></div>
+          <p className="text-gray-500 mt-2 text-lg italic">Modifying: {formData.name}</p>
+          <div className="w-24 h-1.5 bg-orange-500 mt-4 rounded-full"></div>
         </div>
         <button 
           onClick={() => navigate("/admin/drivers")}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 w-fit font-semibold"
         >
-          <FaArrowLeft /> Back to List
+          <FaArrowLeft size={14}/> Back to Fleet
         </button>
       </div>
 
       <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/60 overflow-hidden border border-gray-100">
+        {/* Banner Section */}
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 text-white flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold tracking-wide">Update Information</h2>
-            <p className="text-gray-400 text-sm mt-1">Edit the fields you wish to change.</p>
+            <h2 className="text-xl font-bold tracking-wide uppercase">Update Profile</h2>
+            <p className="text-gray-400 text-sm mt-1">Keep the driver information up to date.</p>
           </div>
-          <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg">
-            <FaUser className="text-orange-500 text-2xl" />
+          <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg border border-white/10">
+            <FaIdCard className="text-orange-500 text-2xl" />
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-10 space-y-6">
+        <form onSubmit={handleSubmit} className="p-10 space-y-8">
           
-          {/* --- Image Section --- */}
-          <div className="flex flex-col items-center justify-center mb-6">
-            <div className="relative w-32 h-32 group">
-              <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-100 shadow-md bg-gray-50 flex items-center justify-center">
+          {/* --- Profile Image Section --- */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative w-36 h-36 group">
+              <div className="w-full h-full rounded-full overflow-hidden border-4 border-orange-50 shadow-xl bg-gray-50 flex items-center justify-center">
                 {preview ? (
                   <img src={preview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <FaUser className="text-gray-300 text-5xl" />
+                  <FaUser className="text-gray-300 text-6xl" />
                 )}
               </div>
-              <label className="absolute bottom-1 right-1 bg-orange-500 p-2.5 rounded-full text-white cursor-pointer hover:bg-orange-600 transition-all shadow-lg">
-                <FaCamera size={18} />
+              <label className="absolute bottom-2 right-2 bg-gray-900 p-3 rounded-full text-white cursor-pointer hover:bg-orange-600 transition-all shadow-lg border-2 border-white">
+                <FaCamera size={16} />
                 <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
               </label>
             </div>
-            <p className="text-xs text-gray-400 mt-2 font-medium">Change Photo (Optional)</p>
+            <p className="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">Driver Profile Photo</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <InputGroup icon={<FaUser />} label="Full Name" name="name" value={formData.name} onChange={handleChange} />
             <InputGroup icon={<FaEnvelope />} label="Email Address" name="email" value={formData.email} onChange={handleChange} type="email" disabled />
             <InputGroup icon={<FaPhone />} label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} />
@@ -154,26 +164,52 @@ const EditDriverPage = () => {
               <InputGroup icon={<FaCar />} label="Vehicle Type" name="vehicleType" value={formData.vehicleType} onChange={handleChange} />
             </div>
 
+            {/* Address Field */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Residential Address</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-orange-500" size={14}/> Permanent Address
+              </label>
               <textarea
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 required
-                rows="3"
+                rows="2"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all resize-none"
+              ></textarea>
+            </div>
+
+            {/* Description Field (ඔබ ඇසූ පරිදි) */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
+                <FaFileAlt className="text-orange-500" size={14}/> Driver Bio / Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+                rows="4"
                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all"
+                placeholder="Briefly describe the driver's experience and skills..."
               ></textarea>
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-6">
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-gray-900 hover:bg-black text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl active:scale-[0.98] disabled:bg-gray-400"
             >
-              {loading ? "Saving Changes..." : <><FaSave className="text-orange-500" /> Save Changes</>}
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Updating...
+                </div>
+              ) : (
+                <><FaSave className="text-orange-500" /> Update Driver Details</>
+              )}
             </button>
           </div>
         </form>
@@ -182,7 +218,7 @@ const EditDriverPage = () => {
   );
 };
 
-// Reusable Input Component (AddDriver එකේ එකමයි)
+// Reusable Input Component
 function InputGroup({ icon, label, ...props }) {
   return (
     <div>
@@ -192,7 +228,7 @@ function InputGroup({ icon, label, ...props }) {
         <input
           {...props}
           required
-          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all disabled:opacity-50"
+          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all disabled:opacity-60 disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
       </div>
     </div>
