@@ -3,15 +3,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // අවශ්‍ය සියලුම Icons නිවැරදිව Import කර ඇත
 import {
-    FaUser,
+    
     FaEnvelope,
-    FaPhone,
-    FaMapMarkerAlt,
-    FaEdit,
-    FaTrash,
-    FaSave,
-    FaTimes,
-    FaPlus,
+    
+    FaSyncAlt,
     FaCar,
     FaIdCard,
     FaThLarge,       // Dashboard Icon
@@ -19,7 +14,8 @@ import {
     FaUserShield,    // Users Icon
     FaHome,          // Home Icon
     FaSignOutAlt , 
-    FaHotel   // Logout Icon
+    FaHotel  ,
+    FaCalendarCheck, // Logout Icon
 } from "react-icons/fa";
 
 // Pages
@@ -32,6 +28,8 @@ import EditDriverPage from "./Admin/EditDriverPage";
 import AddHotelPage from "./Admin/hotelAddPage";
 import AdminHotelPage from "./Admin/AdminHotelPage";
 import EditHotelPage from "./Admin/editHotelPage";
+import AdminFeedback from "./Admin/AdminFeedbackPage";
+import AdminBookingPage from "./Admin/AdminBookingPage";
 
 
 export default function AdminPage() {
@@ -99,7 +97,9 @@ export default function AdminPage() {
                     <SidebarLink to="/admin/messages" icon={<FaEnvelope />} label="User Messages" />
                     <SidebarLink to="/admin/users" icon={<FaUserShield />} label="Users" />
                     <SidebarLink to="/admin/drivers" icon={<FaCar />} label="Drivers" />
-                    <SidebarLink to="/admin/hotels" icon={<FaHotel />} label="Hotel" />                          
+                    <SidebarLink to="/admin/hotels" icon={<FaHotel />} label="Hotel" />   
+                        <SidebarLink to="/admin/feedback" icon={<FaIdCard />} label="Feedback" />   
+                        <SidebarLink to="/admin/bookings" icon={<FaCalendarCheck />} label="Bookings" />                    
                     
                     
                     <div className="mt-10 px-6 text-gray-500 text-[10px] uppercase font-bold tracking-widest border-t border-gray-800 pt-6">Quick Links</div>
@@ -148,6 +148,8 @@ export default function AdminPage() {
                         <Route path="/hotels" element={<AdminHotelPage />} />
                         <Route path="/add-hotel" element={<AddHotelPage />} />
                         <Route path="/hotels/edit/:id" element={<EditHotelPage />} />
+                        <Route path="/feedback" element={<AdminFeedback />} />
+                        <Route path="/bookings" element={<AdminBookingPage />} />
                         <Route path="/" element={
                             <div className="bg-white p-10 rounded-[2rem] shadow-sm border border-gray-100">
                                 <h1 className="text-3xl font-black text-gray-800">Welcome, {user?.firstName}! 👋</h1>

@@ -69,7 +69,7 @@ export default function AdminDriverPage() {
         <p className="text-gray-500">Manage your official transport staff and their vehicle details</p>
       </div>
 
-      {/* Table Container - Image එකේ තිබුණු විදිහටම */}
+      {/* Table Container - Image  */}
       <div className="bg-white rounded-[1.5rem] shadow-xl shadow-gray-200/50 overflow-hidden border border-gray-100">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -145,7 +145,7 @@ export default function AdminDriverPage() {
         </table>
       </div>
 
-      {/* Floating Add Button - දකුණු පස පහළින් */}
+      {/* Floating Add Button -  */}
       <Link 
         to="/admin/add-drivers" 
         className="fixed bottom-10 right-10 w-16 h-16 bg-[#2D3748] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-black hover:scale-110 transition-all z-50 group"

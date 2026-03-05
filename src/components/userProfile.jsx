@@ -42,8 +42,13 @@ export default function UserData() {
     };
 
     const handleOrders = () => {
-        window.location.href = "/orders";
-    };
+    // user._id එක URL එකට එකතු කිරීම
+    if (user && user._id) {
+        window.location.href = `/my-bookings/${user._id}`;
+    } else {
+        window.location.href = "/my-bookings";
+    }
+}; 
 
     const handleProfile = () => {
         window.location.href = "/profile";

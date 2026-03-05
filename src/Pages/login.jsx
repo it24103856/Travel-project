@@ -20,6 +20,7 @@ export default function LoginPage() {
         token: response.access_token,
       }).then((res) => {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         res.data.role === "admin" ? navigate("/admin") : navigate("/");
         toast.success("Welcome back to your journey!");
       }).catch((err) => {
@@ -45,6 +46,7 @@ async function login(e) {
     //  check user role form backend
     console.log("Logged in user role:", res.data.role);
 localStorage.setItem("token", res.data.token);
+localStorage.setItem("user", JSON.stringify(res.data.user));
 localStorage.setItem("role", res.data.role);
     if (res.data.role === "admin") {
       navigate("/admin");

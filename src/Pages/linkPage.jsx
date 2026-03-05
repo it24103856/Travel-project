@@ -10,6 +10,10 @@ import Drivers from "./driverPage";
 import DriverOverview from "../components/driverOverview";
 import HotelPage from "./hotelPage";
 import HotelOverview from "../components/hotelOverview";
+import FeedbackPage from "./Feedback";
+import BookingPage from "./BookingPage";
+import PaymentMainPage from "./paymentPage";
+import MyBookings from "../components/MyBokkings";
 
 export default function LinkPage() {
     return (
@@ -26,7 +30,10 @@ export default function LinkPage() {
                     <Route path="/overview/:email" element={<DriverOverview />} />
                     <Route path="/hotel" element={<HotelPage />} />
                     <Route path="/hotel-details/:id" element={<HotelOverview />} />
-                </Routes>
+                    <Route path="/feedback" element={<FeedbackPage />} />
+                    <Route path="/booking/:type/:id" element={<BookingPage />} />
+                    <Route path="/payment" element={<PaymentMainPage />} />
+<Route path="/my-bookings/:userId" element={<MyBookings />} />                </Routes>
             </main>
         </div>
     );

@@ -25,11 +25,12 @@ export default function Header() {
       <div className="hidden md:flex gap-8 text-white font-medium">
         <Link to="/" className="hover:text-cyan-400 transition">Home</Link>
         <Link to="/packages" className="hover:text-cyan-400 transition">Packages</Link>
-        <Link to="/drivers" className="hover:text-cyan-400 transition">Driverse</Link>
+        <Link to="/drivers" className="hover:text-cyan-400 transition">Drivers</Link>
         <Link to="/hotel" className="hover:text-cyan-400 transition">Hotels</Link>
         <Link to="/destinations" className="hover:text-cyan-400 transition">Destinations</Link>
         <Link to="/about" className="hover:text-cyan-400 transition">About</Link>
         <Link to="/contact" className="hover:text-cyan-400 transition">Contact</Link>
+        <Link to="/feedback" className="hover:text-cyan-400 transition">Feedback</Link>
       </div>
 
       {/* Auth Section: ලොග් වී ඇත්නම් Profile ද, නැතිනම් Login පෙන්වන්න */}

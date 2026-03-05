@@ -179,7 +179,7 @@ const EditDriverPage = () => {
               ></textarea>
             </div>
 
-            {/* Description Field (ඔබ ඇසූ පරිදි) */}
+            {/* Description Field () */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
                 <FaFileAlt className="text-orange-500" size={14}/> Driver Bio / Description
@@ -236,3 +236,4 @@ function InputGroup({ icon, label, ...props }) {
 }
 
 export default EditDriverPage;
+
