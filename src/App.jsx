@@ -20,10 +20,10 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forget-password" element={<ForgotPassword />} />
             
-            {/* Admin Route එක මුලින් තියන්න */}
+            {/* Admin Route should come first */}
             <Route path='/admin/*' element={<AdminPage/>}/>
             
-            {/* අනිත් හැම එකක්ම (Home, About, Contact) LinkPage එකට */}
+            {/* All other routes (Home, About, Contact) go to LinkPage */}
             <Route path="/*" element={<LinkPage />} />
           </Routes>
         </div>

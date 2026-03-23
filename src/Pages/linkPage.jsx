@@ -14,6 +14,11 @@ import FeedbackPage from "./Feedback";
 import BookingPage from "./BookingPage";
 import PaymentMainPage from "./paymentPage";
 import MyBookings from "../components/MyBokkings";
+import BankTransferPage from "../components/BankTranferPage";
+import MyPayments from "../components/MypayemntPage";
+import CustomerPackage from "./CustomerPackage";
+import CryptoPayment from "../components/cryptoPayment";
+import DestinationPage from "./destinationpage";
 
 export default function LinkPage() {
     return (
@@ -33,6 +38,14 @@ export default function LinkPage() {
                     <Route path="/feedback" element={<FeedbackPage />} />
                     <Route path="/booking/:type/:id" element={<BookingPage />} />
                     <Route path="/payment" element={<PaymentMainPage />} />
+                    <Route path="/payment/bank-transfer" element={<BankTransferPage />} />
+                    <Route path="/payment/crypto" element={<CryptoPayment />} />
+                    <Route path="/my-payments" element={<MyPayments />} />
+                    <Route path="/packages" element={<CustomerPackage />} />
+                    <Route path="/destinations" element={<DestinationPage />} />
+
+
+
 <Route path="/my-bookings/:userId" element={<MyBookings />} />                </Routes>
             </main>
         </div>

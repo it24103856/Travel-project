@@ -55,9 +55,9 @@ const MyBookings = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setBookings(prev => prev.filter(b => b._id !== id));
-      toast.success("වෙන්කිරීම සාර්ථකව අවලංගු කරන ලදී.");
+      toast.success("Booking cancelled successfully.");
     } catch (error) {
-      toast.error("අවලංගු කිරීම අසාර්ථකයි.");
+      toast.error("Failed to cancel booking.");
     }
   };
 
@@ -157,7 +157,14 @@ const MyBookings = () => {
                   <div className="flex items-center gap-6">
                     {booking.status === "Pending" && (
                       <button 
-                        onClick={() => navigate(`/payment/checkout/${booking._id}`, { state: { amount: booking.totalPrice } })}
+                        onClick={() => navigate(`/payment`, { state: { 
+                          bookingDetails: {
+                            bookingId: booking._id,
+                            total: booking.totalPrice,
+                            currency: "LKR",
+                            discountPercentage: 0
+                          }
+                        } })}
                         className="bg-blue-900 text-white px-12 py-5 rounded-full font-black text-[11px] uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-3"
                       >
                         <FaCreditCard /> Complete Payment
@@ -186,7 +193,7 @@ const MyBookings = () => {
             <p className="text-slate-400 mt-4 font-medium max-w-sm mx-auto leading-relaxed italic">
             
             </p>
-            <button onClick={() => navigate('/hotels')} className="mt-12 bg-blue-900 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">
+            <button onClick={() => navigate('/hotel')} className="mt-12 bg-blue-900 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">
               Discover Destinations
             </button>
           </div>

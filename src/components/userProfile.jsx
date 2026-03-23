@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Package, LogOut, User as UserIcon } from "lucide-react";
+import { ChevronDown, Package, LogOut, User as UserIcon, CreditCard } from "lucide-react"; // CreditCard අයිකනය එක් කරන ලදී
 
 export default function UserData() {
     const [user, setUser] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Function to fetch user data from backend
     const fetchUserData = useCallback(async () => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -24,13 +23,8 @@ export default function UserData() {
     }, []);
 
     useEffect(() => {
-        // Initial fetch
         fetchUserData();
-
-        // Listen for the custom "userProfileUpdated" event from the Edit Modal
         window.addEventListener("userProfileUpdated", fetchUserData);
-
-        // Cleanup listener on unmount
         return () => {
             window.removeEventListener("userProfileUpdated", fetchUserData);
         };
@@ -41,14 +35,19 @@ export default function UserData() {
         window.location.href = "/login";
     };
 
-    const handleOrders = () => {
-    // user._id එක URL එකට එකතු කිරීම
-    if (user && user._id) {
-        window.location.href = `/my-bookings/${user._id}`;
-    } else {
-        window.location.href = "/my-bookings";
-    }
-}; 
+    // My Bookings ලෙස වෙනස් කරන ලදී
+    const handleBookings = () => {
+        if (user && user._id) {
+            window.location.href = `/my-bookings/${user._id}`;
+        } else {
+            window.location.href = "/my-bookings";
+        }
+    };
+
+    // My Payments සඳහා නව Function එකක්
+    const handlePayments = () => {
+        window.location.href = "/my-payments";
+    };
 
     const handleProfile = () => {
         window.location.href = "/profile";
@@ -56,7 +55,6 @@ export default function UserData() {
 
     if (!user) return null;
 
-    // Logic to determine the correct Profile Image URL
     const profileImg = user.image && (user.image.includes("googleusercontent") || user.image.startsWith("http"))
         ? user.image 
         : `${import.meta.env.VITE_BACKEND_URL}/${user.image || 'default.png'}`;
@@ -74,7 +72,6 @@ export default function UserData() {
                         referrerPolicy='no-referrer'
                         className='w-10 h-10 rounded-full object-cover border-2 border-cyan-400 shadow-sm'
                         alt="user"
-                        // Fallback to UI Avatars if image fails to load
                         onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${user.firstName}`}
                     />
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
@@ -99,7 +96,6 @@ export default function UserData() {
             <AnimatePresence>
                 {isOpen && (
                     <>
-                        {/* Overlay to handle closing when clicking outside */}
                         <div className="fixed inset-0 z-[-1]" onClick={() => setIsOpen(false)} />
                         
                         <motion.div
@@ -114,12 +110,22 @@ export default function UserData() {
                             </div>
 
                             <div className="p-2">
+                                {/* My Bookings (කලින් My Orders) */}
                                 <button 
-                                    onClick={handleOrders}
+                                    onClick={handleBookings}
                                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-all group"
                                 >
                                     <Package size={18} className="group-hover:scale-110 transition-transform" />
-                                    <span className="font-medium">My Orders</span>
+                                    <span className="font-medium">My Bookings</span>
+                                </button>
+
+                                {/* My Payments - අලුතින් එක් කරන ලදී */}
+                                <button 
+                                    onClick={handlePayments}
+                                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-all group"
+                                >
+                                    <CreditCard size={18} className="group-hover:scale-110 transition-transform" />
+                                    <span className="font-medium">My Payments</span>
                                 </button>
 
                                 <button 

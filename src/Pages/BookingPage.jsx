@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Token එක කියවීමට මෙය අවශ්‍යයි
+import { jwtDecode } from "jwt-decode"; // This is needed to read the token
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -62,7 +62,7 @@ export default function TravelBookingUI() {
   };
 
   const handleBookingSubmit = async () => {
-    // 1. Validation - අත්‍යවශ්‍ය දත්ත පරීක්ෂාව
+    // 1. Validation - Check mandatory data
     if (!formData.firstName || !formData.email || !formData.checkIn || !formData.checkOut) {
       toast.error("Please fill in all essential details (Name, Email, Dates)!");
       setStep(1);
@@ -75,18 +75,18 @@ export default function TravelBookingUI() {
       
       const token = localStorage.getItem("token");
 
-      // 2. Token එක පරීක්ෂාව
+      // 2. Check token
       if (!token) {
         toast.error("You are not logged in! Please login first.");
         setIsSubmitting(false);
         return;
       }
 
-      // 3. User ID ලබා ගැනීම (Token එක Decode කිරීමෙන්)
+      // 3. Get User ID (by decoding the token)
       let userId;
       try {
         const decoded = jwtDecode(token);
-        userId = decoded.id; // ඔබ එවූ Token එකේ තිබුණේ "id" ලෙසයි
+        userId = decoded.id; // Your token contains the "id" property
       } catch (decodeError) {
         console.error("Token Decode Error:", decodeError);
         toast.error("Session expired or invalid. Please login again.");
@@ -98,8 +98,8 @@ export default function TravelBookingUI() {
         return;
       }
 
-      // 4. Backend Schema එකට ගැලපෙන ලෙස Payload එක සැකසීම
-      // 4. Backend Schema එකේ අනිවාර්ය කර ඇති (Required) නම් වලට ගැලපෙන ලෙස සැකසීම
+      // 4. Prepare payload to match the Backend Schema
+      // 4. Match the required field names in the Backend Schema
       const payload = {
         hotelId: id,
         userId: userId, 
@@ -130,9 +130,19 @@ export default function TravelBookingUI() {
       // 5. Request එක යැවීම
       const response = await axios.post(`${backendUrl}/bookings/create`, payload, config);
 
-      if (response.data.success) {
+      if (response.data.success && response.data.data) {
         toast.success("Booking Successful!");
-        setTimeout(() => navigate("/"), 1500);
+        // Navigate to payment page with booking details
+        setTimeout(() => navigate('/payment', { 
+          state: { 
+            bookingDetails: {
+              bookingId: response.data.data._id,
+              total: formData.selectedRoom?.finalPrice,
+              currency: "LKR",
+              discountPercentage: 0
+            }
+          } 
+        }), 1500);
       }
     } catch (err) {
       console.error("Booking Error Full Detail:", err.response?.data || err);

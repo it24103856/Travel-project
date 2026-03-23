@@ -14,7 +14,7 @@ export default function AdminHotelPage() {
   const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
-  // හෝටල් සියල්ල ලබා ගැනීම
+  // Fetch all hotels
   const fetchHotels = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -43,7 +43,7 @@ export default function AdminHotelPage() {
     const token = localStorage.getItem("token");
     setDeleting(true);
     try {
-      // මෙහිදී හෝටලයේ MongoDB _id එක භාවිතා කරයි
+      // Here we use the hotel's MongoDB _id
       await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/hotels/delete/${selectedHotel._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

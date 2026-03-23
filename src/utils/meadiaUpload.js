@@ -5,13 +5,13 @@ const supabaseKey = import.meta.env.VITE_SUPERBASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const uploadFile = (file) => { // export const ලෙස වෙනස් කළා
+export const uploadFile = (file) => { // Changed to export const
   return new Promise(async (resolve, reject) => {
     const timeStamp = Date.now();
     const fileName = `${timeStamp}-${file.name}`;
 
     const { data, error } = await supabase.storage
-      .from("images") // Dashboard එකේ මේ නමින්ම Bucket එකක් තිබිය යුතුයි
+      .from("images") // There must be a Bucket with this name in the Dashboard
       .upload(fileName, file, {
         cacheControl: "3600",
         upsert: false,
