@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { 
-  FaUser, FaEnvelope, FaPhone, FaIdCard, FaCar, FaSave, 
-  FaCamera, FaArrowLeft, FaMapMarkerAlt, FaFileAlt 
-} from "react-icons/fa";
+import { User, Mail, Phone, IdCard, Car, Save, Camera, ArrowLeft, MapPin, FileText } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom"; 
 import { uploadFile } from "../../utils/meadiaUpload.js";
 
@@ -13,14 +10,8 @@ const EditDriverPage = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    licenseNumber: "",
-    vehicleType: "",
-    profileImage: "",
-    description: "" 
+    name: "", email: "", phone: "", address: "",
+    licenseNumber: "", vehicleType: "", profileImage: "", description: "" 
   });
   
   const [loading, setLoading] = useState(false);
@@ -95,8 +86,8 @@ const EditDriverPage = () => {
   if (fetching) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-gray-500 font-medium animate-pulse">Fetching driver details...</p>
+        <div className="w-12 h-12 border-4 border-[#00AEEF] border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-500 font-medium animate-pulse font-[Inter]">Fetching driver details...</p>
       </div>
     );
   }
@@ -105,102 +96,84 @@ const EditDriverPage = () => {
     <div className="w-full max-w-4xl mx-auto px-6 py-12">
       <Toaster position="top-center" />
       
-      {/* Header with Back Button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">
-            Edit <span className="text-orange-500">Driver</span>
+          <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">
+            Edit <span className="text-[#00AEEF]">Driver</span>
           </h1>
-          <p className="text-gray-500 mt-2 text-lg italic">Modifying: {formData.name}</p>
-          <div className="w-24 h-1.5 bg-orange-500 mt-4 rounded-full"></div>
+          <p className="text-gray-500 mt-2 text-lg italic font-[Inter]">Modifying: {formData.name}</p>
+          <div className="w-24 h-1.5 bg-[#00AEEF] mt-4 rounded-full"></div>
         </div>
         <button 
           onClick={() => navigate("/admin/drivers")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 w-fit font-semibold"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 hover:bg-[#00AEEF] hover:text-white hover:border-[#00AEEF] transition-all duration-500 w-fit font-semibold uppercase tracking-widest text-xs"
         >
-          <FaArrowLeft size={14}/> Back to Fleet
+          <ArrowLeft size={14}/> Back to Fleet
         </button>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/60 overflow-hidden border border-gray-100">
-        {/* Banner Section */}
+      <div className="bg-white rounded-3xl shadow-sm hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500">
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 text-white flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold tracking-wide uppercase">Update Profile</h2>
-            <p className="text-gray-400 text-sm mt-1">Keep the driver information up to date.</p>
+            <h2 className="text-xl font-[Playfair_Display] font-bold tracking-wide uppercase">Update Profile</h2>
+            <p className="text-gray-400 text-sm mt-1 font-[Inter]">Keep the driver information up to date.</p>
           </div>
           <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg border border-white/10">
-            <FaIdCard className="text-orange-500 text-2xl" />
+            <IdCard className="text-[#00AEEF] w-6 h-6" />
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-10 space-y-8">
-          
-          {/* --- Profile Image Section --- */}
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-36 h-36 group">
-              <div className="w-full h-full rounded-full overflow-hidden border-4 border-orange-50 shadow-xl bg-gray-50 flex items-center justify-center">
+              <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#00AEEF]/10 shadow-xl bg-gray-50 flex items-center justify-center">
                 {preview ? (
                   <img src={preview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <FaUser className="text-gray-300 text-6xl" />
+                  <User className="text-gray-300 w-16 h-16" />
                 )}
               </div>
-              <label className="absolute bottom-2 right-2 bg-gray-900 p-3 rounded-full text-white cursor-pointer hover:bg-orange-600 transition-all shadow-lg border-2 border-white">
-                <FaCamera size={16} />
+              <label className="absolute bottom-2 right-2 bg-[#00AEEF] p-3 rounded-full text-white cursor-pointer hover:bg-[#0095cc] transition-all duration-500 shadow-lg border-2 border-white">
+                <Camera size={16} />
                 <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
               </label>
             </div>
-            <p className="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">Driver Profile Photo</p>
+            <p className="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest font-[Inter]">Driver Profile Photo</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <InputGroup icon={<FaUser />} label="Full Name" name="name" value={formData.name} onChange={handleChange} />
-            <InputGroup icon={<FaEnvelope />} label="Email Address" name="email" value={formData.email} onChange={handleChange} type="email" disabled />
-            <InputGroup icon={<FaPhone />} label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} />
-            <InputGroup icon={<FaIdCard />} label="License Number" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} />
+            <InputGroup icon={<User size={16} />} label="Full Name" name="name" value={formData.name} onChange={handleChange} />
+            <InputGroup icon={<Mail size={16} />} label="Email Address" name="email" value={formData.email} onChange={handleChange} type="email" disabled />
+            <InputGroup icon={<Phone size={16} />} label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} />
+            <InputGroup icon={<IdCard size={16} />} label="License Number" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} />
             
             <div className="md:col-span-2">
-              <InputGroup icon={<FaCar />} label="Vehicle Type" name="vehicleType" value={formData.vehicleType} onChange={handleChange} />
+              <InputGroup icon={<Car size={16} />} label="Vehicle Type" name="vehicleType" value={formData.vehicleType} onChange={handleChange} />
             </div>
 
-            {/* Address Field */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-orange-500" size={14}/> Permanent Address
+                <MapPin className="text-[#00AEEF]" size={14}/> Permanent Address
               </label>
-              <textarea
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-                rows="2"
-                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all resize-none"
+              <textarea name="address" value={formData.address} onChange={handleChange} required rows="2"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 resize-none font-[Inter]"
               ></textarea>
             </div>
 
-            {/* Description Field () */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
-                <FaFileAlt className="text-orange-500" size={14}/> Driver Bio / Description
+                <FileText className="text-[#00AEEF]" size={14}/> Driver Bio / Description
               </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-                rows="4"
-                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all"
+              <textarea name="description" value={formData.description} onChange={handleChange} required rows="4"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
                 placeholder="Briefly describe the driver's experience and skills..."
               ></textarea>
             </div>
           </div>
 
           <div className="pt-6">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gray-900 hover:bg-black text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl active:scale-[0.98] disabled:bg-gray-400"
+            <button type="submit" disabled={loading}
+              className="w-full bg-[#00AEEF] hover:bg-[#0095cc] text-white font-bold py-5 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl uppercase tracking-widest active:scale-[0.98] disabled:bg-gray-400"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
@@ -208,7 +181,7 @@ const EditDriverPage = () => {
                   Updating...
                 </div>
               ) : (
-                <><FaSave className="text-orange-500" /> Update Driver Details</>
+                <><Save className="text-white" size={18} /> Update Driver Details</>
               )}
             </button>
           </div>
@@ -218,17 +191,14 @@ const EditDriverPage = () => {
   );
 };
 
-// Reusable Input Component
 function InputGroup({ icon, label, ...props }) {
   return (
     <div>
       <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">{label}</label>
       <div className="relative">
         <span className="absolute inset-y-0 left-0 flex items-center pl-5 text-gray-400">{icon}</span>
-        <input
-          {...props}
-          required
-          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all disabled:opacity-60 disabled:bg-gray-100 disabled:cursor-not-allowed"
+        <input {...props} required
+          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 disabled:opacity-60 disabled:bg-gray-100 disabled:cursor-not-allowed font-[Inter]"
         />
       </div>
     </div>
@@ -236,4 +206,3 @@ function InputGroup({ icon, label, ...props }) {
 }
 
 export default EditDriverPage;
-

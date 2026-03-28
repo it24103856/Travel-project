@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { 
-    FaStar, 
-    FaPaperPlane, 
-    FaTrash, 
-    FaRegCommentDots, 
-    FaCar, 
-    FaUserTie, 
-    FaGlobe 
-} from "react-icons/fa";
+import { Star, Send, Trash2, MessageCircle, Car, UserCheck, Globe } from "lucide-react";
 import Footer from '../components/Footer';
 
 export default function CustomerFeedback() {
@@ -18,7 +10,7 @@ export default function CustomerFeedback() {
     const [formData, setFormData] = useState({
         feedback: "",
         rating: 5,
-        category: "Vehicles" 
+        category: "Vehicles"
     });
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -26,7 +18,7 @@ export default function CustomerFeedback() {
     const fetchMyFeedbacks = async () => {
         try {
             const token = localStorage.getItem("token");
-            if (!token) return; 
+            if (!token) return;
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const { data } = await axios.get(`${backendUrl}/feedback/get-all`, config);
             setFeedbacks(data.feedbacks || []);
@@ -50,8 +42,8 @@ export default function CustomerFeedback() {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             await axios.post(`${backendUrl}/feedback/create`, formData, config);
             toast.success("Feedback submitted successfully!", { id: loadingToast });
-            setFormData({ feedback: "", rating: 5, category: "Vehicles" }); 
-            fetchMyFeedbacks(); 
+            setFormData({ feedback: "", rating: 5, category: "Vehicles" });
+            fetchMyFeedbacks();
         } catch (error) {
             toast.error("Error submitting feedback", { id: loadingToast });
         } finally {
@@ -74,56 +66,66 @@ export default function CustomerFeedback() {
         }
     };
 
+    const getCategoryIcon = (category) => {
+        if (category === "Vehicles") return <Car size={20} />;
+        if (category === "driverse") return <UserCheck size={20} />;
+        return <Globe size={20} />;
+    };
+
     return (
-        <main className="w-full min-h-screen bg-white font-sans">
+        <main className="w-full min-h-screen bg-[#FDFDFD]">
             <Toaster position="top-center" reverseOrder={false} />
 
-            {/* 1. Hero Section (About page එකට සමානයි) */}
-            <section className="relative h-[45vh] flex items-center justify-center bg-fixed bg-center bg-cover" 
+            {/* 1. Hero Section */}
+            <section className="relative h-[45vh] flex items-center justify-center bg-fixed bg-center bg-cover"
                        style={{ backgroundImage: "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
                 <div className="absolute inset-0 bg-black/50"></div>
                 <div className="relative z-10 text-center text-white px-4">
-                    <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight">Guest Reviews</h1>
-                    <p className="mt-4 text-lg md:text-xl font-light max-w-2xl mx-auto italic">
-                        "Your experiences shape our journey. Thank you for being part of TravelMate."
+                    <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Your Voice Matters</p>
+                    <h1 className="text-5xl md:text-6xl font-bold tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      Guest <span className="italic">Reviews</span>
+                    </h1>
+                    <p className="mt-4 text-lg md:text-xl font-light max-w-2xl mx-auto text-white/80">
+                        Your experiences shape our journey. Thank you for being part of TravelEase.
                     </p>
                 </div>
             </section>
 
             {/* 2. Main Content Section */}
-            <section className="max-w-7xl mx-auto py-20 px-6 grid grid-cols-1 lg:grid-cols-3 gap-16">
-                
-                {/* Left Side - Feedback Form (Modern White Theme) */}
+            <section className="max-w-7xl mx-auto py-24 px-6 grid grid-cols-1 lg:grid-cols-3 gap-16">
+
+                {/* Left Side - Feedback Form */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 sticky top-28">
+                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-lg transition-all duration-500 border border-gray-50 sticky top-28">
                         <div className="mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900 leading-tight">
-                                Share Your <span className="text-orange-500">Story</span>
+                            <p className="uppercase text-[10px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-2">Leave a Review</p>
+                            <h2 className="text-3xl font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                                Share Your <span className="italic text-[#00AEEF]">Story</span>
                             </h2>
-                            <div className="w-12 h-1 bg-orange-500 mt-2 rounded-full"></div>
+                            <div className="w-12 h-1 bg-[#00AEEF] mt-2 rounded-full"></div>
                         </div>
-                        
+
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Category Selectors */}
                             <div>
                                 <label className="text-xs font-bold uppercase text-gray-400 tracking-widest ml-1">Category</label>
                                 <div className="grid grid-cols-3 gap-3 mt-3">
                                     {[
-                                        { id: "Vehicles", icon: <FaCar />, label: "Vehicle" },
-                                        { id: "driverse", icon: <FaUserTie />, label: "Driver" },
-                                        { id: "All", icon: <FaGlobe />, label: "Other" }
+                                        { id: "Vehicles", icon: <Car size={20} />, label: "Vehicle" },
+                                        { id: "driverse", icon: <UserCheck size={20} />, label: "Driver" },
+                                        { id: "All", icon: <Globe size={20} />, label: "Other" }
                                     ].map((cat) => (
                                         <button
                                             key={cat.id}
                                             type="button"
                                             onClick={() => setFormData({ ...formData, category: cat.id })}
-                                            className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 ${
-                                                formData.category === cat.id 
-                                                ? "border-orange-500 bg-orange-50 text-orange-500 shadow-sm" 
-                                                : "border-gray-100 bg-gray-50 text-gray-400 hover:border-orange-200"
+                                            className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-500 ${
+                                                formData.category === cat.id
+                                                ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF] shadow-sm"
+                                                : "border-gray-100 bg-gray-50 text-gray-400 hover:border-[#00AEEF]/30"
                                             }`}
                                         >
-                                            <span className="text-xl mb-1">{cat.icon}</span>
+                                            <span className="mb-1">{cat.icon}</span>
                                             <span className="text-[9px] font-bold uppercase">{cat.label}</span>
                                         </button>
                                     ))}
@@ -135,11 +137,12 @@ export default function CustomerFeedback() {
                                 <label className="text-xs font-bold uppercase text-gray-400 tracking-widest ml-1">Rating</label>
                                 <div className="flex gap-2 mt-2 py-3 justify-center bg-gray-50 rounded-2xl border border-gray-100">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <FaStar
+                                        <Star
                                             key={star}
                                             onClick={() => setFormData({ ...formData, rating: star })}
-                                            className={`text-2xl cursor-pointer transition-all ${
-                                                star <= formData.rating ? "text-yellow-400" : "text-gray-200"
+                                            size={24}
+                                            className={`cursor-pointer transition-all duration-300 ${
+                                                star <= formData.rating ? "text-amber-400 fill-amber-400" : "text-gray-200"
                                             }`}
                                         />
                                     ))}
@@ -152,7 +155,7 @@ export default function CustomerFeedback() {
                                 <textarea
                                     required
                                     rows="4"
-                                    className="w-full mt-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-700 placeholder:text-gray-300"
+                                    className="w-full mt-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#00AEEF]/20 focus:border-[#00AEEF] outline-none transition-all duration-500 text-gray-700 placeholder:text-gray-300"
                                     placeholder="How was your trip?"
                                     value={formData.feedback}
                                     onChange={(e) => setFormData({ ...formData, feedback: e.target.value })}
@@ -162,20 +165,20 @@ export default function CustomerFeedback() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-bold shadow-lg shadow-orange-200 transition-all flex items-center justify-center gap-2 uppercase text-sm tracking-widest"
+                                className="w-full py-4 bg-[#00AEEF] hover:bg-[#0096CE] text-white rounded-full font-bold shadow-lg shadow-[#00AEEF]/20 transition-all duration-500 flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest"
                             >
-                                {isLoading ? "Sending..." : <><FaPaperPlane /> Post Feedback</>}
+                                {isLoading ? "Sending..." : <><Send size={16} /> Post Feedback</>}
                             </button>
                         </form>
                     </div>
                 </div>
 
-                {/* Right Side - Feedback List (Professional List View) */}
+                {/* Right Side - Feedback List */}
                 <div className="lg:col-span-2 space-y-8">
                     <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-                        <h3 className="text-2xl font-bold text-gray-900">What People Say</h3>
+                        <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>What People Say</h3>
                         <div className="flex items-center gap-2">
-                            <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold">
+                            <span className="bg-[#00AEEF]/10 text-[#00AEEF] px-3 py-1 rounded-full text-xs font-bold">
                                 {feedbacks.length} Reviews
                             </span>
                         </div>
@@ -183,45 +186,45 @@ export default function CustomerFeedback() {
 
                     {feedbacks.length === 0 ? (
                         <div className="bg-gray-50 p-20 rounded-[2.5rem] text-center border-2 border-dashed border-gray-100">
-                            <FaRegCommentDots className="text-gray-200 text-5xl mx-auto mb-4" />
-                            <p className="text-gray-400 font-medium italic">No reviews yet. Start the conversation!</p>
+                            <MessageCircle className="text-gray-200 mx-auto mb-4" size={48} />
+                            <p className="text-gray-400 font-medium italic" style={{ fontFamily: "'Playfair Display', serif" }}>No reviews yet. Start the conversation!</p>
                         </div>
                     ) : (
                         <div className="grid gap-6">
                             {feedbacks.map((fb) => (
-                                <div key={fb._id} className="group bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 relative">
+                                <div key={fb._id} className="group bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-lg border border-gray-50 transition-all duration-500 relative">
                                     <div className="flex justify-between items-start">
                                         <div className="flex gap-5">
-                                            <div className="w-14 h-14 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
-                                                {fb.category === "Vehicles" ? <FaCar /> : fb.category === "driverse" ? <FaUserTie /> : <FaGlobe />}
+                                            <div className="w-14 h-14 bg-[#00AEEF]/10 text-[#00AEEF] rounded-2xl flex items-center justify-center flex-shrink-0">
+                                                {getCategoryIcon(fb.category)}
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="flex text-yellow-400">
+                                                    <div className="flex text-amber-400">
                                                         {[...Array(5)].map((_, i) => (
-                                                            <FaStar key={i} size={14} className={i < fb.rating ? "text-yellow-400" : "text-gray-100"} />
+                                                            <Star key={i} size={14} className={i < fb.rating ? "fill-amber-400" : "text-gray-200"} />
                                                         ))}
                                                     </div>
-                                                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">
+                                                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
                                                         {new Date(fb.createdAt).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                                <p className="text-gray-700 mt-3 text-lg leading-relaxed font-medium italic">
+                                                <p className="text-gray-700 mt-3 text-lg leading-relaxed font-medium italic" style={{ fontFamily: "'Playfair Display', serif" }}>
                                                     "{fb.feedback}"
                                                 </p>
                                                 <div className="mt-4 flex items-center gap-2">
-                                                    <span className="text-[9px] px-3 py-1 bg-gray-100 text-gray-500 rounded-full font-black uppercase tracking-widest">
+                                                    <span className="text-[9px] px-3 py-1 bg-gray-100 text-gray-500 rounded-full font-bold uppercase tracking-widest">
                                                         #{fb.category}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <button 
+
+                                        <button
                                             onClick={() => handleDelete(fb._id)}
-                                            className="text-gray-200 hover:text-red-500 p-2 transition-colors"
+                                            className="text-gray-200 hover:text-red-500 p-2 transition-colors duration-500"
                                         >
-                                            <FaTrash size={14} />
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>

@@ -9,7 +9,7 @@ export default function ForgotPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [step, setStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false); // Loading state එකක් එකතු කළා design එකට
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSendOtp = async (e) => {
@@ -20,7 +20,7 @@ export default function ForgotPassword() {
       toast.success(res.data.message);
       setStep(2);
     } catch (err) {
-      toast.error(err.response?.data?.message || "OTP එක යවන්න බැරි වුණා");
+      toast.error(err.response?.data?.message || "Could not send OTP");
     } finally {
       setIsLoading(false);
     }
@@ -52,24 +52,24 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[url('/travel-bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative px-6 font-poppins">
-      
-      {/* Dark Overlay for better readability */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+    <div className="w-full min-h-screen bg-[url('/travel-bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative px-6">
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
 
       <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-6xl gap-12">
-        
+
         {/* Glassmorphism Container */}
         <div className="w-full max-w-[420px] bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-10 flex flex-col items-center">
-          
+
           <img src="/logo.png" alt="Logo" className="w-24 mb-6 drop-shadow-2xl" />
-          
-          <h2 className="text-3xl font-bold text-white mb-2 text-center">
+
+          <h2 className="text-3xl font-bold text-white mb-2 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
             {step === 1 ? "Forgot Password?" : "Set New Password"}
           </h2>
           <p className="text-white/60 text-sm mb-8 text-center">
-            {step === 1 
-              ? "Enter your email to receive a 6-digit verification code." 
+            {step === 1
+              ? "Enter your email to receive a 6-digit verification code."
               : "Verify OTP and secure your account with a new password."}
           </p>
 
@@ -78,39 +78,37 @@ export default function ForgotPassword() {
               <input
                 type="email"
                 placeholder="Email Address"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <button 
+              <button
                 disabled={isLoading}
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/40 active:scale-[0.98] transition-all duration-300"
+                className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
               >
                 {isLoading ? "Sending OTP..." : "Send OTP"}
               </button>
             </form>
           ) : (
             <form onSubmit={handleResetPassword} className="w-full space-y-4">
-              {/* 💡 Browser එක රවට්ටන්න දාන පේන්නේ නැති (Hidden) inputs */}
-    {/* Browser එක Autofill කරන විස්තර මේවට වැටෙයි */}
-    <input type="text" name="fake-email" style={{ display: 'none' }} />
-    <input type="password" name="fake-password" style={{ display: 'none' }} />
+              <input type="text" name="fake-email" style={{ display: 'none' }} />
+              <input type="password" name="fake-password" style={{ display: 'none' }} />
               <input
                 type="text"
                 name='otp-code'
                 autoComplete='one-time-code'
                 placeholder="Enter 6-digit OTP"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
               />
-              
+
               <input
                 type="password"
                 placeholder="New Password"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
@@ -119,8 +117,8 @@ export default function ForgotPassword() {
               <input
                 type="password"
                 placeholder="Confirm New Password"
-                className={`w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 transition-all outline-none text-gray-800 shadow-inner ${
-                  confirmPassword && newPassword !== confirmPassword ? "focus:ring-red-500 ring-2 ring-red-500" : "focus:ring-cyan-400/50"
+                className={`w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 transition-all duration-500 outline-none text-gray-800 shadow-inner ${
+                  confirmPassword && newPassword !== confirmPassword ? "focus:ring-red-500 ring-2 ring-red-500" : "focus:ring-[#00AEEF]/50"
                 }`}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -131,9 +129,9 @@ export default function ForgotPassword() {
                 <p className="text-xs text-red-400 text-center font-bold">* Passwords do not match</p>
               )}
 
-              <button 
+              <button
                 disabled={isLoading}
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/40 active:scale-[0.98] transition-all duration-300"
+                className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
               >
                 {isLoading ? "Resetting..." : "Reset Password"}
               </button>
@@ -141,7 +139,7 @@ export default function ForgotPassword() {
           )}
 
           <div className="mt-8">
-            <Link to="/login" className="text-cyan-400 font-bold hover:underline text-sm">
+            <Link to="/login" className="text-[#00AEEF] font-bold hover:underline text-sm">
               Back to Sign In
             </Link>
           </div>

@@ -32,60 +32,57 @@ export default function LoginPage() {
   });
 
   // Manual Login Logic
-async function login(e) {
-  if (e) e.preventDefault();
-  setIsLoading(true); 
-  try {
-    const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
-      email,
-      password,
-    });
+  async function login(e) {
+    if (e) e.preventDefault();
+    setIsLoading(true);
+    try {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
+        email,
+        password,
+      });
 
-    localStorage.setItem("token", res.data.token);
-    
-    //  check user role form backend
-    console.log("Logged in user role:", res.data.role);
-localStorage.setItem("token", res.data.token);
-localStorage.setItem("user", JSON.stringify(res.data.user));
-localStorage.setItem("role", res.data.role);
-    if (res.data.role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/"); // customer navigate to home page
+      localStorage.setItem("token", res.data.token);
+      console.log("Logged in user role:", res.data.role);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("role", res.data.role);
+      if (res.data.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+
+      toast.success("Ready for your next adventure?");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
-    
-    toast.success("Ready for your next adventure?");
-  } catch (err) {
-    toast.error(err.response?.data?.message || "Login failed");
-  } finally {
-    setIsLoading(false);
   }
-}
+
   return (
-    
     <div className="w-full min-h-screen bg-[url('/travel-bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative px-6">
-      
-      {/* Dark Overlay for better readability */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
 
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full max-w-6xl gap-12">
-        
+
         {/* Left Side: Brand Identity */}
         <div className="text-center md:text-left max-w-[550px]">
-          {/* Logo Path '/logo.png'  */}
           <img src="/logo.png" alt="Travel Logo" className="w-40 mb-8 mx-auto md:mx-0 drop-shadow-2xl" />
-          <h1 className="text-white font-extrabold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl">
-            Explore the <span className="text-cyan-400">World</span> <br /> 
+          <h1 className="text-white font-bold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Explore the <span className="italic text-[#00AEEF]">World</span> <br />
             with Ease.
           </h1>
-          <p className="mt-6 text-gray-100 text-xl font-light tracking-wide italic drop-shadow-md">
+          <p className="mt-6 text-gray-200 text-xl font-light tracking-wide italic drop-shadow-md">
             "Your journey of a thousand miles begins with a single click."
           </p>
         </div>
 
         {/* Right Side: Glassmorphism Login Form */}
         <form onSubmit={login} className="w-full max-w-[420px] bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-10 flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-white mb-2 self-start">Sign In</h2>
+          <h2 className="text-3xl font-bold text-white mb-2 self-start" style={{ fontFamily: "'Playfair Display', serif" }}>Sign In</h2>
           <p className="text-white/60 text-sm mb-8 self-start">Welcome back! Please enter your details.</p>
 
           <div className="w-full space-y-4">
@@ -95,7 +92,7 @@ localStorage.setItem("role", res.data.role);
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email Address"
-              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner"
+              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
             />
 
             <input
@@ -104,12 +101,12 @@ localStorage.setItem("role", res.data.role);
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="Password"
-              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner"
+              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
             />
           </div>
 
           <div className="w-full flex justify-end mt-3 mb-6">
-            <Link to="/forget-password"  className="text-white/80 text-sm hover:text-cyan-400 transition-colors italic">
+            <Link to="/forget-password" className="text-white/80 text-sm hover:text-[#00AEEF] transition-colors duration-500 italic">
               Forgot password?
             </Link>
           </div>
@@ -117,7 +114,7 @@ localStorage.setItem("role", res.data.role);
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/40 active:scale-[0.98] transition-all duration-300"
+            className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
           >
             {isLoading ? "Authenticating..." : "Sign In"}
           </button>
@@ -133,15 +130,15 @@ localStorage.setItem("role", res.data.role);
           <button
             onClick={() => GoogleLogin()}
             type="button"
-            className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 py-3.5 rounded-xl hover:bg-gray-100 transition-all font-semibold shadow-md active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 py-3.5 rounded-full hover:bg-gray-100 transition-all duration-500 font-semibold shadow-md active:scale-[0.98] uppercase text-[11px] tracking-widest"
           >
             <GrGoogle className="text-xl text-red-500" />
             Sign in with Google
           </button>
 
           <p className="text-white/70 mt-8 text-sm">
-            Not a member? {" "}
-            <Link to="/register" className="text-cyan-400 font-bold hover:underline">
+            Not a member?{" "}
+            <Link to="/register" className="text-[#00AEEF] font-bold hover:underline">
               Join for Free
             </Link>
           </p>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Footer from "../components/Footer";
-import { MapPin, Star, Heart, Share2, Search, ArrowRight } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 
 const DestinationPage = () => {
   const [destinations, setDestinations] = useState([]);
@@ -29,195 +29,98 @@ const DestinationPage = () => {
 
   const filteredDestinations = destinations.filter(dest =>
     dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.province?.toLowerCase().includes(searchTerm.toLowerCase())
+    dest.city?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-white font-sans overflow-x-hidden flex flex-col">
-      {/* Hero Section – with background image */}
-      <div className="relative h-screen md:h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop"
-            alt="Mountain adventure"
-            className="w-full h-full object-cover"
+    <div className="min-h-screen bg-[#FDFDFD] flex flex-col">
+
+      {/* 1. Static Header Section */}
+      <div className="pt-32 pb-16 px-6 text-center max-w-5xl mx-auto animate-fade-in">
+        <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-4">Explore Sri Lanka</p>
+        <h1
+          className="text-5xl md:text-7xl font-light text-gray-900 mb-8 tracking-tight"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          <span className="italic">Destinations</span>
+        </h1>
+        <p className="text-gray-500 text-lg leading-relaxed font-light max-w-4xl mx-auto">
+          Sri Lanka is one of the most exotic getaways in the world. Surrounded by the azure Indian Ocean,
+          this island paradise has contrasting landscapes, stretches of golden sandy beaches and a wealth of
+          wildlife and culture to discover. It is home to 8 UNESCO World Heritage Sites, 15 national parks
+          showcasing spectacular wildlife and nearly 500,000 acres of lush tea estates.
+        </p>
+
+        {/* Search Bar - Minimalist style */}
+        <div className="mt-12 max-w-md mx-auto relative group">
+          <input
+            type="text"
+            placeholder="Search your destination..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-6 py-4 bg-white border border-gray-200 rounded-full shadow-sm focus:shadow-lg focus:border-[#00AEEF] outline-none transition-all duration-500 text-center text-sm"
           />
-          <div className="absolute inset-0 bg-black/50" /> {/* Dark overlay for text readability */}
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-6 text-center text-white">
-          <div className="max-w-4xl mx-auto animate-fade-up">
-            <span className="inline-block text-sm font-bold tracking-wider text-blue-300 bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full mb-6">
-              ADVENTURE AWAITS
-            </span>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">
-              Go <span className="text-blue-400">Together</span>
-            </h1>
-            <p className="text-2xl md:text-3xl font-bold mt-4">
-              We Take You Places, <span className="text-blue-400">You Make the Memories</span>
-            </p>
-            <p className="text-lg max-w-2xl mx-auto mt-6 leading-relaxed">
-              Your moment is yours to cherish. Explore new destinations and create lasting memories that will stay with you forever.
-            </p>
-
-            {/* Search Bar */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center max-w-2xl mx-auto">
-              <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search destinations..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-full bg-white text-gray-800 placeholder-gray-400 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                />
-              </div>
-              <button className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-full font-bold text-white shadow-lg transition transform hover:scale-105 flex items-center gap-2">
-                Explore Now <ArrowRight size={18} />
-              </button>
-            </div>
-
-            {/* Exclusive Trip section */}
-            <div className="mt-16 pt-8 border-t border-white/30 max-w-xl mx-auto">
-              <h3 className="text-2xl font-bold mb-2">Exclusive Trip</h3>
-              <p className="text-sm text-white/80">
-                There are many variations of passages of available but the majority have suffered alteration in some form.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-2 bg-white rounded-full mt-2 animate-scroll"></div>
-          </div>
+          <Search className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
         </div>
       </div>
 
-      {/* Destination Cards */}
-      <div className="py-20 bg-white flex-grow">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter">
-              Featured <span className="text-blue-600">Destinations</span>
-            </h2>
-            <div className="w-24 h-1 bg-blue-600 mx-auto mt-4"></div>
-            <p className="text-gray-500 max-w-2xl mx-auto mt-4">
-              Handpicked locations that promise adventure, culture, and relaxation.
-            </p>
-          </div>
-
+      {/* 2. Destination Grid */}
+      <div className="pb-24 px-6 flex-grow">
+        <div className="container mx-auto max-w-7xl">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-            </div>
-          ) : filteredDestinations.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-400 text-lg">No destinations found.</p>
+            <div className="flex justify-center py-20">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#00AEEF]"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               {filteredDestinations.map((dest) => (
                 <div
                   key={dest._id}
-                  className="group relative bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
-                  onClick={() => navigate(`/destination/${dest._id}`)}
+                  className="bg-white rounded-[15rem] shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col group border border-gray-50"
                 >
-                  {/* Image Container */}
-                  <div className="relative h-72 overflow-hidden">
+                  {/* Image Section */}
+                  <div className="relative h-[300px] overflow-hidden rounded-t-[15rem]">
                     <img
-                      src={
-                        (dest.image && dest.image[0]) ||
-                        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop"
-                      }
+                      src={dest.image?.[0] || "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800"}
                       alt={dest.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Quick Action Buttons */}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                      <button className="p-2 bg-white/90 backdrop-blur rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-colors">
-                        <Heart size={18} />
-                      </button>
-                      <button className="p-2 bg-white/90 backdrop-blur rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-colors">
-                        <Share2 size={18} />
-                      </button>
-                    </div>
                   </div>
 
-                  {/* Card Content */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin size={16} className="text-blue-500" />
-                      <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">
-                        {dest.city || dest.province || "Explore"}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  {/* Content Section */}
+                  <div className="p-10 flex flex-col items-center text-center">
+                    <h3
+                      className="text-2xl font-medium text-gray-800 mb-4 tracking-tight"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
                       {dest.name}
                     </h3>
-                    <p className="text-gray-500 text-sm mb-4 line-clamp-2">
-                      {dest.description || "Discover this amazing destination with breathtaking views and unforgettable experiences."}
+
+                    <p className="text-gray-500 text-sm leading-relaxed mb-8 line-clamp-3 font-light italic">
+                      {dest.description || "Experience the breathtaking views and unique culture of this legendary Sri Lankan destination."}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <Star size={16} className="text-yellow-400 fill-yellow-400" />
-                        <span className="text-sm font-semibold text-gray-700">4.8</span>
-                        <span className="text-xs text-gray-400">(120 reviews)</span>
-                      </div>
-                      <button className="text-blue-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-                        View Details
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </div>
+
+                    <button
+                      onClick={() => navigate(`/destination/${dest._id}`)}
+                      className="bg-[#00AEEF] text-white px-10 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-[#0096CE] transition-all duration-500 hover:scale-105 flex items-center gap-2 shadow-lg shadow-[#00AEEF]/20"
+                    >
+                      Read More <ArrowRight size={14} strokeWidth={3} />
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           )}
+
+          {!loading && filteredDestinations.length === 0 && (
+            <div className="text-center py-20 italic text-gray-400" style={{ fontFamily: "'Playfair Display', serif" }}>
+              No destinations matching your search were found.
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
-
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes fade-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-up {
-          animation: fade-up 0.8s ease-out forwards;
-        }
-        @keyframes scroll {
-          0% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 0; transform: translateY(10px); }
-        }
-        .animate-scroll {
-          animation: scroll 1.5s infinite;
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
     </div>
   );
 };

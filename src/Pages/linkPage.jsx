@@ -16,9 +16,13 @@ import PaymentMainPage from "./paymentPage";
 import MyBookings from "../components/MyBokkings";
 import BankTransferPage from "../components/BankTranferPage";
 import MyPayments from "../components/MypayemntPage";
-import CustomerPackage from "./CustomerPackage";
 import CryptoPayment from "../components/cryptoPayment";
 import DestinationPage from "./destinationpage";
+import DestinationOverview from "../components/destinationOverview";
+import Vehicles from "./vehiclePage";
+import VehicleOverview from "../components/vehicleOverview";
+import PackageOverviewPage from "../components/packageOverview";
+import PackagePage from "./packagePage";
 
 export default function LinkPage() {
     return (
@@ -41,12 +45,14 @@ export default function LinkPage() {
                     <Route path="/payment/bank-transfer" element={<BankTransferPage />} />
                     <Route path="/payment/crypto" element={<CryptoPayment />} />
                     <Route path="/my-payments" element={<MyPayments />} />
-                    <Route path="/packages" element={<CustomerPackage />} />
+                    <Route path="/packages" element={<PackagePage />} />
                     <Route path="/destinations" element={<DestinationPage />} />
-
-
-
-<Route path="/my-bookings/:userId" element={<MyBookings />} />                </Routes>
+                    <Route path="/destination/:id" element={<DestinationOverview />} />
+                    <Route path="/my-bookings/:userId" element={<MyBookings />} />
+                    <Route path="/vehicles" element={<Vehicles />} />
+                    <Route path="/vehicle/:id" element={<VehicleOverview />} />
+                    <Route path="/package-details/:id" element={<PackageOverviewPage />} />
+                </Routes>
             </main>
         </div>
     );

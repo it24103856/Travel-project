@@ -32,32 +32,33 @@ export default function ContactForm() {
     <div className="fixed bottom-8 right-8 z-[999]">
       <button
         onClick={() => setIsFormOpen(!isFormOpen)}
-        className="w-16 h-16 bg-orange-600 text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white"
+        className="w-16 h-16 bg-[#00AEEF] hover:bg-[#0096CE] text-white rounded-full flex items-center justify-center shadow-xl shadow-[#00AEEF]/30 border-4 border-white transition-all duration-500 hover:scale-110"
       >
-        {isFormOpen ? <X size={30} /> : <MessageCircle size={30} />}
+        {isFormOpen ? <X size={28} /> : <MessageCircle size={28} />}
       </button>
 
       <AnimatePresence>
         {isFormOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="absolute bottom-20 right-0 w-[320px] md:w-[380px] bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden"
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            className="absolute bottom-20 right-0 w-[320px] md:w-[380px] bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-100 overflow-hidden"
           >
             <div className="bg-gray-900 p-5 text-white">
-              <h3 className="font-bold">Send a Message</h3>
+              <h3 className="font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Send a Message</h3>
+              <p className="text-white/50 text-xs mt-1">We typically respond within 24 hours.</p>
             </div>
             <form onSubmit={handleSend} className="p-5 space-y-3">
-              <input 
-                className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500"
+              <input
+                className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00AEEF]/50 focus:border-[#00AEEF] transition-all duration-500 text-sm bg-white/70 placeholder:text-gray-400"
                 placeholder="Name"
                 value={formData.customerName}
                 onChange={(e) => setFormData({...formData, customerName: e.target.value})}
                 required
               />
-              <input 
-                className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500"
+              <input
+                className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00AEEF]/50 focus:border-[#00AEEF] transition-all duration-500 text-sm bg-white/70 placeholder:text-gray-400"
                 placeholder="Email"
                 type="email"
                 value={formData.customerEmail}
@@ -65,22 +66,22 @@ export default function ContactForm() {
                 required
               />
               <input
-                className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00AEEF]/50 focus:border-[#00AEEF] transition-all duration-500 text-sm bg-white/70 placeholder:text-gray-400"
                 placeholder="Subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 required
               />
-              <textarea 
-                className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-orange-500"
+              <textarea
+                className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00AEEF]/50 focus:border-[#00AEEF] transition-all duration-500 text-sm bg-white/70 placeholder:text-gray-400"
                 placeholder="Message"
                 rows="3"
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 required
               ></textarea>
-              <button type="submit" className="w-full bg-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2">
-                <Send size={18} /> Send
+              <button type="submit" className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white py-3 rounded-full font-bold flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest transition-all duration-500 shadow-lg shadow-[#00AEEF]/20">
+                <Send size={16} /> Send Message
               </button>
             </form>
           </motion.div>

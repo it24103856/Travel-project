@@ -1,15 +1,12 @@
 import { Routes, Route, useNavigate, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-// All required Icons are properly imported
 import { 
-  FaThLarge, FaEnvelope, FaPhoneAlt, FaComments, FaUsers, FaTachometerAlt, 
-  FaTruck, FaHotel, FaGlobe, FaSignOutAlt, FaUserCog, FaLeaf,
-  FaTag, FaPlusCircle, FaInfoCircle, FaClock, FaImage, 
-  FaBed, FaBus, FaMapMarkedAlt, FaFlag, FaSave, FaTimes, FaUserShield, FaCar,
-  FaIdCard, FaCalendarCheck, FaSyncAlt, FaHome
-} from "react-icons/fa";
-// Pages
+  LayoutDashboard, Mail, Phone, ShieldCheck, Car, Hotel, 
+    IdCard, CalendarCheck, RefreshCw, Tag, Info, Home, LogOut , Truck
+} from "lucide-react";
+
+// Pages (ඔබේ පැරණි Imports එලෙසම තබා ගන්න)
 import AdminContactPage from "./Admin/adminContactPage";
 import AdminMessages from "./Admin/AdminMessages";
 import AdminUserPage from "./Admin/adminUserPage";
@@ -22,11 +19,17 @@ import EditHotelPage from "./Admin/editHotelPage";
 import AdminFeedback from "./Admin/AdminFeedbackPage";
 import AdminBookingPage from "./Admin/AdminBookingPage";
 import AdminPaymentPage from "./Admin/adminPaymentpage";
-import CreatePackage from "./Admin/adminCreatePackage";
+import AdminPackagePage from "./Admin/AdminPackagePage";
+import AddPackagePage from "./Admin/addPackagePage";
+import EditPackagePage from "./Admin/editPackagePage";
 import PaymentReportpage from "../components/PaymentReportpage";
 import AdminCreateDestination from "./Admin/adminCreateDestination";
 import AdminDestinationPage from "./Admin/adminDestination";
 import UpdateDestination from "./Admin/updateDestination";
+import AdminVehicleCreatePage from "./Admin/adminVehicleCreatePage";
+import AdminVehiclePage from "./Admin/AdminVehiclePage";
+import AdminVehicleUpdatePage from "./Admin/AdminVehicleUpdatePage";
+
 
 
 export default function AdminPage() {
@@ -60,91 +63,78 @@ export default function AdminPage() {
     };
 
     if (isLoading) return (
-        <div className="h-screen flex flex-col items-center justify-center bg-gray-50">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
-            <p className="mt-4 text-gray-600 font-medium">Authenticating Admin...</p>
+        <div className="h-screen flex flex-col items-center justify-center bg-[#FDFDFD]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00AEEF]"></div>
+            <p className="mt-4 text-gray-600 font-medium font-[Inter]">Authenticating Admin...</p>
         </div>
     );
-
-    // Sidebar Link Component
-    const SidebarLink = ({ to, icon, label }) => {
-        const isActive = location.pathname === to;
-        return (
-            <Link to={to} className={`flex items-center gap-4 px-6 py-4 transition-all ${
-                isActive ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:bg-gray-800 hover:text-white"
-            }`}>
-                <span className="text-lg">{icon}</span>
-                <span className="font-medium">{label}</span>
-            </Link>
-        );
-    };
 
     const TopNavLink = ({ to, icon, label }) => {
         const isActive = location.pathname === to;
         return (
-            <Link to={to} className={`flex items-center gap-1 px-3 py-3 rounded-lg transition-all whitespace-nowrap text-xs font-medium ${
-                isActive ? "bg-blue-800 text-white shadow-lg" : "text-blue-900 hover:bg-blue-200 hover:text-blue-900"
+            <Link to={to} className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider ${
+                isActive ? "bg-[#00AEEF] text-white shadow-lg shadow-blue-100" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
             }`}>
-                <span className="text-base">{icon}</span>
-                <span className="hidden md:inline">{label}</span>
+                <span className={isActive ? "text-white" : "text-gray-400 group-hover:text-gray-900"}>{icon}</span>
+                <span>{label}</span>
             </Link>
         );
     };
 
     return (
-        <div className="w-full h-screen flex flex-col overflow-hidden bg-gray-50 font-poppins">
-            {/* Fixed Top Navbar */}
-            <nav className="fixed top-0 left-0 right-0 h-16 background-color: transparent; backdrop-blur-md shadow-lg z-50 border-b border-blue-400/30">
-                <div className="h-full px-6 flex items-center justify-between gap-4">
-                    {/* Logo and Brand */}
-                    <div className="flex items-center gap-4 shrink-0">
-                        <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
-                        <span className="text-blue-900 font-bold text-sm hidden sm:inline">Admin Panel</span>
-                    </div>
-
-                    {/* Navigation Items */}
-                    <div className="flex-1 overflow-hidden">
-                        <div className="flex items-center gap-1 px-4 flex-nowrap">
-                            <TopNavLink to="/" icon={<FaThLarge />} label="Dashboard" />
-                            <TopNavLink to="/admin/contact" icon={<FaPhoneAlt />} label="Contact" />
-                            <TopNavLink to="/admin/messages" icon={<FaEnvelope />} label="Messages" />
-                            <TopNavLink to="/admin/users" icon={<FaUserShield />} label="Users" />
-                            <TopNavLink to="/admin/drivers" icon={<FaCar />} label="Drivers" />
-                            <TopNavLink to="/admin/hotels" icon={<FaHotel />} label="Hotels" />
-                            <TopNavLink to="/admin/feedback" icon={<FaIdCard />} label="Feedback" />
-                            <TopNavLink to="/admin/bookings" icon={<FaCalendarCheck />} label="Bookings" />
-                            <TopNavLink to="/admin/payments" icon={<FaSyncAlt />} label="Payments" />
-                            <TopNavLink to="/admin/add-package" icon={<FaTag />} label="Package" />
-                            <TopNavLink to="/admin/destinations" icon={<FaInfoCircle />} label="Destinations" />
-                            <Link to="/" className="flex items-center gap-1 px-3 py-3 rounded-lg text-blue-900 hover:bg-blue-200 transition-all whitespace-nowrap text-xs font-medium">
-                                <FaHome /> <span className="hidden md:inline">Website</span>
-                            </Link>
+        <div className="w-full h-screen flex flex-col overflow-hidden bg-[#FDFDFD] font-[Inter]">
+            
+            {/* --- Updated Fixed Top Navbar --- */}
+            <nav className="fixed top-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-gray-100 px-6 flex items-center">
+                <div className="w-full flex items-center justify-between gap-8">
+                    
+                    {/* 1. Logo Section */}
+                    <div className="flex items-center gap-3 shrink-0">
+                        <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white">
+                            <ShieldCheck size={22} />
+                        </div>
+                        <div className="hidden lg:block">
+                            <h2 className="font-[Playfair_Display] text-gray-900 font-black text-sm uppercase tracking-tighter">Admin Panel</h2>
+                            <p className="text-[9px] text-[#00AEEF] font-bold tracking-[0.2em] uppercase">TravelMate</p>
                         </div>
                     </div>
 
-                    {/* User Info and Logout */}
-                    <div className="flex items-center gap-4 shrink-0">
-                        <div className="text-right hidden md:block">
-                            <p className="text-sm font-bold text-blue-900">{user?.firstName} {user?.lastName}</p>
-                            <p className="text-[10px] text-blue-800 font-bold uppercase tracking-tighter">Admin</p>
+                    {/* 2. Scrollable Navigation (The Fix) */}
+                    <div className="flex-1 overflow-x-auto no-scrollbar py-2">
+                        <div className="flex items-center gap-1 min-w-max px-2">
+                            <TopNavLink to="/admin" icon={<LayoutDashboard size={14} />} label="Dashboard" />
+                            <TopNavLink to="/admin/contact" icon={<Phone size={14} />} label="Contact" />
+                            <TopNavLink to="/admin/messages" icon={<Mail size={14} />} label="Messages" />
+                            <TopNavLink to="/admin/users" icon={<ShieldCheck size={14} />} label="Users" />
+                            <TopNavLink to="/admin/drivers" icon={<Car size={14} />} label="Drivers" />
+                            <TopNavLink to="/admin/hotels" icon={<Hotel size={14} />} label="Hotels" />
+                            <TopNavLink to="/admin/feedback" icon={<IdCard size={14} />} label="Feedback" />
+                            <TopNavLink to="/admin/bookings" icon={<CalendarCheck size={14} />} label="Bookings" />
+                            <TopNavLink to="/admin/payments" icon={<RefreshCw size={14} />} label="Payments" />
+                            <TopNavLink to="/admin/packages" icon={<Tag size={14} />} label="Packages" />                             <TopNavLink to="/admin/destinations" icon={<Info size={14} />} label="Destinations" />
+                            <TopNavLink to="/admin/vehicles" icon={<Truck size={14} />} label="Vehicles" />
                         </div>
-                        <div className="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center text-white shadow-md">
-                            <FaUserShield size={20} />
-                        </div>
+                    </div>
+
+                    {/* 3. Right Side Actions */}
+                    <div className="flex items-center gap-4 shrink-0 pl-4 border-l border-gray-100">
+                        <Link to="/" className="p-2.5 text-gray-400 hover:text-gray-900 transition-colors">
+                            <Home size={18} />
+                        </Link>
                         <button 
                             onClick={handleLogout}
-                            className="flex items-center gap-2 px-3 py-2 bg-red-700 hover:bg-blue-950 text-white rounded-lg transition-all font-bold text-sm">
-                            <FaSignOutAlt size={16} />
-                            <span className="hidden sm:inline">Logout</span>
+                            className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300"
+                            title="Logout"
+                        >
+                            <LogOut size={18} />
                         </button>
                     </div>
                 </div>
             </nav>
 
-            {/* Main Content Area with top margin for fixed navbar */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden pt-16">
-                {/* Content Container */}
-                <main className="flex-1 overflow-y-auto p-10 bg-[#F8F9FA]">
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col h-full overflow-hidden pt-20">
+                <main className="flex-1 overflow-y-auto p-8 lg:p-12">
                     <Routes>
                         <Route path="/contact" element={<AdminContactPage />} />
                         <Route path="/messages" element={<AdminMessages />} />
@@ -160,28 +150,46 @@ export default function AdminPage() {
                         <Route path="/feedback" element={<AdminFeedback />} />
                         <Route path="/bookings" element={<AdminBookingPage />} />
                         <Route path="/payments" element={<AdminPaymentPage />} />
-                        <Route path="/add-package" element={<CreatePackage />} />
-                        <Route path="/payment-report" element={<PaymentReportpage />} />
+                        <Route path="/packages" element={<AdminPackagePage />} />
+                        <Route path="/add-package" element={<AddPackagePage />} />
+                        <Route path="/packages/edit/:id" element={<EditPackagePage />} />                        <Route path="/payment-report" element={<PaymentReportpage />} />
                         <Route path="/destinations/edit/:id" element={<UpdateDestination />} />
-                        
-                        
-                        
+                        <Route path="/vehicles" element={<AdminVehiclePage />} />
+                        <Route path="/vehicles/create" element={<AdminVehicleCreatePage />} />
+                        <Route path="/vehicles/update/:id" element={<AdminVehicleUpdatePage />} />
                         
                         <Route path="/" element={
-                            <div className="bg-white p-10 rounded-4xl shadow-sm border border-gray-100">
-                                <h1 className="text-3xl font-black text-gray-800">Welcome, {user?.firstName}! 👋</h1>
-                                <p className="text-gray-500 mt-2">Manage your travels, messages and contact details from here.</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-                                    <div className="p-6 bg-orange-50 rounded-3xl border border-orange-100">
-                                        <p className="text-orange-600 font-bold">System Status</p>
-                                        <p className="text-sm text-gray-600 mt-1">All systems are running smoothly.</p>
+                            <div className="animate-fade-in">
+                                <span className="text-[10px] font-bold text-[#00AEEF] uppercase tracking-[0.3em]">Management Console</span>
+                                <h1 className="text-4xl md:text-5xl font-[Playfair_Display] font-black text-gray-900 mt-2 italic">
+                                    Welcome, {user?.firstName}
+                                </h1>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                                    <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] group hover:border-[#00AEEF] transition-all duration-500">
+                                        <div className="w-12 h-12 bg-[#00AEEF]/10 rounded-2xl flex items-center justify-center text-[#00AEEF] mb-6">
+                                            <LayoutDashboard size={20} />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-2">System Status</h3>
+                                        <p className="text-sm text-gray-500 leading-relaxed font-medium">All TravelMate systems are currently operational and synchronized.</p>
                                     </div>
+                                    {/* මෙතැනට තවත් Stats cards එක් කළ හැක */}
                                 </div>
                             </div>
                         } />
                     </Routes>
                 </main>
             </div>
+
+            {/* Custom Styles for hidden scrollbar and animation */}
+            <style>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                @keyframes fade-in {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+            `}</style>
         </div>
     );
 }

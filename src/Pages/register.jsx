@@ -18,7 +18,7 @@ export default function RegisterPage() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    // New state for  image file
+    // New state for image file
     const[imageFile, setImageFile] = useState(null);
     const[preview,setPreview] = useState(null);
 
@@ -30,6 +30,7 @@ export default function RegisterPage() {
             setPreview(URL.createObjectURL(file));
         }
     }
+
     async function HandleRegister(e) {
         if (e) e.preventDefault();
 
@@ -48,73 +49,69 @@ export default function RegisterPage() {
 
         setIsLoading(true);
         try {
-    let imageUrl = "/default-profile.png"; 
+            let imageUrl = "/default-profile.png";
 
-    if (imageFile) {
-        // Upload the image and get the URL
-        const uploadToast = toast.loading("Uploading image...");
-        try {
-            const uploadedUrl = await uploadFile(imageFile);
-            if (uploadedUrl) {
-                imageUrl = uploadedUrl;
-                toast.success("Image uploaded!", { id: uploadToast });
+            if (imageFile) {
+                const uploadToast = toast.loading("Uploading image...");
+                try {
+                    const uploadedUrl = await uploadFile(imageFile);
+                    if (uploadedUrl) {
+                        imageUrl = uploadedUrl;
+                        toast.success("Image uploaded!", { id: uploadToast });
+                    }
+                } catch (uploadErr) {
+                    toast.error("Image upload failed!", { id: uploadToast });
+                    console.error(uploadErr);
+                }
             }
-        } catch (uploadErr) {
-            toast.error("Image upload failed!", { id: uploadToast });
-            console.error(uploadErr);
+
+            const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/create", {
+                firstName,
+                lastName,
+                email,
+                password,
+                image: imageUrl,
+                address,
+                phone
+            });
+
+            toast.success("Registration successful!");
+            navigate("/login");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Registration failed");
+        } finally {
+            setIsLoading(false);
         }
     }
 
-    const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/create", {
-        firstName,
-        lastName,
-        email,
-        password,
-        image: imageUrl,
-        address,
-        phone
-
-    });
-    
-    toast.success("Registration successful!");
-    navigate("/login");
-} catch (error) {
-    toast.error(error.response?.data?.message || "Registration failed");
-} finally {
-    setIsLoading(false);
-}
-
-    }
-
     return (
-        
         <div className="w-full min-h-screen bg-[url('/travel-bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative px-6 py-10">
-            
-            {/* Dark Overlay for better readability */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full max-w-6xl gap-12">
-                
+
                 {/* Left Side: Brand Identity */}
                 <div className="text-center md:text-left max-w-[550px]">
                     <img src="/logo.png" alt="Travel Logo" className="w-40 mb-8 mx-auto md:mx-0 drop-shadow-2xl" />
-                    <h1 className="text-white font-extrabold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl">
+                    <h1 className="text-white font-bold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
                         Start Your <br />
-                        <span className="text-cyan-400">Adventure</span> Today.
+                        <span className="italic text-[#00AEEF]">Adventure</span> Today.
                     </h1>
-                    <p className="mt-6 text-gray-100 text-xl font-light tracking-wide italic drop-shadow-md">
+                    <p className="mt-6 text-gray-200 text-xl font-light tracking-wide italic drop-shadow-md">
                         "Join our community of world travelers and discover hidden gems."
                     </p>
                 </div>
 
                 {/* Right Side: Glassmorphism Register Form */}
                 <form onSubmit={HandleRegister} className="w-full max-w-[480px] bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-10 flex flex-col items-center">
-                    <h2 className="text-3xl font-bold text-white mb-2 self-start">Create Account</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2 self-start" style={{ fontFamily: "'Playfair Display', serif" }}>Create Account</h2>
                     <p className="text-white/60 text-sm mb-8 self-start">Sign up to get started on your journey.</p>
 
-                    {/* --- Profile Image Picker --- */}
+                    {/* Profile Image Picker */}
                     <div className="relative mb-8 group">
-                        <div className="w-24 h-24 rounded-full border-4 border-cyan-400 overflow-hidden bg-white/20 shadow-xl">
+                        <div className="w-24 h-24 rounded-full border-4 border-[#00AEEF] overflow-hidden bg-white/20 shadow-xl">
                             {preview ? (
                                 <img src={preview} alt="preview" className="w-full h-full object-cover" />
                             ) : (
@@ -123,12 +120,11 @@ export default function RegisterPage() {
                                 </div>
                             )}
                         </div>
-                        <label className="absolute bottom-0 right-0 bg-cyan-500 p-2 rounded-full cursor-pointer hover:bg-cyan-400 transition-all shadow-lg border-2 border-white/50">
+                        <label className="absolute bottom-0 right-0 bg-[#00AEEF] p-2 rounded-full cursor-pointer hover:bg-[#0096CE] transition-all duration-500 shadow-lg border-2 border-white/50">
                             <BiCamera size={20} className="text-white" />
                             <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                         </label>
                     </div>
-
 
                     <div className="w-full space-y-4">
                         <div className="flex gap-4">
@@ -138,7 +134,7 @@ export default function RegisterPage() {
                                 onChange={(e) => setFirstName(e.target.value)}
                                 type="text"
                                 placeholder="First Name"
-                                className="w-1/2 p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                                className="w-1/2 p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                             />
                             <input
                                 required
@@ -146,7 +142,7 @@ export default function RegisterPage() {
                                 onChange={(e) => setLastName(e.target.value)}
                                 type="text"
                                 placeholder="Last Name"
-                                className="w-1/2 p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                                className="w-1/2 p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                             />
                         </div>
                         <input
@@ -155,56 +151,53 @@ export default function RegisterPage() {
                             onChange={(e) => setPhone(e.target.value)}
                             type="number"
                             placeholder="Phone Number"
-                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                         />
-                            <input
+                        <input
                             required
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                             type="text"
                             placeholder="Address"
-                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                         />
-
                         <input
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             type="email"
                             placeholder="Email Address"
-                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                         />
-
                         <input
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             type="password"
                             placeholder="Password"
-                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                         />
-
                         <input
                             required
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             type="password"
                             placeholder="Confirm Password"
-                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-cyan-400/50 transition-all outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
+                            className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner placeholder:text-gray-400"
                         />
                     </div>
 
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/40 active:scale-[0.98] transition-all duration-300 mt-8"
+                        className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 mt-8 uppercase text-[11px] tracking-widest"
                     >
                         {isLoading ? "Creating Account..." : "Join Now"}
                     </button>
 
                     <p className="text-white/70 mt-8 text-sm">
-                        Already have an account? {" "}
-                        <Link to="/login" className="text-cyan-400 font-bold hover:underline">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-[#00AEEF] font-bold hover:underline">
                             Login
                         </Link>
                     </p>

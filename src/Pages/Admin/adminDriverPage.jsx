@@ -1,5 +1,5 @@
-import { BiTrash, BiEditAlt } from "react-icons/bi";
-import { FaPlus, FaCar, FaIdCard, FaUser, FaPhone, FaMapMarkerAlt ,FaEnvelope} from "react-icons/fa";
+import { Trash2, Pencil } from "lucide-react";
+import { Plus, Car, IdCard, User, Phone, MapPin, Mail } from "lucide-react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState, Fragment } from "react";
@@ -20,7 +20,6 @@ export default function AdminDriverPage() {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/driver/get-all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // Backend එකෙන් එන්නේ data: [] ආකාරයට නම් response.data.data ලෙස වෙනස් කරන්න
       setDrivers(response.data.data || response.data);
     } catch (error) {
       toast.error("Failed to fetch drivers");
@@ -33,7 +32,6 @@ export default function AdminDriverPage() {
     fetchDrivers();
   }, []);
 
-  // Delete බටන් එක එබූ විට Confirmation Box එක පෙන්වීම
   const handleDeleteClick = (driver) => {
     setSelectedDriver(driver);
     setIsConfirmOpen(true);
@@ -57,23 +55,23 @@ export default function AdminDriverPage() {
     }
   };
 
-  if (loading) return <div className="text-center mt-20 text-gray-500 animate-pulse">Loading drivers...</div>;
+  if (loading) return <div className="text-center mt-20 text-gray-500 animate-pulse font-[Inter]">Loading drivers...</div>;
 
   return (
-    <div className="relative min-h-screen p-6 bg-gray-50">
+    <div className="relative min-h-screen p-6 bg-[#FDFDFD]">
       <Toaster />
       
-      {/* Header Section */}
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Driver Management</h1>
-        <p className="text-gray-500">Manage your official transport staff and their vehicle details</p>
+        <h1 className="text-3xl font-[Playfair_Display] font-bold text-gray-900">Driver Management</h1>
+        <p className="text-gray-500 font-[Inter]">Manage your official transport staff and their vehicle details</p>
       </div>
 
-      {/* Table Container - Image  */}
-      <div className="bg-white rounded-[1.5rem] shadow-xl shadow-gray-200/50 overflow-hidden border border-gray-100">
+      {/* Table */}
+      <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100 transition-all duration-500">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-[#2D3748] text-white">
+            <tr className="bg-gradient-to-r from-[#00AEEF] to-[#0095cc] text-white">
               <th className="p-4 text-xs font-black uppercase tracking-widest">Driver</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">Contact</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">License</th>
@@ -84,35 +82,31 @@ export default function AdminDriverPage() {
           <tbody>
             {drivers.length > 0 ? (
               drivers.map((driver) => (
-                <tr key={driver._id} className="border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
+                <tr key={driver._id} className="border-b border-gray-50 hover:bg-[#00AEEF]/5 transition-all duration-500">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-100 bg-orange-50 flex items-center justify-center text-orange-600 shadow-sm">
+                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#00AEEF]/10 bg-[#00AEEF]/5 flex items-center justify-center text-[#00AEEF] shadow-sm">
                        {driver.profileImage ? (
-        <img 
-          src={driver.profileImage} 
-          alt={driver.name} 
-          className="w-full h-full object-cover" 
-        />
-      ) : (
-        <FaUser size={20} />
-      )}
-    </div>
-    <div className="flex flex-col">
-       <span className="font-bold text-gray-700 leading-tight">{driver.name}</span>
-       <span className="text-[10px] text-gray-400 uppercase tracking-tighter">ID: {driver._id.slice(-6)}</span>
-    </div>
-  </div>
+                        <img src={driver.profileImage} alt={driver.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <User size={20} />
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                       <span className="font-bold text-gray-700 leading-tight font-[Inter]">{driver.name}</span>
+                       <span className="text-[10px] text-gray-400 uppercase tracking-tighter">ID: {driver._id.slice(-6)}</span>
+                    </div>
+                  </div>
                   </td>
                   <td className="p-4">
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <div className="flex items-center gap-2"><FaEnvelope className="text-[10px]" /> {driver.email}</div>
-                      <div className="flex items-center gap-2"><FaPhone className="text-[10px]" /> {driver.phone}</div>
+                    <div className="text-sm text-gray-600 space-y-1 font-[Inter]">
+                      <div className="flex items-center gap-2"><Mail size={10} /> {driver.email}</div>
+                      <div className="flex items-center gap-2"><Phone size={10} /> {driver.phone}</div>
                     </div>
                   </td>
-                  <td className="p-4 text-sm font-medium text-gray-600">{driver.licenseNumber}</td>
+                  <td className="p-4 text-sm font-medium text-gray-600 font-[Inter]">{driver.licenseNumber}</td>
                   <td className="p-4">
-                    <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold uppercase">
+                    <span className="px-3 py-1 bg-[#00AEEF]/10 text-[#00AEEF] rounded-full text-xs font-bold uppercase">
                       {driver.vehicleType}
                     </span>
                   </td>
@@ -120,15 +114,15 @@ export default function AdminDriverPage() {
                     <div className="flex justify-center gap-2">
                       <button 
                         onClick={() => navigate(`/admin/drivers/edit/${driver.email}`)}
-                        className="p-2 bg-blue-50 text-blue-500 rounded-xl hover:bg-blue-500 hover:text-white transition-all"
+                        className="p-2 bg-[#00AEEF]/10 text-[#00AEEF] rounded-xl hover:bg-[#00AEEF] hover:text-white transition-all duration-500"
                       >
-                        <BiEditAlt size={20} />
+                        <Pencil size={20} />
                       </button>
                       <button 
                         onClick={() => handleDeleteClick(driver)}
-                        className="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"
+                        className="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-500"
                       >
-                        <BiTrash size={20} />
+                        <Trash2 size={20} />
                       </button>
                     </div>
                   </td>
@@ -136,7 +130,7 @@ export default function AdminDriverPage() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="p-20 text-center text-gray-400 font-medium">
+                <td colSpan="5" className="p-20 text-center text-gray-400 font-medium font-[Inter]">
                    No Drivers found. Click the + button to add.
                 </td>
               </tr>
@@ -145,68 +139,43 @@ export default function AdminDriverPage() {
         </table>
       </div>
 
-      {/* Floating Add Button -  */}
+      {/* Floating Add Button */}
       <Link 
         to="/admin/add-drivers" 
-        className="fixed bottom-10 right-10 w-16 h-16 bg-[#2D3748] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-black hover:scale-110 transition-all z-50 group"
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#00AEEF] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#0095cc] hover:scale-110 transition-all duration-500 z-50 group"
       >
-        <FaPlus size={24} />
-        <span className="absolute right-20 bg-gray-800 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        <Plus size={24} />
+        <span className="absolute right-20 bg-gray-800 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-[Inter]">
           Add New Driver
         </span>
       </Link>
 
-      {/* DELETE CONFIRMATION MODAL */}
+      {/* Delete Confirmation Modal */}
       <Transition show={isConfirmOpen} as={Fragment}>
         <Dialog as="div" className="relative z-[100]" onClose={() => setIsConfirmOpen(false)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
+          <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-[2rem] bg-white p-8 shadow-2xl transition-all border border-gray-100 text-center">
+              <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all border border-gray-100 text-center">
                   <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <BiTrash size={40} />
+                    <Trash2 size={40} />
                   </div>
-                  <Dialog.Title as="h3" className="text-2xl font-bold text-gray-900 leading-6">
+                  <Dialog.Title as="h3" className="text-2xl font-[Playfair_Display] font-bold text-gray-900 leading-6">
                     Delete Driver?
                   </Dialog.Title>
-                  <p className="mt-4 text-gray-500">
+                  <p className="mt-4 text-gray-500 font-[Inter]">
                     Are you sure you want to delete <span className="font-bold text-gray-800">{selectedDriver?.name}</span>? This action cannot be undone.
                   </p>
 
                   <div className="mt-8 flex gap-4">
-                    <button
-                      type="button"
-                      className="flex-1 px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl font-bold transition-all"
-                      onClick={() => setIsConfirmOpen(false)}
-                    >
+                    <button type="button" className="flex-1 px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full font-bold transition-all duration-500 uppercase tracking-widest text-xs" onClick={() => setIsConfirmOpen(false)}>
                       Cancel
                     </button>
-                    <button
-                      type="button"
-                      disabled={deleting}
-                      className="flex-1 px-6 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-bold shadow-lg shadow-red-100 transition-all disabled:bg-gray-400"
-                      onClick={confirmDelete}
-                    >
+                    <button type="button" disabled={deleting} className="flex-1 px-6 py-4 bg-red-500 hover:bg-red-600 text-white rounded-full font-bold shadow-lg shadow-red-100 transition-all duration-500 disabled:bg-gray-400 uppercase tracking-widest text-xs" onClick={confirmDelete}>
                       {deleting ? "Deleting..." : "Yes, Delete"}
                     </button>
                   </div>
