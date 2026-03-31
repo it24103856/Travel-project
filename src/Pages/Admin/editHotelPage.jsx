@@ -100,8 +100,8 @@ export default function EditHotelPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InputField label="Hotel Name" name="name" value={formData.name} onChange={handleChange} />
               <InputField label="Category" name="category" value={formData.category} onChange={handleChange} />
-              <InputField label="Rating" name="rating" value={formData.rating} onChange={handleChange} type="number" />
-              <InputField label="Phone" name="phone" value={formData.phone} onChange={handleChange} type="tel" />
+              <InputField label="Rating" name="rating" value={formData.rating} onChange={(e) => { const val = e.target.value; if(val === '' || (parseInt(val) >= 0 && parseInt(val) <= 5)) setFormData({...formData, rating: val}); }} type="number" min="0" max="5" />
+              <InputField label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} type="tel" maxLength="10" />
               <InputField label="Email" name="email" value={formData.email} onChange={handleChange} type="email" />
             </div>
             <div className="mt-6">
@@ -145,8 +145,8 @@ export default function EditHotelPage() {
             {formData.roomTypes.map((room, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 relative">
                 <InputField label="Type" value={room.type} onChange={(e) => handleRoomChange(index, "type", e.target.value)} />
-                <InputField label="Original Price" value={room.originalPrice} onChange={(e) => handleRoomChange(index, "originalPrice", e.target.value)} type="number" />
-                <InputField label="Final Price" value={room.finalPrice} onChange={(e) => handleRoomChange(index, "finalPrice", e.target.value)} type="number" />
+                <InputField label="Original Price" value={room.originalPrice} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleRoomChange(index, "originalPrice", val); }} type="number" min="0" />
+                <InputField label="Final Price" value={room.finalPrice} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleRoomChange(index, "finalPrice", val); }} type="number" min="0" />
                 <div className="md:col-span-2 flex gap-4">
                   <div className="flex-1"><label className="block text-sm font-bold text-gray-700 mb-2">Description</label><input value={room.description} onChange={(e) => handleRoomChange(index, "description", e.target.value)} className="w-full px-5 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] outline-none transition-all duration-500" /></div>
                   {formData.roomTypes.length > 1 && <button type="button" onClick={() => removeRoom(index)} className="self-end p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-500"><Trash2 size={18} /></button>}

@@ -182,7 +182,7 @@ export default function TravelBookingUI() {
                 </div>
                 <input name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="Email Address" className="w-full bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
                 <div className="grid grid-cols-2 gap-4">
-                  <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="Telephone No" className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                  <input name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} type="tel" placeholder="Telephone No" maxLength="10" className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
                   <input name="country" value={formData.country} onChange={handleInputChange} type="text" placeholder="Country" className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
                 </div>
               </motion.div>

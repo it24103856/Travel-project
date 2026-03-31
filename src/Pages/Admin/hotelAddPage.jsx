@@ -215,7 +215,7 @@ const AddHotelPage = () => {
               <InputGroup label="Hotel ID" name="hotelID" value={formData.hotelID} onChange={handleChange} />
               <InputGroup label="Hotel Name" name="name" value={formData.name} onChange={handleChange} />
               <InputGroup label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
-              <InputGroup label="Phone" name="phone" value={formData.phone} onChange={handleChange} />
+              <InputGroup label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} type="tel" maxLength="10" />
               <div className="md:col-span-2">
                 <InputGroup label="Amenities" name="amenities" value={formData.amenities} onChange={handleChange} placeholder="Pool, WiFi, Gym (Comma separated)" />
               </div>
@@ -284,9 +284,9 @@ const AddHotelPage = () => {
           </div>
 
           {/* Reusable Input for Rooms - Clear Text */}
-          <RoomInput label="Price (LKR)" type="number" value={room.originalPrice} onChange={(e) => handleRoomChange(index, 'originalPrice', e.target.value)} />
-          <RoomInput label="Max Guests" type="number" value={room.maxGuests} onChange={(e) => handleRoomChange(index, 'maxGuests', e.target.value)} />
-          <RoomInput label="Discount %" type="number" value={room.discountPercentage} onChange={(e) => handleRoomChange(index, 'discountPercentage', e.target.value)} />
+          <RoomInput label="Price (LKR)" type="number" value={room.originalPrice} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleRoomChange(index, 'originalPrice', val); }} min="0" />
+          <RoomInput label="Max Guests" type="number" value={room.maxGuests} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) handleRoomChange(index, 'maxGuests', val); }} min="1" />
+          <RoomInput label="Discount %" type="number" value={room.discountPercentage} onChange={(e) => { const val = e.target.value; if(val === '' || (parseInt(val) >= 0 && parseInt(val) <= 100)) handleRoomChange(index, 'discountPercentage', val); }} min="0" max="100" />
         </div>
 
         {/* Visual Portfolio Section */}

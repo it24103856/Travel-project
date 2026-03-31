@@ -11,7 +11,8 @@ import {
   FaCamera, 
   FaMapMarkerAlt, 
   FaFileAlt 
-} from "react-icons/fa";import { useNavigate } from "react-router-dom"; 
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; 
 import { uploadFile } from "../../utils/meadiaUpload.js";
 
 const AddDriverPage = () => {
@@ -48,6 +49,13 @@ const AddDriverPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Phone number validation logic
+    if (formData.phone.length !== 10) {
+      toast.error("Phone number must be exactly 10 digits!");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -72,7 +80,13 @@ const AddDriverPage = () => {
       }, 1500);
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      // Duplicate Email error handling
+      const errorMessage = error.response?.data?.message || "";
+      if (errorMessage.includes("E11000") || errorMessage.toLowerCase().includes("duplicate")) {
+        toast.error("This email is already registered. Please use another email.");
+      } else {
+        toast.error(errorMessage || "Registration failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -124,7 +138,29 @@ const AddDriverPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputGroup icon={<FaUser />} label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="Ex: Kamal Perera" />
             <InputGroup icon={<FaEnvelope />} label="Email Address" name="email" value={formData.email} onChange={handleChange} placeholder="driver@example.com" type="email" />
-            <InputGroup icon={<FaPhone />} label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} placeholder="+94 7..." type="tel" />
+            
+            {/* Phone Input with validation message */}
+            <div>
+              <InputGroup 
+                icon={<FaPhone />} 
+                label="Phone Number" 
+                name="phone" 
+                value={formData.phone} 
+                onChange={(e) => { 
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 10); 
+                  setFormData({...formData, phone: val}); 
+                }} 
+                placeholder="07xxxxxxxx" 
+                type="tel" 
+                maxLength="10" 
+              />
+              {formData.phone.length > 0 && formData.phone.length < 10 && (
+                <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold italic animate-pulse">
+                  * Enter 10 digits (Current: {formData.phone.length})
+                </p>
+              )}
+            </div>
+
             <InputGroup icon={<FaIdCard />} label="License Number" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} placeholder="B1234567" />
             
             <div className="md:col-span-2">
@@ -146,7 +182,6 @@ const AddDriverPage = () => {
               ></textarea>
             </div>
 
-            {/* --- Description Section (New) --- */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
                 <FaFileAlt className="text-orange-500" size={14} /> Driver Description / Bio
@@ -158,7 +193,7 @@ const AddDriverPage = () => {
                 required
                 rows="4"
                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-50 focus:border-orange-500 focus:bg-white outline-none transition-all"
-                placeholder="Tell something about the driver's experience, languages spoken, or special skills..."
+                placeholder="Tell something about the driver's experience..."
               ></textarea>
               <p className="text-[10px] text-gray-400 mt-2 ml-2 italic">This information will be displayed on the driver's public profile.</p>
             </div>
@@ -188,8 +223,6 @@ const AddDriverPage = () => {
     </div>
   );
 };
-
-// ... InputGroup component remains same ...
 
 function InputGroup({ icon, label, ...props }) {
   return (

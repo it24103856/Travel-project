@@ -96,7 +96,7 @@ const AdminContactPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InputGroup icon={<User size={16} />} label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" />
               <InputGroup icon={<Mail size={16} />} label="Email" name="email" value={formData.email} onChange={handleChange} placeholder="admin@example.com" type="email" />
-              <InputGroup icon={<Phone size={16} />} label="Phone" name="phone" value={formData.phone} onChange={handleChange} placeholder="+94..." type="tel" />
+              <InputGroup icon={<Phone size={16} />} label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} placeholder="+94..." type="tel" maxLength="10" />
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Office Address</label>
                 <textarea name="address" value={formData.address} onChange={handleChange} required rows="3"

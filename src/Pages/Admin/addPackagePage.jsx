@@ -195,8 +195,8 @@ const AddPackagePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="md:col-span-2"><InputGroup label="Package Title" name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Hill Country Escape" /></div>
               <InputGroup label="Location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Ella, Bandarawela" />
-              <InputGroup label="Price (LKR)" name="price" type="number" value={formData.price} onChange={handleChange} placeholder="e.g. 12000" />
-              <InputGroup label="Number of Days" name="no_of_days" type="number" value={formData.no_of_days} onChange={handleChange} placeholder="e.g. 5" />
+              <InputGroup label="Price (LKR)" name="price" type="number" value={formData.price} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleChange({target: {name: 'price', value: val}}); }} placeholder="e.g. 12000" min="0" />
+              <InputGroup label="Number of Days" name="no_of_days" type="number" value={formData.no_of_days} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) handleChange({target: {name: 'no_of_days', value: val}}); }} placeholder="e.g. 5" min="1" />
               <div className="md:col-span-2">
                 <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-2">Description</label>
                 <textarea name="description" value={formData.description} onChange={handleChange} rows={4} placeholder="Describe what makes this package special..."

@@ -144,8 +144,8 @@ const AdminVehicleCreatePage = () => {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Seating Capacity</label>
                 <div className="flex items-center bg-gray-50 border border-gray-200 rounded-2xl px-4">
                   <Users size={18} className="text-gray-400" />
-                  <input required type="number" className="w-full p-4 bg-transparent outline-none" placeholder="No. of seats"
-                    value={formData.seatingCapacity} onChange={(e) => setFormData({...formData, seatingCapacity: e.target.value})} />
+                  <input required type="number" className="w-full p-4 bg-transparent outline-none" placeholder="No. of seats" min="1"
+                    value={formData.seatingCapacity} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) setFormData({...formData, seatingCapacity: val}); }} />
                 </div>
               </div>
 
@@ -154,8 +154,8 @@ const AdminVehicleCreatePage = () => {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Luggage Capacity</label>
                 <div className="flex items-center bg-gray-50 border border-gray-200 rounded-2xl px-4">
                   <Briefcase size={18} className="text-gray-400" />
-                  <input required type="number" className="w-full p-4 bg-transparent outline-none" placeholder="No. of bags"
-                    value={formData.luggageCapacity} onChange={(e) => setFormData({...formData, luggageCapacity: e.target.value})} />
+                  <input required type="number" className="w-full p-4 bg-transparent outline-none" placeholder="No. of bags" min="0"
+                    value={formData.luggageCapacity} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 0) setFormData({...formData, luggageCapacity: val}); }} />
                 </div>
               </div>
               
@@ -175,8 +175,8 @@ const AdminVehicleCreatePage = () => {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Price per KM (LKR)</label>
-                <input required type="number" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none font-bold text-[#00AEEF]"
-                  value={formData.pricePerKm} onChange={(e) => setFormData({...formData, pricePerKm: e.target.value})} />
+                <input required type="number" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none font-bold text-[#00AEEF]" min="0"
+                  value={formData.pricePerKm} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) setFormData({...formData, pricePerKm: val}); }} />
               </div>
 
               {/* AC / NON-AC TOGGLE */}

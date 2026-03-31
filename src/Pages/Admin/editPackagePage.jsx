@@ -196,8 +196,8 @@ const EditPackagePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="md:col-span-2"><InputGroup label="Package Title" name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Hill Country Escape" /></div>
               <InputGroup label="Location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Ella, Bandarawela" />
-              <InputGroup label="Price (LKR)" name="price" type="number" value={formData.price} onChange={handleChange} />
-              <InputGroup label="Number of Days" name="no_of_days" type="number" value={formData.no_of_days} onChange={handleChange} />
+              <InputGroup label="Price (LKR)" name="price" type="number" value={formData.price} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleChange({target: {name: 'price', value: val}}); }} min="0" />
+              <InputGroup label="Number of Days" name="no_of_days" type="number" value={formData.no_of_days} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) handleChange({target: {name: 'no_of_days', value: val}}); }} min="1" />
               <div className="md:col-span-2">
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Description</label>
                 <textarea name="description" value={formData.description} onChange={handleChange} rows={4}

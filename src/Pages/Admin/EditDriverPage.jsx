@@ -144,7 +144,7 @@ const EditDriverPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <InputGroup icon={<User size={16} />} label="Full Name" name="name" value={formData.name} onChange={handleChange} />
             <InputGroup icon={<Mail size={16} />} label="Email Address" name="email" value={formData.email} onChange={handleChange} type="email" disabled />
-            <InputGroup icon={<Phone size={16} />} label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} />
+            <InputGroup icon={<Phone size={16} />} label="Phone Number" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} maxLength="10" type="tel" />
             <InputGroup icon={<IdCard size={16} />} label="License Number" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} />
             
             <div className="md:col-span-2">

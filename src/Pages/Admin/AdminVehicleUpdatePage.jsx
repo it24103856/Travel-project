@@ -181,13 +181,13 @@ export default function AdminVehicleUpdatePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                     <Users size={20} className="text-gray-400" />
-                    <input type="number" placeholder="Seats" className="bg-transparent outline-none w-full"
-                      value={formData.seatingCapacity} onChange={(e) => setFormData({...formData, seatingCapacity: e.target.value})} />
+                    <input type="number" placeholder="Seats" className="bg-transparent outline-none w-full" min="1"
+                      value={formData.seatingCapacity} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) setFormData({...formData, seatingCapacity: val}); }} />
                   </div>
                   <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                     <Briefcase size={20} className="text-gray-400" />
-                    <input type="number" placeholder="Luggage" className="bg-transparent outline-none w-full"
-                      value={formData.luggageCapacity} onChange={(e) => setFormData({...formData, luggageCapacity: e.target.value})} />
+                    <input type="number" placeholder="Luggage" className="bg-transparent outline-none w-full" min="0"
+                      value={formData.luggageCapacity} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 0) setFormData({...formData, luggageCapacity: val}); }} />
                   </div>
                   <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                     <Fuel size={20} className="text-gray-400" />
@@ -199,8 +199,8 @@ export default function AdminVehicleUpdatePage() {
                   </div>
                   <div className="flex items-center gap-3 bg-[#00AEEF]/5 p-4 rounded-2xl border border-[#00AEEF]/10">
                     <DollarSign size={20} className="text-[#00AEEF]" />
-                    <input type="number" placeholder="Price/KM" className="bg-transparent outline-none w-full font-bold text-[#00AEEF]"
-                      value={formData.pricePerKm} onChange={(e) => setFormData({...formData, pricePerKm: e.target.value})} />
+                    <input type="number" placeholder="Price/KM" className="bg-transparent outline-none w-full font-bold text-[#00AEEF]" min="0"
+                      value={formData.pricePerKm} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) setFormData({...formData, pricePerKm: val}); }} />
                   </div>
                 </div>
               </section>
