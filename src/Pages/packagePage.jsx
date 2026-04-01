@@ -90,7 +90,7 @@ const PackagePage = () => {
   }
 
   return (
-    <main className="w-full min-h-screen bg-white pt-10">
+    <main className="w-full min-h-screen bg-white pt-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
 
       {/* ── SECTION 1: HERO ── */}
       <section
@@ -178,7 +178,7 @@ const PackagePage = () => {
         </h2>
 
         {topRated.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
             {topRated.map((pkg) => (
               <PackageCard key={pkg._id} pkg={pkg} />
             ))}
@@ -217,7 +217,7 @@ const PackagePage = () => {
               {remaining.length} more packages available
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
             {remaining.map((pkg) => (
               <PackageCard key={pkg._id} pkg={pkg} />
             ))}
@@ -249,52 +249,40 @@ const PackagePage = () => {
   );
 };
 
-// ─── PACKAGE CARD ────────────────────────────────────────────────
+// ─── PACKAGE CARD (NEW MINIMALIST DESIGN) ────────────────────────
 const PackageCard = ({ pkg }) => (
-  <div className="group relative bg-white rounded-[2rem] shadow-lg shadow-gray-200/60 border border-gray-100 overflow-hidden hover:translate-y-[-6px] transition-all duration-500">
+  <div
+    className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)] hover:scale-[1.03] transition-all duration-500 overflow-hidden"
+    style={{ fontFamily: "'Poppins', sans-serif" }}
+  >
     {/* Image */}
-    <div className="relative h-52 md:h-60 overflow-hidden rounded-[1.5rem] m-3">
+    <div className="relative h-52 overflow-hidden">
       <img
         src={pkg.gallery?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
         alt={pkg.title}
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 rounded-[1.5rem]"
+        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
       />
-      {/* Location badge on image */}
-      <div className="absolute bottom-3 left-3 bg-[#f0dfc0]/90 backdrop-blur-sm text-[#7a4e1e] px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5">
-        <FaLocationDot size={9} /> {pkg.location}
+      {/* Circular Glassmorphism Price Badge */}
+      <div className="absolute top-3.5 right-3.5 w-[4.2rem] h-[4.2rem] rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
+        <span className="text-[8px] text-gray-400 font-medium leading-none">LKR</span>
+        <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">{pkg.price?.toLocaleString()}</span>
       </div>
     </div>
 
-    {/* Info */}
-    <div className="px-5 pb-5 pt-2">
-      <h3 className="text-lg md:text-xl font-black text-slate-900 mb-2 leading-tight">
+    {/* Content */}
+    <div className="bg-white px-5 py-7 text-center">
+      <h3 className="text-[1.05rem] font-bold text-gray-800 mb-1.5 leading-snug">
         {pkg.title}
       </h3>
-
-      {/* Tags: days + categories */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span className="bg-[#f0dfc0] text-[#7a4e1e] px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1.5">
-          <FaClock size={9} /> {pkg.no_of_days} days
-        </span>
-        {pkg.categories?.slice(0, 1).map((cat, i) => (
-          <span key={i} className="bg-[#f0dfc0] text-[#7a4e1e] px-3 py-1 rounded-full text-[10px] font-black">
-            {cat}
-          </span>
-        ))}
-      </div>
-
-      {/* Price + CTA */}
-      <div className="flex items-center justify-between">
-        <p className="text-lg md:text-xl font-black text-slate-900">
-          LKR {pkg.price?.toLocaleString()}
-        </p>
-        <Link
-          to={`/package-details/${pkg._id}`}
-          className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-black text-[11px] uppercase tracking-wide hover:bg-amber-500 hover:text-white transition-all"
-        >
-          View Details
-        </Link>
-      </div>
+      <p className="text-[11px] text-gray-400 mb-4 font-medium">
+        {pkg.location} · {pkg.no_of_days} days
+      </p>
+      <Link
+        to={`/package-details/${pkg._id}`}
+        className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm hover:text-[#A66A28] hover:gap-3 transition-all duration-300"
+      >
+        Add to Cart <span className="text-base">→</span>
+      </Link>
     </div>
   </div>
 );

@@ -44,7 +44,7 @@ const HotelPage = () => {
   }
 
   return (
-    <main className="w-full min-h-screen pt-10 bg-[#FDFDFD]">
+    <main className="w-full min-h-screen pt-10 bg-[#FDFDFD]" style={{ fontFamily: "'Poppins', sans-serif" }}>
 
       {/* SECTION 1: HERO SECTION */}
       <section className="relative h-[50vh] md:h-[55vh] flex items-center justify-center bg-fixed bg-center bg-cover"
@@ -80,7 +80,7 @@ const HotelPage = () => {
         </div>
       </section>
 
-      {/* SECTION 3: HOTEL GRID */}
+      {/* SECTION 3: HOTEL GRID — 4 cols desktop, 2 tablet, 1 mobile */}
       <section className="max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
@@ -94,50 +94,41 @@ const HotelPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
           {filteredHotels.length > 0 ? (
             filteredHotels.map((hotel) => (
               <div
                 key={hotel._id}
-                className="group relative bg-white rounded-[15rem] shadow-sm border border-gray-50 overflow-hidden hover:shadow-2xl hover:translate-y-[-8px] transition-all duration-500"
+                className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)] hover:scale-[1.03] transition-all duration-500 overflow-hidden"
               >
-                {/* Image Section */}
-                <div className="relative h-64 md:h-72 overflow-hidden">
+                {/* Image */}
+                <div className="relative h-52 overflow-hidden">
                   <img
                     src={hotel.images?.[0] || "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg"}
                     alt={hotel.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-
-                  {/* HOVER OVERLAY */}
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-30">
-                    <Link
-                      to={`/hotel-details/${hotel._id}`}
-                      className="bg-white text-gray-900 px-8 py-3 rounded-full font-bold shadow-2xl hover:bg-[#00AEEF] hover:text-white transition-all duration-500 uppercase text-[10px] tracking-widest"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-
-                  {/* Floating Tags */}
-                  <div className="absolute top-5 left-5 bg-[#00AEEF]/90 text-white px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest z-20">
-                    {hotel.category || "Luxury"}
-                  </div>
-                  <div className="absolute top-5 right-5 bg-white/90 backdrop-blur-md px-2 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 shadow-sm z-20">
-                    <Star size={12} className="text-amber-500" fill="currentColor" /> 4.8
+                  {/* Circular Glassmorphism Rating Badge */}
+                  <div className="absolute top-3.5 right-3.5 w-14 h-14 rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
+                    <Star size={14} className="text-amber-500" fill="currentColor" />
+                    <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">4.8</span>
                   </div>
                 </div>
 
-                {/* Info Content */}
-                <div className="p-8 text-center">
-                  <div className="flex items-center justify-center gap-2 text-[#00AEEF] mb-3">
-                    <MapPin size={12} />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{hotel.city}</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 capitalize group-hover:text-[#00AEEF] transition-colors duration-500" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {/* Content */}
+                <div className="bg-white px-5 py-7 text-center">
+                  <h3 className="text-[1.05rem] font-bold text-gray-800 mb-1.5 leading-snug capitalize">
                     {hotel.name}
                   </h3>
-                  <div className="w-10 h-1 bg-gray-100 mx-auto mt-4 rounded-full group-hover:w-20 group-hover:bg-[#00AEEF]/30 transition-all duration-500"></div>
+                  <p className="text-[11px] text-gray-400 mb-4 font-medium flex items-center justify-center gap-1">
+                    <MapPin size={11} /> {hotel.city}
+                  </p>
+                  <Link
+                    to={`/hotel-details/${hotel._id}`}
+                    className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm hover:text-[#A66A28] hover:gap-3 transition-all duration-300"
+                  >
+                    Add to Cart <span className="text-base">→</span>
+                  </Link>
                 </div>
               </div>
             ))

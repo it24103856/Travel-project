@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Footer from "../components/Footer";
-import { Search, ArrowRight } from "lucide-react";
+import { Search } from "lucide-react";
 
 const DestinationPage = () => {
   const [destinations, setDestinations] = useState([]);
@@ -33,7 +33,7 @@ const DestinationPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] flex flex-col">
+    <div className="min-h-screen bg-[#FDFDFD] flex flex-col" style={{ fontFamily: "'Poppins', sans-serif" }}>
 
       {/* 1. Static Header Section */}
       <div className="pt-32 pb-16 px-6 text-center max-w-5xl mx-auto animate-fade-in">
@@ -51,7 +51,7 @@ const DestinationPage = () => {
           showcasing spectacular wildlife and nearly 500,000 acres of lush tea estates.
         </p>
 
-        {/* Search Bar - Minimalist style */}
+        {/* Search Bar */}
         <div className="mt-12 max-w-md mx-auto relative group">
           <input
             type="text"
@@ -64,7 +64,7 @@ const DestinationPage = () => {
         </div>
       </div>
 
-      {/* 2. Destination Grid */}
+      {/* 2. Destination Grid — 4 cols desktop, 2 tablet, 1 mobile */}
       <div className="pb-24 px-6 flex-grow">
         <div className="container mx-auto max-w-7xl">
           {loading ? (
@@ -72,40 +72,36 @@ const DestinationPage = () => {
               <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#00AEEF]"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
               {filteredDestinations.map((dest) => (
                 <div
                   key={dest._id}
-                  className="bg-white rounded-[15rem] shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col group border border-gray-50"
+                  className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)] hover:scale-[1.03] transition-all duration-500 overflow-hidden cursor-pointer"
+                  onClick={() => navigate(`/destination/${dest._id}`)}
                 >
-                  {/* Image Section */}
-                  <div className="relative h-[300px] overflow-hidden rounded-t-[15rem]">
+                  {/* Image */}
+                  <div className="relative h-52 overflow-hidden">
                     <img
                       src={dest.image?.[0] || "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=800"}
                       alt={dest.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
+                    {/* Glassmorphism City Badge */}
+                    {dest.city && (
+                      <div className="absolute top-3.5 right-3.5 w-14 h-14 rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
+                        <span className="text-[10px] font-bold text-gray-700 leading-tight text-center truncate max-w-[2.8rem]">{dest.city}</span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Content Section */}
-                  <div className="p-10 flex flex-col items-center text-center">
-                    <h3
-                      className="text-2xl font-medium text-gray-800 mb-4 tracking-tight"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
+                  {/* Content */}
+                  <div className="bg-white px-5 py-7 text-center">
+                    <h3 className="text-[1.05rem] font-bold text-gray-800 mb-4 leading-snug">
                       {dest.name}
                     </h3>
-
-                    <p className="text-gray-500 text-sm leading-relaxed mb-8 line-clamp-3 font-light italic">
-                      {dest.description || "Experience the breathtaking views and unique culture of this legendary Sri Lankan destination."}
-                    </p>
-
-                    <button
-                      onClick={() => navigate(`/destination/${dest._id}`)}
-                      className="bg-[#00AEEF] text-white px-10 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-[#0096CE] transition-all duration-500 hover:scale-105 flex items-center gap-2 shadow-lg shadow-[#00AEEF]/20"
-                    >
-                      Read More <ArrowRight size={14} strokeWidth={3} />
-                    </button>
+                    <span className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm group-hover:text-[#A66A28] group-hover:gap-3 transition-all duration-300">
+                      Explore <span className="text-base">→</span>
+                    </span>
                   </div>
                 </div>
               ))}
