@@ -11,6 +11,23 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // --- Helper Function to Save User Session ---
+  const saveUserSession = (data) => {
+    // Backend එකෙන් දත්ත ලැබෙන්නේ res.data.user ලෙස හෝ සෘජුවම res.data ලෙස විය හැක.
+    // එය නිවැරදිව හඳුනාගෙන ගබඩා කිරීම මෙහිදී සිදු වේ.
+    const user = data.user || data; 
+    const token = data.token;
+    const role = data.role || user?.role;
+
+    if (user && token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", role);
+      return role;
+    }
+    return null;
+  };
+
   // Google Login Logic
   const GoogleLogin = useGoogleLogin({
     flow: "implicit",
@@ -19,10 +36,14 @@ export default function LoginPage() {
       axios.post(import.meta.env.VITE_BACKEND_URL + "/users/google-login", {
         token: response.access_token,
       }).then((res) => {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        res.data.role === "admin" ? navigate("/admin") : navigate("/");
-        toast.success("Welcome back to your journey!");
+        const role = saveUserSession(res.data);
+        
+        if (role) {
+          toast.success("Welcome back to your journey!");
+          role === "admin" ? navigate("/admin") : navigate("/");
+          // UI එක refresh කිරීමට (Header update වීමට)
+          window.location.reload();
+        }
       }).catch((err) => {
         toast.error("Google Login Failed");
         console.error(err);
@@ -41,20 +62,24 @@ export default function LoginPage() {
         password,
       });
 
-      localStorage.setItem("token", res.data.token);
-      console.log("Logged in user role:", res.data.role);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      localStorage.setItem("role", res.data.role);
-      if (res.data.role === "admin") {
-        navigate("/admin");
+      const role = saveUserSession(res.data);
+
+      if (role) {
+        toast.success("Ready for your next adventure?");
+        if (role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+        // UI එක refresh කිරීමට (Header update වීමට)
+        window.location.reload();
       } else {
-        navigate("/");
+        toast.error("Invalid user data received");
       }
 
-      toast.success("Ready for your next adventure?");
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }

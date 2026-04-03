@@ -1,29 +1,58 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast"; 
-import { Trash2, Mail, Clock, User } from "lucide-react"; 
-import Swal from "sweetalert2"; 
+import toast, { Toaster } from "react-hot-toast";
+import { Trash2, Mail, Clock, User, Eye, X, Send } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMsg, setSelectedMsg] = useState(null); 
+  const [replyText, setReplyText] = useState(""); 
+  const [isSending, setIsSending] = useState(false);
+  
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchMessages = async () => {
     try {
+      const token = localStorage.getItem("token");
       const res = await axios.get(`${backendUrl}/contact/messages`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setMessages(res.data.data);
+      // දත්ත Array එකක් බව තහවුරු කරගන්න
+      setMessages(Array.isArray(res.data.data) ? res.data.data : []);
       setLoading(false);
-    } catch (err) { 
+    } catch (err) {
       console.error("Error fetching messages", err);
-      toast.error("Failed to load messages!"); 
+      toast.error("Failed to load messages!");
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchMessages(); }, [backendUrl]);
+  useEffect(() => {
+    if (backendUrl) fetchMessages();
+  }, [backendUrl]);
+
+  const handleReply = async () => {
+    if (!replyText.trim()) return toast.error("Please enter a reply!");
+    
+    setIsSending(true);
+    try {
+      await axios.put(
+        `${backendUrl}/contact/reply-message/${selectedMsg._id}`,
+        { adminReply: replyText },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
+      toast.success("Reply sent successfully!");
+      setReplyText("");
+      setSelectedMsg(null);
+      fetchMessages(); 
+    } catch (err) {
+      toast.error("Failed to send reply");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const handleDelete = async (id) => {
     Swal.fire({
@@ -33,14 +62,14 @@ export default function AdminMessages() {
       showCancelButton: true,
       confirmButtonColor: "#00AEEF",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const deleteToast = toast.loading("Deleting message...");
         try {
-          const token = localStorage.getItem('token'); 
+          const token = localStorage.getItem("token");
           await axios.delete(`${backendUrl}/contact/delete-message/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           });
           toast.success("Message deleted successfully!", { id: deleteToast });
           setMessages(messages.filter((msg) => msg._id !== id));
@@ -56,8 +85,9 @@ export default function AdminMessages() {
   return (
     <main className="w-full min-h-screen bg-[#FDFDFD]">
       <Toaster position="top-center" reverseOrder={false} />
-      
-      <div className="max-w-[1400px] mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+      <div className="max-w-[1400px] mx-auto py-8 px-4 sm:px-6 lg:px-8 font-[Inter]">
+        {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -69,73 +99,69 @@ export default function AdminMessages() {
                   Customer <span className="text-[#00AEEF]">Inquiries</span>
                 </h1>
               </div>
-              <p className="text-gray-600 ml-16 font-[Inter]">Manage and respond to messages from your visitors</p>
+              <p className="text-gray-600 ml-0 sm:ml-16">Manage and respond to messages from your visitors</p>
             </div>
-            
+
             <div className="flex items-center gap-2 bg-white px-5 py-3 rounded-full shadow-sm border border-gray-100">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-gray-600 font-medium font-[Inter]">Total Messages:</span>
+              <span className="text-gray-600 font-medium">Total Messages:</span>
               <span className="text-2xl font-bold text-[#00AEEF]">{messages.length}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100 transition-all duration-500">
+        {/* Table Section */}
+        <div className="bg-white rounded-3xl shadow-sm hover:shadow-md overflow-hidden border border-gray-100 transition-all duration-500">
           {loading ? (
             <div className="p-20 text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#00AEEF] mb-4"></div>
-              <p className="text-gray-500 font-medium font-[Inter]">Loading messages...</p>
+              <p className="text-gray-500 font-medium">Loading messages...</p>
             </div>
           ) : messages.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gradient-to-r from-[#00AEEF] to-[#0095cc] text-white">
-                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">
-                      <div className="flex items-center gap-2"><Clock size={14} /> Date</div>
-                    </th>
-                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">
-                      <div className="flex items-center gap-2"><User size={14} /> Customer</div>
-                    </th>
+                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Customer</th>
                     <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Subject</th>
-                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Message</th>
+                    <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                     <th className="px-6 py-5 text-center text-xs font-bold uppercase tracking-wider">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {messages.map((msg, index) => (
-                    <tr key={msg._id} className={`transition-all duration-500 hover:bg-[#00AEEF]/5 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-1 h-10 bg-[#00AEEF] rounded-full"></div>
-                          <span className="text-sm font-medium text-gray-600 font-[Inter]">
-                            {new Date(msg.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </span>
-                        </div>
+                    <tr key={msg._id} className={`transition-all duration-300 hover:bg-[#00AEEF]/5 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}>
+                      <td className="px-6 py-5 text-sm text-gray-600">
+                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString() : "N/A"}
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#00AEEF] flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                            {msg.customerName.charAt(0).toUpperCase()}
+                          <div className="w-10 h-10 rounded-full bg-[#00AEEF] flex items-center justify-center text-white font-bold text-sm shadow-md">
+                            {/* charAt Error එක මෙතනින් නිවැරදි කර ඇත */}
+                            {msg?.firstName ? msg.firstName.charAt(0).toUpperCase() : (msg?.customerName ? msg.customerName.charAt(0).toUpperCase() : "C")}
                           </div>
                           <div>
-                            <div className="font-bold text-gray-900 text-sm font-[Inter]">{msg.customerName}</div>
-                            <div className="text-xs text-[#00AEEF] font-medium flex items-center gap-1">
-                              <Mail size={10} /> {msg.customerEmail}
-                            </div>
+                            <div className="font-bold text-gray-900 text-sm">{msg?.firstName || msg?.customerName || "Unknown"}</div>
+                            <div className="text-xs text-[#00AEEF] font-medium">{msg?.customerEmail || "No Email"}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
-                        <span className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs font-bold uppercase border border-gray-200">{msg.subject || "General Inquiry"}</span>
+                      <td className="px-6 py-5 text-sm font-semibold text-gray-700">{msg?.subject || "No Subject"}</td>
+                      <td className="px-6 py-5 text-xs">
+                        {msg.adminReply ? (
+                          <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full font-bold uppercase">Replied</span>
+                        ) : (
+                          <span className="px-3 py-1 bg-amber-100 text-amber-600 rounded-full font-bold uppercase">Pending</span>
+                        )}
                       </td>
-                      <td className="px-6 py-5">
-                        <p className="text-sm text-gray-600 line-clamp-2 max-w-md leading-relaxed font-[Inter]">{msg.message}</p>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex justify-center">
-                          <button onClick={() => handleDelete(msg._id)} className="group p-3 text-red-500 hover:text-white hover:bg-red-500 rounded-xl transition-all duration-500 active:scale-95 shadow-sm hover:shadow-lg border border-red-200 hover:border-red-500" title="Delete Message">
-                            <Trash2 className="group-hover:scale-110 transition-transform" size={16} />
+                      <td className="px-6 py-5 text-center">
+                        <div className="flex justify-center gap-2">
+                          <button onClick={() => setSelectedMsg(msg)} className="p-2 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg border border-blue-100 transition-all">
+                            <Eye size={16} />
+                          </button>
+                          <button onClick={() => handleDelete(msg._id)} className="p-2 text-red-500 hover:bg-red-500 hover:text-white rounded-lg border border-red-100 transition-all">
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
@@ -145,16 +171,70 @@ export default function AdminMessages() {
               </table>
             </div>
           ) : (
-            <div className="p-20 text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                <Mail className="text-gray-400 w-8 h-8" />
-              </div>
-              <p className="text-gray-400 text-lg font-medium font-[Inter]">No messages found</p>
-              <p className="text-gray-400 text-sm mt-1 font-[Inter]">Customer inquiries will appear here</p>
+            <div className="p-20 text-center text-gray-400">
+              <Mail className="w-12 h-12 mx-auto mb-4 opacity-20" />
+              <p className="text-lg font-medium">No messages found in your inbox</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* View & Reply Modal */}
+      {selectedMsg && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100">
+            <div className="bg-[#00AEEF] p-8 text-white flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold font-[Playfair_Display]">Inquiry Details</h2>
+                <p className="text-sm opacity-80 mt-1">From: {selectedMsg?.firstName || selectedMsg?.customerName}</p>
+              </div>
+              <button onClick={() => { setSelectedMsg(null); setReplyText(""); }} className="p-2 hover:bg-white/20 rounded-full transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-8 max-h-[65vh] overflow-y-auto">
+              <div className="mb-6">
+                <label className="text-[10px] uppercase font-bold text-gray-400 tracking-[0.2em]">Subject</label>
+                <p className="text-xl font-bold text-gray-800 mt-1">{selectedMsg?.subject}</p>
+              </div>
+
+              <div className="mb-8 p-6 bg-gray-50 rounded-3xl border border-gray-100 relative">
+                <label className="text-[10px] uppercase font-bold text-[#00AEEF] tracking-[0.2em]">Message Body</label>
+                <p className="text-gray-700 mt-3 leading-relaxed text-lg">{selectedMsg?.message}</p>
+                <div className="mt-6 text-[11px] text-gray-400 flex items-center gap-2">
+                    <Clock size={12}/> Received: {selectedMsg?.createdAt ? new Date(selectedMsg.createdAt).toLocaleString() : "Unknown date"}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[10px] uppercase font-bold text-gray-400 tracking-[0.2em]">Response</label>
+                {selectedMsg.adminReply ? (
+                  <div className="p-6 bg-green-50 text-green-700 rounded-3xl border border-green-100 italic">
+                    {selectedMsg.adminReply}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <textarea
+                      className="w-full p-5 bg-gray-50 border border-gray-200 rounded-3xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] outline-none transition-all min-h-[150px] resize-none"
+                      placeholder="Write your response to the customer..."
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                    ></textarea>
+                    <button
+                      onClick={handleReply}
+                      disabled={isSending}
+                      className="w-full bg-[#00AEEF] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0095cc] shadow-lg shadow-[#00AEEF]/20 transition-all active:scale-[0.98] disabled:opacity-50"
+                    >
+                      {isSending ? "Sending Reply..." : <><Send size={20} /> Send Message</>}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

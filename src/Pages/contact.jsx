@@ -7,18 +7,26 @@ import Footer from "../components/Footer";
 import ContactForm from "../components/ContactForm";
 
 export default function Contact() {
-  const [adminDetails, setAdminDetails] = useState({});
+  const [adminDetails, setAdminDetails] = useState({
+    phone: "0788316997",
+    address: "40/a, wlaassna wilage yalabowa, Monaragala",
+    email: "travelease@gmail.com"
+  });
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
         const res = await axios.get(`${backendUrl}/contact/get`);
-        if (res.data?.data) setAdminDetails(res.data.data);
-      } catch (err) { console.error(err); }
+        if (res.data?.data) {
+          setAdminDetails(res.data.data);
+        }
+      } catch (err) { 
+        console.error("Error fetching admin details:", err); 
+      }
     };
     fetchAdmin();
-  }, []);
+  }, [backendUrl]);
 
   return (
     <main className="w-full min-h-screen bg-[#FDFDFD]">
@@ -144,7 +152,7 @@ export default function Contact() {
               <Phone size={28} />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Call Us</h3>
-            <p className="text-gray-700 font-medium">{adminDetails.phone || "0788316997"}</p>
+            <p className="text-gray-700 font-medium">{adminDetails.phone}</p>
             <p className="text-gray-400 text-xs mt-2 uppercase tracking-widest">24/7 Service</p>
           </motion.div>
 
@@ -158,7 +166,7 @@ export default function Contact() {
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Location</h3>
             <p className="text-gray-700 font-medium leading-relaxed">
-              {adminDetails.address || "40/a, wlaassna wilage yalabowa, Monaragala"}
+              {adminDetails.address}
             </p>
           </motion.div>
 
