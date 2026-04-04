@@ -114,9 +114,9 @@ export default function HomePage() {
       <section className="py-24 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-left">
-            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A] mb-3">Testimonials</p>
+            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#d48c43] mb-3">Testimonials</p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
-              What Our <span className="italic text-[#C8813A]">Travelers Say</span>
+              What Our <span className="italic text-[#db8e41]">Travelers Say</span>
             </h2>
             <p className="text-gray-500 mt-4 text-lg font-medium">Real stories from our luxury experiences</p>
           </div>
