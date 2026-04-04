@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { CalendarCheck, User, RefreshCw, Trash2, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Dialog, Transition } from "@headlessui/react";
 
 export default function AdminBookingPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchBookings = async () => {
@@ -33,15 +37,27 @@ export default function AdminBookingPage() {
   };
 
   const handleDeleteBooking = async (bookingId) => {
-    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+    const booking = bookings.find(b => b._id === bookingId);
+    setSelectedBooking(booking);
+    setIsConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedBooking) return;
+    setDeleting(true);
     const loadingToastId = toast.loading("Deleting booking...");
     try {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`${backendUrl}/bookings/delete/${bookingId}`, config);
+      await axios.delete(`${backendUrl}/bookings/delete/${selectedBooking._id}`, config);
       toast.success("Booking deleted!", { id: loadingToastId });
       fetchBookings();
-    } catch (error) { toast.error("Could not delete booking.", { id: loadingToastId }); }
+      setIsConfirmOpen(false);
+    } catch (error) { 
+      toast.error("Could not delete booking.", { id: loadingToastId }); 
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -136,6 +152,36 @@ export default function AdminBookingPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Transition show={isConfirmOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-[100]" onClose={() => setIsConfirmOpen(false)}>
+          <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all border border-gray-100 text-center">
+                  <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Trash2 size={40} />
+                  </div>
+                  <Dialog.Title as="h3" className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Delete Booking?</Dialog.Title>
+                  <p className="mt-4 text-gray-500 font-[Inter]">Are you sure you want to delete this booking? This action cannot be undone.</p>
+
+                  <div className="mt-8 flex gap-4">
+                    <button type="button" className="flex-1 px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full font-bold transition-all duration-500 uppercase tracking-widest text-xs" onClick={() => setIsConfirmOpen(false)}>Cancel</button>
+                    <button type="button" disabled={deleting} className="flex-1 px-6 py-4 bg-red-500 hover:bg-red-600 text-white rounded-full font-bold shadow-lg shadow-red-100 transition-all duration-500 disabled:bg-gray-400 uppercase tracking-widest text-xs" onClick={confirmDelete}>
+                      {deleting ? "Deleting..." : "Confirm Delete"}
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 }

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { User, Mail, Phone, MapPin, Pencil, Trash2, Save, X } from "lucide-react";
+import { Dialog, Transition } from "@headlessui/react";
 
 const AdminContactPage = () => {
   const [contact, setContact] = useState(null);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", address: "" });
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -39,85 +42,121 @@ const AdminContactPage = () => {
     } finally { setLoading(false); }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
+    setIsConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
     if (!contact) return;
-    if (window.confirm("Are you sure you want to delete this contact?")) {
-      const deleteToast = toast.loading("Deleting...");
-      try {
-        await axios.delete(`${backendUrl}/contact/delete/${contact._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
-        toast.success("Contact deleted successfully!", { id: deleteToast });
-        setContact(null);
-        setFormData({ name: "", email: "", phone: "", address: "" });
-      } catch (error) { toast.error("Failed to delete contact", { id: deleteToast }); }
+    setDeleting(true);
+    try {
+      await axios.delete(`${backendUrl}/contact/delete/${contact._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+      toast.success("Contact deleted successfully!");
+      setContact(null);
+      setFormData({ name: "", email: "", phone: "", address: "" });
+      setIsConfirmOpen(false);
+    } catch (error) { 
+      toast.error("Failed to delete contact"); 
+    } finally {
+      setDeleting(false);
     }
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 py-12">
-      <Toaster position="top-center" />
-      <div className="mb-10 text-center md:text-left">
-        <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">
-          Contact <span className="text-[#C8813A]">Management</span>
-        </h1>
-        <p className="text-gray-500 mt-2 text-lg font-[Inter]">Configure the official contact details for your travel platform.</p>
-        <div className="w-24 h-1.5 bg-[#C8813A] mt-4 rounded-full mx-auto md:mx-0"></div>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-sm hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500">
-        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 text-white flex justify-between items-center">
-          <div>
-            <h2 className="text-xl font-[Playfair_Display] font-bold tracking-wide">{isEditing ? "Update Information" : "Official Business Details"}</h2>
-            <p className="text-gray-400 text-sm mt-1 font-medium font-[Inter]">{contact ? "Currently Active" : "No record found"}</p>
-          </div>
-          <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg">
-            {isEditing ? <Pencil className="text-[#C8813A] w-6 h-6 animate-pulse" /> : <User className="text-[#C8813A] w-6 h-6" />}
-          </div>
+    <>
+      <div className="w-full max-w-4xl mx-auto px-6 py-12">
+        <Toaster position="top-center" />
+        <div className="mb-10 text-center md:text-left">
+          <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">
+            Contact <span className="text-[#C8813A]">Management</span>
+          </h1>
+          <p className="text-gray-500 mt-2 text-lg font-[Inter]">Configure the official contact details for your travel platform.</p>
+          <div className="w-24 h-1.5 bg-[#C8813A] mt-4 rounded-full mx-auto md:mx-0"></div>
         </div>
 
-        {!isEditing && contact ? (
-          <div className="p-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <InfoBlock icon={<User size={18} />} label="Full Name" value={contact.name} />
-              <InfoBlock icon={<Mail size={18} />} label="Email Address" value={contact.email} />
-              <InfoBlock icon={<Phone size={18} />} label="Phone Number" value={contact.phone} />
-              <InfoBlock icon={<MapPin size={18} />} label="Office Address" value={contact.address} />
+        <div className="bg-white rounded-3xl shadow-sm hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500">
+          <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 text-white flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-[Playfair_Display] font-bold tracking-wide">{isEditing ? "Update Information" : "Official Business Details"}</h2>
+              <p className="text-gray-400 text-sm mt-1 font-medium font-[Inter]">{contact ? "Currently Active" : "No record found"}</p>
             </div>
-            <div className="flex gap-4 mt-12">
-              <button onClick={() => setIsEditing(true)} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg transition-all duration-500 flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest text-xs">
-                <Pencil size={16} /> Edit Details
-              </button>
-              <button onClick={handleDelete} className="px-6 bg-red-50 hover:bg-red-100 text-red-500 font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 active:scale-95" title="Delete Record">
-                <Trash2 size={16} />
-              </button>
+            <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg">
+              {isEditing ? <Pencil className="text-[#C8813A] w-6 h-6 animate-pulse" /> : <User className="text-[#C8813A] w-6 h-6" />}
             </div>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="p-10 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputGroup icon={<User size={16} />} label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" />
-              <InputGroup icon={<Mail size={16} />} label="Email" name="email" value={formData.email} onChange={handleChange} placeholder="admin@example.com" type="email" />
-              <InputGroup icon={<Phone size={16} />} label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} placeholder="+94..." type="tel" maxLength="10" />
-              <div className="md:col-span-2">
-                <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Office Address</label>
-                <textarea name="address" value={formData.address} onChange={handleChange} required rows="3"
-                  className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
-                  placeholder="Street, City, Country"></textarea>
+
+          {!isEditing && contact ? (
+            <div className="p-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <InfoBlock icon={<User size={18} />} label="Full Name" value={contact.name} />
+                <InfoBlock icon={<Mail size={18} />} label="Email Address" value={contact.email} />
+                <InfoBlock icon={<Phone size={18} />} label="Phone Number" value={contact.phone} />
+                <InfoBlock icon={<MapPin size={18} />} label="Office Address" value={contact.address} />
+              </div>
+              <div className="flex gap-4 mt-12">
+                <button onClick={() => setIsEditing(true)} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg transition-all duration-500 flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest text-xs">
+                  <Pencil size={16} /> Edit Details
+                </button>
+                <button onClick={handleDeleteClick} className="px-6 bg-red-50 hover:bg-red-100 text-red-500 font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 active:scale-95" title="Delete Record">
+                  <Trash2 size={16} />
+                </button>
               </div>
             </div>
-            <div className="flex gap-4 pt-4">
-              <button type="submit" disabled={loading} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:bg-gray-400 uppercase tracking-widest text-xs">
-                {loading ? "Saving..." : <><Save size={16} /> {contact ? "Update Settings" : "Create Record"}</>}
-              </button>
-              {isEditing && (
-                <button type="button" onClick={() => setIsEditing(false)} className="px-8 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
-                  <X size={16} /> Cancel
+          ) : (
+            <form onSubmit={handleSubmit} className="p-10 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputGroup icon={<User size={16} />} label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" />
+                <InputGroup icon={<Mail size={16} />} label="Email" name="email" value={formData.email} onChange={handleChange} placeholder="admin@example.com" type="email" />
+                <InputGroup icon={<Phone size={16} />} label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} placeholder="+94..." type="tel" maxLength="10" />
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Office Address</label>
+                  <textarea name="address" value={formData.address} onChange={handleChange} required rows="3"
+                    className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
+                    placeholder="Street, City, Country"></textarea>
+                </div>
+              </div>
+              <div className="flex gap-4 pt-4">
+                <button type="submit" disabled={loading} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:bg-gray-400 uppercase tracking-widest text-xs">
+                  {loading ? "Saving..." : <><Save size={16} /> {contact ? "Update Settings" : "Create Record"}</>}
                 </button>
-              )}
-            </div>
-          </form>
-        )}
+                {isEditing && (
+                  <button type="button" onClick={() => setIsEditing(false)} className="px-8 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
+                    <X size={16} /> Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+          )}
+        </div>
       </div>
-    </div>
+
+      <Transition appear show={isConfirmOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-[100]" onClose={() => setIsConfirmOpen(false)}>
+          <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+          </Transition.Child>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all border border-gray-100 text-center">
+                  <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Trash2 size={40} />
+                  </div>
+                  <Dialog.Title as="h3" className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Delete Contact?</Dialog.Title>
+                  <p className="mt-4 text-gray-500 font-[Inter]">Are you sure you want to delete this contact information? This action cannot be undone.</p>
+                  <div className="mt-8 flex gap-4">
+                    <button type="button" className="flex-1 px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full font-bold transition-all duration-500 uppercase tracking-widest text-xs" onClick={() => setIsConfirmOpen(false)}>Cancel</button>
+                    <button type="button" disabled={deleting} className="flex-1 px-6 py-4 bg-red-500 hover:bg-red-600 text-white rounded-full font-bold shadow-lg shadow-red-100 transition-all duration-500 disabled:bg-gray-400 uppercase tracking-widest text-xs" onClick={confirmDelete}>
+                      {deleting ? "Deleting..." : "Confirm Delete"}
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
   );
 };
 
