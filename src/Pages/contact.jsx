@@ -61,9 +61,9 @@ export default function Contact() {
           className="space-y-8"
         >
           <div className="space-y-4">
-            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF]">Reach Out</p>
+            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A]">Reach Out</p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Let's Start a <span className="italic text-[#00AEEF]">Conversation</span>
+              Let's Start a <span className="italic text-[#C8813A]">Conversation</span>
             </h2>
             <p className="text-gray-500 leading-relaxed text-lg max-w-lg">
               Have a specific destination in mind or need help crafting the perfect itinerary?
@@ -75,7 +75,7 @@ export default function Contact() {
           <div className="bg-[#FAFAFA] p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 hover:shadow-lg transition-all duration-500">
 
             <div className="flex items-center gap-5 group">
-              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#00AEEF] group-hover:bg-[#00AEEF] group-hover:text-white transition-all duration-500">
+              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#C8813A] group-hover:bg-[#C8813A] group-hover:text-white transition-all duration-500">
                 <span className="font-bold text-xs uppercase">Name</span>
               </div>
               <div>
@@ -85,7 +85,7 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center gap-5 group">
-              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#00AEEF] group-hover:bg-[#00AEEF] group-hover:text-white transition-all duration-500">
+              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#C8813A] group-hover:bg-[#C8813A] group-hover:text-white transition-all duration-500">
                 <Phone size={20} />
               </div>
               <div>
@@ -95,7 +95,7 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center gap-5 group">
-              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#00AEEF] group-hover:bg-[#00AEEF] group-hover:text-white transition-all duration-500">
+              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#C8813A] group-hover:bg-[#C8813A] group-hover:text-white transition-all duration-500">
                 <MapPin size={20} />
               </div>
               <div>
@@ -107,12 +107,12 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center gap-5 group">
-              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#00AEEF] group-hover:bg-[#00AEEF] group-hover:text-white transition-all duration-500">
+              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#C8813A] group-hover:bg-[#C8813A] group-hover:text-white transition-all duration-500">
                 <Mail size={20} />
               </div>
               <div>
                 <p className="text-sm text-gray-400 font-semibold uppercase tracking-wider">Mail Us</p>
-                <p className="text-[#00AEEF] text-lg font-bold hover:underline cursor-pointer">
+                <p className="text-[#C8813A] text-lg font-bold hover:underline cursor-pointer">
                   {adminDetails.email}
                 </p>
               </div>
@@ -135,7 +135,7 @@ export default function Contact() {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-[#00AEEF]/10 rounded-full -z-0 opacity-60 blur-3xl"></div>
+          <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-[#C8813A]/10 rounded-full -z-0 opacity-60 blur-3xl"></div>
         </motion.div>
       </section>
 
@@ -148,7 +148,7 @@ export default function Contact() {
             whileHover={{ y: -10, scale: 1.02 }}
             className="bg-white border border-gray-100 p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all duration-500 hover:shadow-2xl"
           >
-            <div className="text-[#00AEEF] mb-4 flex justify-center">
+            <div className="text-[#C8813A] mb-4 flex justify-center">
               <Phone size={28} />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Call Us</h3>
@@ -161,7 +161,7 @@ export default function Contact() {
             whileHover={{ y: -10, scale: 1.02 }}
             className="bg-white border border-gray-100 p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all duration-500 hover:shadow-2xl"
           >
-            <div className="text-[#00AEEF] mb-4 flex justify-center">
+            <div className="text-[#C8813A] mb-4 flex justify-center">
               <MapPin size={28} />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Location</h3>
@@ -175,7 +175,7 @@ export default function Contact() {
             whileHover={{ y: -10, scale: 1.02 }}
             className="bg-white border border-gray-100 p-10 rounded-3xl shadow-sm text-center group cursor-pointer transition-all duration-500 hover:shadow-2xl"
           >
-            <div className="text-[#00AEEF] mb-4 flex justify-center">
+            <div className="text-[#C8813A] mb-4 flex justify-center">
               <Clock size={28} />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Hours</h3>

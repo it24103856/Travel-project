@@ -38,8 +38,8 @@ const Vehicles = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#FDFDFD]">
         <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#00AEEF]"></div>
-          <Car className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#00AEEF] animate-pulse" />
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#C8813A]"></div>
+          <Car className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#C8813A] animate-pulse" />
         </div>
         <p className="mt-6 font-bold text-gray-800 tracking-widest uppercase text-[10px]">Loading Premium Fleet...</p>
       </div>
@@ -55,14 +55,14 @@ const Vehicles = () => {
         <div className="relative z-10 text-center text-white px-6">
           <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Premium Vehicles</p>
           <h1 className="text-4xl md:text-7xl font-bold tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Our <span className="italic text-[#00AEEF]">Fleet</span>
+            Our <span className="italic text-[#C8813A]">Fleet</span>
           </h1>
           <p className="mt-3 text-sm md:text-xl font-light max-w-2xl mx-auto text-white/80">
             Travel in style with our well-maintained, comfortable, and luxury vehicles.
           </p>
 
           <div className="mt-8 max-w-lg mx-auto relative group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#00AEEF] transition-colors" size={18} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C8813A] transition-colors" size={18} />
             <input
               type="text"
               placeholder="Search make, model or type..."
@@ -87,9 +87,9 @@ const Vehicles = () => {
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-none" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Choose your <span className="italic text-[#00AEEF]">Ride</span>
+              Choose your <span className="italic text-[#C8813A]">Ride</span>
             </h2>
-            <div className="w-16 h-1 bg-[#00AEEF] mt-3 rounded-full mx-auto md:mx-0"></div>
+            <div className="w-16 h-1 bg-[#C8813A] mt-3 rounded-full mx-auto md:mx-0"></div>
           </div>
           <p className="text-gray-400 text-[10px] md:text-sm font-medium max-w-xs italic uppercase tracking-widest leading-relaxed">
             The perfect vehicle for every journey.
@@ -145,13 +145,13 @@ const Vehicles = () => {
 
       {/* 4. Bottom CTA Section */}
       <section className="bg-gray-900 py-16 px-6 rounded-[3rem] md:rounded-[4rem] mx-4 md:mx-6 mb-16 text-center relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#00AEEF]/10 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#C8813A]/10 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
         <div className="relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
             Ready to <span className="italic">explore?</span>
           </h2>
           <p className="text-gray-400 text-sm md:text-base mb-10 max-w-xs md:max-w-lg mx-auto opacity-80">Book your perfect ride today and experience comfort and safety like never before.</p>
-          <Link to="/booking" className="inline-block bg-[#00AEEF] hover:bg-[#0096CE] text-white px-10 py-4 rounded-full font-bold text-[11px] uppercase tracking-widest transition-all duration-500 shadow-xl hover:scale-105">
+          <Link to="/booking" className="inline-block bg-[#C8813A] hover:bg-[#A66A28] text-white px-10 py-4 rounded-full font-bold text-[11px] uppercase tracking-widest transition-all duration-500 shadow-xl hover:scale-105">
             Book Now
           </Link>
         </div>
@@ -165,7 +165,7 @@ const Vehicles = () => {
 // Sub-component for Trust Badges
 const Badge = ({ icon, text }) => (
   <div className="flex items-center gap-3 justify-center px-6 md:border-r border-gray-200 last:border-none">
-    <div className="text-[#00AEEF]">{icon}</div>
+    <div className="text-[#C8813A]">{icon}</div>
     <span className="font-bold text-gray-700 uppercase tracking-widest text-[10px] whitespace-nowrap">{text}</span>
   </div>
 );

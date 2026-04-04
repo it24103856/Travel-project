@@ -120,7 +120,7 @@ export default function AdminVehicleUpdatePage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-[#FDFDFD]">
       <div className="flex flex-col items-center gap-4">
-        <FiLoader className="animate-spin text-[#00AEEF] text-4xl" />
+        <FiLoader className="animate-spin text-[#C8813A] text-4xl" />
         <p className="text-gray-400 font-medium">Fetching Asset Data...</p>
       </div>
     </div>
@@ -133,10 +133,10 @@ export default function AdminVehicleUpdatePage() {
         
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#00AEEF] transition-all">
+          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#C8813A] transition-all">
             <FiChevronLeft size={20} /> <span className="font-medium text-sm uppercase tracking-widest">Inventory</span>
           </Link>
-          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Edit <span className="text-[#00AEEF]">Vehicle Asset</span></h1>
+          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Edit <span className="text-[#C8813A]">Vehicle Asset</span></h1>
         </div>
 
         <form onSubmit={handleUpdate} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -147,13 +147,13 @@ export default function AdminVehicleUpdatePage() {
               
               {/* Basic Details */}
               <section>
-                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#00AEEF] mb-6 flex items-center gap-2">
+                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#C8813A] mb-6 flex items-center gap-2">
                   <Car size={18} /> Essential Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">Type</label>
-                    <select className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#00AEEF] transition-all"
+                    <select className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#C8813A] transition-all"
                       value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})}>
                       <option value="Car">Car</option>
                       <option value="Van">Van</option>
@@ -163,19 +163,19 @@ export default function AdminVehicleUpdatePage() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">Reg. Number</label>
-                    <input required className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#00AEEF] transition-all font-mono"
+                    <input required className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#C8813A] transition-all font-mono"
                       value={formData.registrationNumber} onChange={(e) => setFormData({...formData, registrationNumber: e.target.value})} />
                   </div>
-                  <input required placeholder="Make (e.g. Toyota)" className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#00AEEF] transition-all"
+                  <input required placeholder="Make (e.g. Toyota)" className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#C8813A] transition-all"
                     value={formData.make} onChange={(e) => setFormData({...formData, make: e.target.value})} />
-                  <input required placeholder="Model (e.g. Axio)" className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#00AEEF] transition-all"
+                  <input required placeholder="Model (e.g. Axio)" className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#C8813A] transition-all"
                     value={formData.model} onChange={(e) => setFormData({...formData, model: e.target.value})} />
                 </div>
               </section>
 
               {/* Specifications */}
               <section className="pt-8 border-t border-gray-50">
-                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#00AEEF] mb-6 flex items-center gap-2">
+                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#C8813A] mb-6 flex items-center gap-2">
                   <Settings size={18} /> Performance & Capacity
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -197,9 +197,9 @@ export default function AdminVehicleUpdatePage() {
                       <option value="Hybrid">Hybrid</option>
                     </select>
                   </div>
-                  <div className="flex items-center gap-3 bg-[#00AEEF]/5 p-4 rounded-2xl border border-[#00AEEF]/10">
-                    <DollarSign size={20} className="text-[#00AEEF]" />
-                    <input type="number" placeholder="Price/KM" className="bg-transparent outline-none w-full font-bold text-[#00AEEF]" min="0"
+                  <div className="flex items-center gap-3 bg-[#C8813A]/5 p-4 rounded-2xl border border-[#C8813A]/10">
+                    <DollarSign size={20} className="text-[#C8813A]" />
+                    <input type="number" placeholder="Price/KM" className="bg-transparent outline-none w-full font-bold text-[#C8813A]" min="0"
                       value={formData.pricePerKm} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) setFormData({...formData, pricePerKm: val}); }} />
                   </div>
                 </div>
@@ -207,14 +207,14 @@ export default function AdminVehicleUpdatePage() {
 
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">Assign Driver</label>
-                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#00AEEF] transition-all"
+                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#C8813A] transition-all"
                   value={formData.driverId} onChange={(e) => setFormData({...formData, driverId: e.target.value})}>
                   <option value="">No Driver Assigned</option>
                   {drivers.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
                 </select>
               </div>
 
-              <button type="submit" disabled={updating || uploading} className="w-full py-5 bg-[#00AEEF] text-white rounded-full font-black uppercase tracking-widest shadow-xl shadow-[#00AEEF]/20 hover:bg-[#0095cc] transition-all disabled:bg-gray-300">
+              <button type="submit" disabled={updating || uploading} className="w-full py-5 bg-[#C8813A] text-white rounded-full font-black uppercase tracking-widest shadow-xl shadow-[#C8813A]/20 hover:bg-[#A66A28] transition-all disabled:bg-gray-300">
                 {updating ? "Syncing Data..." : "Update Asset Details"}
               </button>
             </div>
@@ -237,9 +237,9 @@ export default function AdminVehicleUpdatePage() {
                   </div>
                 ))}
                 
-                <label className="cursor-pointer border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center aspect-square hover:bg-[#00AEEF]/5 hover:border-[#00AEEF]/30 transition-all">
+                <label className="cursor-pointer border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center aspect-square hover:bg-[#C8813A]/5 hover:border-[#C8813A]/30 transition-all">
                   <input type="file" hidden multiple onChange={handleImageChange} disabled={uploading} />
-                  {uploading ? <FiLoader className="animate-spin text-[#00AEEF]" /> : <FiUploadCloud className="text-gray-300 text-xl" />}
+                  {uploading ? <FiLoader className="animate-spin text-[#C8813A]" /> : <FiUploadCloud className="text-gray-300 text-xl" />}
                   <span className="text-[9px] font-bold text-gray-400 mt-2 uppercase">Add New</span>
                 </label>
               </div>

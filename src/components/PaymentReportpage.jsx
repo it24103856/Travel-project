@@ -86,16 +86,7 @@ const PaymentReportpage = () => {
         <div className="min-h-screen bg-[#f8fafc] p-4 md:p-10 font-sans print:bg-white print:p-0">
             <Toaster position="top-right" />
             
-            {/* Print Settings CSS */}
-            <style dangerouslySetInnerHTML={{ __html: `
-                @media print {
-                    @page { size: A4; margin: 15mm; }
-                    body { -webkit-print-color-adjust: exact; background-color: white !important; }
-                    .no-print { display: none !important; }
-                    .print-card { border: 1px solid #e2e8f0 !important; box-shadow: none !important; border-radius: 1.5rem !important; margin-bottom: 20px !important; break-inside: avoid; }
-                    .chart-container { height: 350px !important; width: 100% !important; display: block !important; }
-                }
-            `}} />
+           
 
             <div className="max-w-6xl mx-auto">
                 
@@ -113,12 +104,8 @@ const PaymentReportpage = () => {
                         </div>
                     </div>
                     <div className="flex gap-2 no-print">
-                         <button onClick={() => navigate('/')} className="flex items-center gap-2 bg-slate-100 text-slate-700 px-5 py-3 rounded-2xl font-bold hover:bg-slate-200 transition-all text-xs tracking-widest uppercase">
-                            <Globe size={18} /> Website
-                        </button>
-                        <button onClick={() => window.print()} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all uppercase text-xs tracking-widest">
-                            <Download size={18} /> Export PDF
-                        </button>
+                        
+                        
                     </div>
                 </div>
 
@@ -141,7 +128,7 @@ const PaymentReportpage = () => {
                                         outerRadius={105} 
                                         paddingAngle={5} 
                                         dataKey="value"
-                                        isAnimationActive={false} // PDF එකේ Chart එක පෙන්වීමට මෙය අත්‍යවශ්‍යයි
+                                        isAnimationActive={false} 
                                     >
                                         {reportData.methodData.map((_, index) => (
                                             <Cell key={index} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
@@ -165,24 +152,24 @@ const PaymentReportpage = () => {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="border-b border-slate-100">
-                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Month</th>
-                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Total Revenue</th>
-                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Trans.</th>
-                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Average</th>
-                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Growth</th>
+                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-black">Month</th>
+                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-black">Total Revenue</th>
+                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-black text-center">Trans.</th>
+                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-black">Average</th>
+                                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-black text-right">Growth</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-50">
                                     {reportData.monthlySummary.map((item, idx) => (
                                         <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-6 font-bold text-slate-700">{item.label}</td>
-                                            <td className="px-6 py-6 font-black text-slate-900 italic">Rs. {item.totalRevenue.toLocaleString()}</td>
+                                            <td className="px-6 py-6 font-bold text-slate-450">{item.label}</td>
+                                            <td className="px-6 py-6 font-black text-slate-450 italic">Rs. {item.totalRevenue.toLocaleString()}</td>
                                             <td className="px-6 py-6 text-center">
-                                                <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-[10px] font-bold border border-slate-200">
+                                                <span className="bg-slate-100 text-slate-450 px-3 py-1 rounded-full text-[10px] font-bold border border-slate-200">
                                                     {item.transactions}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-6 font-medium text-slate-600">Rs. {item.average.toLocaleString()}</td>
+                                            <td className="px-6 py-6 font-medium text-slate-450">Rs. {item.average.toLocaleString()}</td>
                                             <td className="px-6 py-6 text-right font-black italic">
                                                 {idx === reportData.monthlySummary.length - 1 ? (
                                                     <span className="text-slate-300 text-[10px] uppercase">Initial</span>
@@ -200,10 +187,7 @@ const PaymentReportpage = () => {
                         </div>
                     </div>
 
-                    {/* Footer for PDF */}
-                    <div className="hidden print:block text-center mt-12 border-t pt-6">
-                        <p className="text-[10px] text-slate-400 uppercase font-bold tracking-[0.2em]">Official System Generated Report • Travel Management System</p>
-                    </div>
+                    
 
                 </div>
             </div>

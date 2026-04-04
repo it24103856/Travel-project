@@ -57,10 +57,10 @@ const AdminContactPage = () => {
       <Toaster position="top-center" />
       <div className="mb-10 text-center md:text-left">
         <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">
-          Contact <span className="text-[#00AEEF]">Management</span>
+          Contact <span className="text-[#C8813A]">Management</span>
         </h1>
         <p className="text-gray-500 mt-2 text-lg font-[Inter]">Configure the official contact details for your travel platform.</p>
-        <div className="w-24 h-1.5 bg-[#00AEEF] mt-4 rounded-full mx-auto md:mx-0"></div>
+        <div className="w-24 h-1.5 bg-[#C8813A] mt-4 rounded-full mx-auto md:mx-0"></div>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500">
@@ -70,7 +70,7 @@ const AdminContactPage = () => {
             <p className="text-gray-400 text-sm mt-1 font-medium font-[Inter]">{contact ? "Currently Active" : "No record found"}</p>
           </div>
           <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg">
-            {isEditing ? <Pencil className="text-[#00AEEF] w-6 h-6 animate-pulse" /> : <User className="text-[#00AEEF] w-6 h-6" />}
+            {isEditing ? <Pencil className="text-[#C8813A] w-6 h-6 animate-pulse" /> : <User className="text-[#C8813A] w-6 h-6" />}
           </div>
         </div>
 
@@ -83,7 +83,7 @@ const AdminContactPage = () => {
               <InfoBlock icon={<MapPin size={18} />} label="Office Address" value={contact.address} />
             </div>
             <div className="flex gap-4 mt-12">
-              <button onClick={() => setIsEditing(true)} className="flex-1 bg-[#00AEEF] hover:bg-[#0095cc] text-white font-bold py-4 rounded-full shadow-lg transition-all duration-500 flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest text-xs">
+              <button onClick={() => setIsEditing(true)} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg transition-all duration-500 flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest text-xs">
                 <Pencil size={16} /> Edit Details
               </button>
               <button onClick={handleDelete} className="px-6 bg-red-50 hover:bg-red-100 text-red-500 font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 active:scale-95" title="Delete Record">
@@ -100,12 +100,12 @@ const AdminContactPage = () => {
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Office Address</label>
                 <textarea name="address" value={formData.address} onChange={handleChange} required rows="3"
-                  className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
+                  className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
                   placeholder="Street, City, Country"></textarea>
               </div>
             </div>
             <div className="flex gap-4 pt-4">
-              <button type="submit" disabled={loading} className="flex-1 bg-[#00AEEF] hover:bg-[#0095cc] text-white font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:bg-gray-400 uppercase tracking-widest text-xs">
+              <button type="submit" disabled={loading} className="flex-1 bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:bg-gray-400 uppercase tracking-widest text-xs">
                 {loading ? "Saving..." : <><Save size={16} /> {contact ? "Update Settings" : "Create Record"}</>}
               </button>
               {isEditing && (
@@ -123,8 +123,8 @@ const AdminContactPage = () => {
 
 function InfoBlock({ icon, label, value }) {
   return (
-    <div className="flex items-start gap-4 p-5 rounded-2xl bg-gray-50/50 hover:bg-[#00AEEF]/5 transition-all duration-500 border border-transparent hover:border-[#00AEEF]/10">
-      <div className="bg-white p-3.5 rounded-xl text-[#00AEEF] shadow-sm border border-gray-100">{icon}</div>
+    <div className="flex items-start gap-4 p-5 rounded-2xl bg-gray-50/50 hover:bg-[#C8813A]/5 transition-all duration-500 border border-transparent hover:border-[#C8813A]/10">
+      <div className="bg-white p-3.5 rounded-xl text-[#C8813A] shadow-sm border border-gray-100">{icon}</div>
       <div>
         <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{label}</p>
         <p className="text-lg font-bold text-gray-800 leading-tight font-[Inter]">{value || "Not Set"}</p>
@@ -139,7 +139,7 @@ function InputGroup({ icon, label, ...props }) {
       <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">{label}</label>
       <div className="relative">
         <span className="absolute inset-y-0 left-0 flex items-center pl-5 text-gray-400">{icon}</span>
-        <input {...props} required className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 font-[Inter]" />
+        <input {...props} required className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 font-[Inter]" />
       </div>
     </div>
   );

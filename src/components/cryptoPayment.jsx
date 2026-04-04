@@ -99,9 +99,9 @@ const CryptoPayment = () => {
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentWallet.address)}`;
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 flex justify-center items-center">
+        <div className="min-h-screen bg-[#f1ebe3] py-30 px-4 flex justify-center items-center">
             <div className="max-w-xl w-full">
-                <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100">
+                <div className="bg-[#eceae7] rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100">
                     
                     <div className="flex p-2 bg-gray-100/50 m-4 rounded-2xl">
                         {Object.entries(cryptoWallets).map(([key, wallet]) => (

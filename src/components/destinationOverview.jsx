@@ -31,7 +31,7 @@ const DestinationOverview = () => {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#00AEEF]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#C8813A]"></div>
       </div>
     );
   }
@@ -65,7 +65,7 @@ const DestinationOverview = () => {
         </div>
 
         <div className="w-full md:w-1/2 px-8 md:px-20 py-16 flex flex-col justify-center animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#00AEEF]/5 text-[#00AEEF] rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-8 w-fit">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#C8813A]/5 text-[#C8813A] rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-8 w-fit">
             <MapPin size={14} /> {destination.city || 'Sri Lanka'}
           </div>
 
@@ -99,7 +99,7 @@ const DestinationOverview = () => {
 
             <button
               onClick={() => navigate('/packages')}
-              className="bg-gray-900 text-white px-12 py-5 rounded-full text-[11px] font-bold uppercase tracking-[3px] hover:bg-[#00AEEF] transition-all transform active:scale-95 flex items-center gap-4 w-fit shadow-xl mt-4"
+              className="bg-gray-900 text-white px-12 py-5 rounded-full text-[11px] font-bold uppercase tracking-[3px] hover:bg-[#C8813A] transition-all transform active:scale-95 flex items-center gap-4 w-fit shadow-xl mt-4"
             >
               View Packages <ArrowRight size={16} strokeWidth={2.5} />
             </button>
@@ -132,7 +132,7 @@ const DestinationOverview = () => {
 
           {/* Text Side */}
           <div className="w-full md:w-1/2">
-            <span className="text-[#00AEEF] font-black uppercase text-[10px] tracking-[0.4em]">
+            <span className="text-[#C8813A] font-black uppercase text-[10px] tracking-[0.4em]">
               Location Guide
             </span>
             <h2
@@ -148,7 +148,7 @@ const DestinationOverview = () => {
             </p>
 
             {/* CTA Card */}
-            <div className="mt-12 p-10 bg-white rounded-[3rem] border border-gray-100 shadow-xl flex items-center justify-between group/card hover:border-[#00AEEF]/30 transition-all">
+            <div className="mt-12 p-10 bg-white rounded-[3rem] border border-gray-100 shadow-xl flex items-center justify-between group/card hover:border-[#C8813A]/30 transition-all">
               <div>
                 <p className="text-gray-900 font-black text-xl italic uppercase tracking-tighter">
                   Ready to Visit?
@@ -159,7 +159,7 @@ const DestinationOverview = () => {
               </div>
               <div
                 onClick={() => navigate('/packages')}
-                className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center text-white cursor-pointer group-hover/card:bg-[#00AEEF] transition-all transform group-hover/card:scale-110"
+                className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center text-white cursor-pointer group-hover/card:bg-[#C8813A] transition-all transform group-hover/card:scale-110"
               >
                 <ArrowRight size={24} />
               </div>

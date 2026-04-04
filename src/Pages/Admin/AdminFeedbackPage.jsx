@@ -11,7 +11,7 @@ export default function AdminFeedback() {
     const [filters, setFilters] = useState({ category: "", rating: "" });
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const COLORS = ['#00AEEF', '#33BFFF', '#66CFFF', '#99DFFF', '#CCEFFF'];
+    const COLORS = ['#C8813A', '#D99955', '#E6B888', '#F0D0BB', '#F7E6D9'];
 
     const fetchData = async () => {
         try {
@@ -47,7 +47,7 @@ export default function AdminFeedback() {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                     <div>
-                        <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">Feedback <span className="text-[#00AEEF]">Intelligence</span></h1>
+                        <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">Feedback <span className="text-[#C8813A]">Intelligence</span></h1>
                         <p className="text-gray-500 font-medium">Advanced analytics for customer satisfaction</p>
                     </div>
                     <div className="flex bg-white p-2 rounded-full shadow-sm border border-gray-100">
@@ -68,7 +68,7 @@ export default function AdminFeedback() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                     <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-500">
                         <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <BarChart3 className="text-[#00AEEF]" size={18} /> Rating Distribution
+                            <BarChart3 className="text-[#C8813A]" size={18} /> Rating Distribution
                         </h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
@@ -77,7 +77,7 @@ export default function AdminFeedback() {
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                                     <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                                     <Tooltip cursor={{fill: '#f0f9ff'}} contentStyle={{borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
-                                    <Bar dataKey="count" fill="#00AEEF" radius={[10, 10, 0, 0]} barSize={40} />
+                                    <Bar dataKey="count" fill="#C8813A" radius={[10, 10, 0, 0]} barSize={40} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -85,7 +85,7 @@ export default function AdminFeedback() {
 
                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-500">
                         <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <Globe className="text-[#00AEEF]" size={18} /> Category Share
+                            <Globe className="text-[#C8813A]" size={18} /> Category Share
                         </h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
@@ -110,7 +110,7 @@ export default function AdminFeedback() {
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-[#00AEEF] to-[#0095cc] text-white text-[10px] uppercase font-black tracking-[0.2em]">
+                            <thead className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white text-[10px] uppercase font-black tracking-[0.2em]">
                                 <tr>
                                     <th className="px-8 py-4">User Details</th>
                                     <th className="px-8 py-4">Experience</th>
@@ -120,13 +120,13 @@ export default function AdminFeedback() {
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {feedbacks.map((fb) => (
-                                    <tr key={fb._id} className="hover:bg-[#00AEEF]/5 transition-all duration-500">
+                                    <tr key={fb._id} className="hover:bg-[#C8813A]/5 transition-all duration-500">
                                         <td className="px-8 py-5">
                                             <div className="flex items-center gap-3">
                                                 {fb.userId?.image ? (
                                                     <img src={fb.userId.image} alt="Profile" className="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm" />
                                                 ) : (
-                                                    <div className="w-10 h-10 bg-[#00AEEF] text-white rounded-full flex items-center justify-center font-bold text-sm uppercase">
+                                                    <div className="w-10 h-10 bg-[#C8813A] text-white rounded-full flex items-center justify-center font-bold text-sm uppercase">
                                                         {fb.userId?.firstName?.charAt(0) || "U"}
                                                     </div>
                                                 )}
@@ -144,10 +144,10 @@ export default function AdminFeedback() {
                                         </td>
                                         <td className="px-8 py-5">
                                             <div className="flex items-center gap-4">
-                                                <div className="flex text-[#00AEEF]">
-                                                    {[...Array(fb.rating)].map((_, i) => <Star key={i} size={10} fill="#00AEEF" />)}
+                                                <div className="flex text-[#C8813A]">
+                                                    {[...Array(fb.rating)].map((_, i) => <Star key={i} size={10} fill="#C8813A" />)}
                                                 </div>
-                                                <span className="text-[9px] px-2 py-0.5 bg-[#00AEEF]/10 text-[#00AEEF] rounded-md font-bold uppercase">{fb.category}</span>
+                                                <span className="text-[9px] px-2 py-0.5 bg-[#C8813A]/10 text-[#C8813A] rounded-md font-bold uppercase">{fb.category}</span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-5 text-right">

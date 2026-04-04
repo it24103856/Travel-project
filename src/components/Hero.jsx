@@ -33,7 +33,7 @@ const Hero = () => {
         </p>
         <Link
           to="/destinations"
-          className="mt-10 inline-flex items-center gap-2 px-10 py-4 bg-[#00AEEF] hover:bg-[#0096CE] rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#00AEEF]/30 uppercase text-[11px] tracking-widest hover:scale-105"
+          className="mt-10 inline-flex items-center gap-2 px-10 py-4 bg-[#C8813A] hover:bg-[#A66A28] rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#C8813A]/30 uppercase text-[11px] tracking-widest hover:scale-105"
         >
           Explore Now <ArrowRight size={16} strokeWidth={2.5} />
         </Link>

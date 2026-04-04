@@ -24,7 +24,7 @@ const AdminDestinations = () => {
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?", text: "This destination will be permanently deleted!",
-      icon: "warning", showCancelButton: true, confirmButtonColor: "#00AEEF", cancelButtonColor: "#6b7280",
+      icon: "warning", showCancelButton: true, confirmButtonColor: "#C8813A", cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, delete it!", cancelButtonText: "Cancel", background: "#ffffff",
       customClass: {
         popup: "rounded-[2.5rem] border border-gray-100 shadow-2xl",
@@ -56,7 +56,7 @@ const AdminDestinations = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-3xl font-[Playfair_Display] font-bold text-gray-900">
-              Manage <span className="text-[#00AEEF]">Destinations</span>
+              Manage <span className="text-[#C8813A]">Destinations</span>
             </h1>
             <p className="text-gray-500 font-medium mt-1 uppercase text-[10px] tracking-widest">
                Total {destinations.length} destinations found
@@ -64,12 +64,12 @@ const AdminDestinations = () => {
           </div>
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#00AEEF] transition-colors" size={18} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C8813A] transition-colors" size={18} />
               <input type="text" placeholder="Search name, city or district..." 
-                className="pl-12 pr-6 py-3 bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-[#00AEEF]/20 focus:border-[#00AEEF] outline-none w-full md:w-64 transition-all duration-500 font-medium text-sm"
+                className="pl-12 pr-6 py-3 bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-[#C8813A]/20 focus:border-[#C8813A] outline-none w-full md:w-64 transition-all duration-500 font-medium text-sm"
                 onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
-            <Link to="/admin/destinations/add" className="flex items-center gap-2 bg-[#00AEEF] hover:bg-[#0095cc] text-white px-6 py-3.5 rounded-full font-bold transition-all duration-500 shadow-lg active:scale-95 group uppercase tracking-widest text-xs">
+            <Link to="/admin/destinations/add" className="flex items-center gap-2 bg-[#C8813A] hover:bg-[#A66A28] text-white px-6 py-3.5 rounded-full font-bold transition-all duration-500 shadow-lg active:scale-95 group uppercase tracking-widest text-xs">
               <Plus size={20} className="group-hover:rotate-90 transition-transform" />
               <span className="hidden sm:inline">Add New</span>
             </Link>
@@ -78,7 +78,7 @@ const AdminDestinations = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 gap-4">
-             <Loader2 className="animate-spin text-[#00AEEF]" size={40} />
+             <Loader2 className="animate-spin text-[#C8813A]" size={40} />
              <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Syncing Data...</p>
           </div>
         ) : (
@@ -93,14 +93,14 @@ const AdminDestinations = () => {
                   )}
                   <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
                     <button onClick={() => handleDelete(loc._id)} className="p-3 bg-white text-red-500 rounded-2xl shadow-lg hover:bg-red-500 hover:text-white transition-all duration-500"><Trash2 size={18} /></button>
-                    <Link to={`/admin/destinations/edit/${loc._id}`} className="p-3 bg-white text-gray-700 rounded-2xl shadow-lg hover:bg-[#00AEEF] hover:text-white transition-all duration-500"><Edit3 size={18} /></Link>
+                    <Link to={`/admin/destinations/edit/${loc._id}`} className="p-3 bg-white text-gray-700 rounded-2xl shadow-lg hover:bg-[#C8813A] hover:text-white transition-all duration-500"><Edit3 size={18} /></Link>
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <div className="mb-4">
-                    <h3 className="text-xl font-[Playfair_Display] font-bold text-gray-900 leading-none truncate group-hover:text-[#00AEEF] transition-colors">{loc.name}</h3>
+                    <h3 className="text-xl font-[Playfair_Display] font-bold text-gray-900 leading-none truncate group-hover:text-[#C8813A] transition-colors">{loc.name}</h3>
                     <div className="flex items-center gap-1 text-gray-400 mt-2">
-                      <MapPin size={14} className="text-[#00AEEF]" />
+                      <MapPin size={14} className="text-[#C8813A]" />
                       <span className="text-[10px] font-black uppercase tracking-wider">{loc.city}, {loc.district}</span>
                     </div>
                   </div>
@@ -110,7 +110,7 @@ const AdminDestinations = () => {
                        <span className="text-[8px] font-black text-gray-300 uppercase">Province</span>
                        <span className="text-[10px] font-black text-gray-700 uppercase">{loc.province}</span>
                     </div>
-                    <Link to={`/overview/${loc._id}`} className="text-gray-300 hover:text-[#00AEEF] transition-all duration-500 hover:scale-110">
+                    <Link to={`/overview/${loc._id}`} className="text-gray-300 hover:text-[#C8813A] transition-all duration-500 hover:scale-110">
                       <Eye size={20} />
                     </Link>
                   </div>

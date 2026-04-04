@@ -63,39 +63,39 @@ const AdminCreateDestination = () => {
       <Toaster position="top-right" />
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <Link to="/admin/destinations" className="flex items-center gap-2 text-gray-500 hover:text-[#00AEEF] transition-all duration-500">
+          <Link to="/admin/destinations" className="flex items-center gap-2 text-gray-500 hover:text-[#C8813A] transition-all duration-500">
             <ArrowLeft size={20} /> <span className="font-medium">Back to List</span>
           </Link>
-          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Add <span className="text-[#00AEEF]">Destination</span></h1>
+          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Add <span className="text-[#C8813A]">Destination</span></h1>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm hover:shadow-2xl p-8 md:p-12 border border-gray-100 transition-all duration-500">
           <div className="space-y-6">
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <Type size={16} className="text-[#00AEEF]" /> Name
+                <Type size={16} className="text-[#C8813A]" /> Name
               </label>
-              <input type="text" name="name" required className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#00AEEF] focus:ring-4 focus:ring-[#00AEEF]/10 transition-all duration-500" placeholder="Destination Name" onChange={handleChange} />
+              <input type="text" name="name" required className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] focus:ring-4 focus:ring-[#C8813A]/10 transition-all duration-500" placeholder="Destination Name" onChange={handleChange} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Province</label>
-                <select name="province" required value={formData.province} onChange={handleChange} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#00AEEF] transition-all duration-500">
+                <select name="province" required value={formData.province} onChange={handleChange} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500">
                   <option value="">Select Province</option>
                   {Object.keys(SRI_LANKA_DATA).map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">District</label>
-                <select name="district" required value={formData.district} onChange={handleChange} disabled={!formData.province} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#00AEEF] transition-all duration-500 disabled:opacity-50">
+                <select name="district" required value={formData.district} onChange={handleChange} disabled={!formData.province} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500 disabled:opacity-50">
                   <option value="">Select District</option>
                   {formData.province && Object.keys(SRI_LANKA_DATA[formData.province]).map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
-                <select name="city" required value={formData.city} onChange={handleChange} disabled={!formData.district} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#00AEEF] transition-all duration-500 disabled:opacity-50">
+                <select name="city" required value={formData.city} onChange={handleChange} disabled={!formData.district} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500 disabled:opacity-50">
                   <option value="">Select City</option>
                   {formData.district && SRI_LANKA_DATA[formData.province][formData.district].map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -104,19 +104,19 @@ const AdminCreateDestination = () => {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <FileText size={16} className="text-[#00AEEF]" /> Description
+                <FileText size={16} className="text-[#C8813A]" /> Description
               </label>
-              <textarea name="description" rows="4" required className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#00AEEF] focus:ring-4 focus:ring-[#00AEEF]/10 transition-all duration-500" placeholder="Description..." onChange={handleChange}></textarea>
+              <textarea name="description" rows="4" required className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] focus:ring-4 focus:ring-[#C8813A]/10 transition-all duration-500" placeholder="Description..." onChange={handleChange}></textarea>
             </div>
 
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                <ImageIcon size={16} className="text-[#00AEEF]" /> Images
+                <ImageIcon size={16} className="text-[#C8813A]" /> Images
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <label className="cursor-pointer border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center h-32 hover:bg-[#00AEEF]/5 hover:border-[#00AEEF]/30 transition-all duration-500 group">
+                <label className="cursor-pointer border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center h-32 hover:bg-[#C8813A]/5 hover:border-[#C8813A]/30 transition-all duration-500 group">
                   <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
-                  {uploading ? <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#00AEEF]"></div> : <UploadCloud className="text-gray-400 group-hover:text-[#00AEEF]" />}
+                  {uploading ? <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#C8813A]"></div> : <UploadCloud className="text-gray-400 group-hover:text-[#C8813A]" />}
                 </label>
                 {formData.image.map((url, index) => (
                   <div key={index} className="relative h-32 rounded-3xl overflow-hidden group shadow-md">
@@ -127,7 +127,7 @@ const AdminCreateDestination = () => {
               </div>
             </div>
 
-            <button type="submit" disabled={loading || uploading} className="w-full py-5 rounded-full font-black uppercase tracking-widest text-white bg-[#00AEEF] hover:bg-[#0095cc] transition-all duration-500 shadow-xl active:scale-[0.98] disabled:bg-gray-300">
+            <button type="submit" disabled={loading || uploading} className="w-full py-5 rounded-full font-black uppercase tracking-widest text-white bg-[#C8813A] hover:bg-[#A66A28] transition-all duration-500 shadow-xl active:scale-[0.98] disabled:bg-gray-300">
               {loading ? "Saving..." : "Create Destination"}
             </button>
           </div>

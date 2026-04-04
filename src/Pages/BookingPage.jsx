@@ -191,8 +191,8 @@ export default function TravelBookingUI() {
   );
 
   const cardBase   = "p-4 rounded-[2rem] cursor-pointer transition-all duration-500 flex justify-between items-center border-2";
-  const cardActive = "bg-[#00AEEF] border-[#00AEEF] text-white shadow-lg";
-  const cardIdle   = "bg-white border-gray-100 hover:border-[#00AEEF]/30 text-gray-800";
+  const cardActive = "bg-[#C8813A] border-[#C8813A] text-white shadow-lg";
+  const cardIdle   = "bg-white border-gray-100 hover:border-[#C8813A]/30 text-gray-800";
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center p-4">
@@ -205,7 +205,7 @@ export default function TravelBookingUI() {
           <div>
             <h1 className="text-white text-5xl font-bold italic leading-none mb-2"
                 style={{ fontFamily: "'Playfair Display', serif" }}>JOURNEY.</h1>
-            <p className="text-[#00AEEF] font-bold text-[10px] uppercase tracking-[0.2em]">
+            <p className="text-[#C8813A] font-bold text-[10px] uppercase tracking-[0.2em]">
               {isPackageBooking ? "📦 " + (details?.title || "Package") : "📍 " + (details?.city || "Destination")}
             </p>
 
@@ -215,7 +215,7 @@ export default function TravelBookingUI() {
               {["Personal Details", "Select Room", "Transport", "Summary"]
                 .map((label, i) => (
                   <div key={i} className={`flex items-center gap-3 transition-all duration-500 ${step === i + 1 ? "opacity-100" : "opacity-30"}`}>
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${step === i + 1 ? "bg-[#00AEEF] text-white" : "bg-white/20 text-white"}`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${step === i + 1 ? "bg-[#C8813A] text-white" : "bg-white/20 text-white"}`}>
                       {i + 1}
                     </div>
                     <span className="text-white text-[11px] font-bold uppercase tracking-widest">{label}</span>
@@ -226,7 +226,7 @@ export default function TravelBookingUI() {
 
           <div className="flex gap-2">
             {Array.from({ length: totalSteps }).map((_, i) => (
-              <div key={i} className={`h-1.5 w-10 rounded-full transition-all duration-500 ${step >= i + 1 ? "bg-[#00AEEF]" : "bg-white/20"}`} />
+              <div key={i} className={`h-1.5 w-10 rounded-full transition-all duration-500 ${step >= i + 1 ? "bg-[#C8813A]" : "bg-white/20"}`} />
             ))}
           </div>
         </div>
@@ -238,23 +238,23 @@ export default function TravelBookingUI() {
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <h2 className="text-gray-900 text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Personal <span className="italic text-[#00AEEF]">Details</span>
+                  Personal <span className="italic text-[#C8813A]">Details</span>
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <input name="firstName" value={formData.firstName} onChange={handleInputChange} placeholder="First Name"
-                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                   <input name="lastName"  value={formData.lastName}  onChange={handleInputChange} placeholder="Last Name"
-                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                 </div>
                 <input name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="Email Address"
-                  className="w-full bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                  className="w-full bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                 <div className="grid grid-cols-2 gap-4">
                   <input name="phone" value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
                     type="tel" placeholder="Telephone No" maxLength="10"
-                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                   <input name="country" value={formData.country} onChange={handleInputChange} placeholder="Country"
-                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#00AEEF]/30 border border-gray-100 transition-all duration-500" />
+                    className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                 </div>
               </motion.div>
             )}
@@ -262,7 +262,7 @@ export default function TravelBookingUI() {
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
                 <h2 className="text-gray-900 text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Select <span className="italic text-[#00AEEF]">Room</span>
+                  Select <span className="italic text-[#C8813A]">Room</span>
                 </h2>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -287,7 +287,7 @@ export default function TravelBookingUI() {
                           onClick={() => handleHotelSelect(hotel)}
                           className={`${cardBase} ${formData.selectedHotel?._id === hotel._id ? cardActive : cardIdle}`}>
                           <div className="flex items-center gap-3">
-                            <Package size={16} className={formData.selectedHotel?._id === hotel._id ? "text-white" : "text-[#00AEEF]"} />
+                            <Package size={16} className={formData.selectedHotel?._id === hotel._id ? "text-white" : "text-[#C8813A]"} />
                             <div>
                               <p className="font-bold text-[11px] uppercase">{hotel.name}</p>
                               <p className="text-[9px] opacity-60">{hotel.city} — ⭐ {hotel.rating}</p>
@@ -311,7 +311,7 @@ export default function TravelBookingUI() {
                           onClick={() => setFormData({ ...formData, selectedRoom: room })}
                           className={`${cardBase} ${formData.selectedRoom?._id === room._id ? cardActive : cardIdle}`}>
                           <div className="flex items-center gap-3">
-                            <Bed size={16} className={formData.selectedRoom?._id === room._id ? "text-white" : "text-[#00AEEF]"} />
+                            <Bed size={16} className={formData.selectedRoom?._id === room._id ? "text-white" : "text-[#C8813A]"} />
                             <div>
                               <p className="font-bold uppercase text-[10px] tracking-tight">{room.type}</p>
                               <p className="text-[8px] opacity-60 italic">Sleeps {room.maxGuests}</p>
@@ -329,9 +329,9 @@ export default function TravelBookingUI() {
                     <div key={field} className="flex-1 bg-white p-4 rounded-2xl flex justify-between items-center border border-gray-100">
                       <span className="text-gray-400 text-[10px] font-bold uppercase">{field === "adults" ? "Adults" : "Kids"}</span>
                       <div className="flex items-center gap-3">
-                        <button type="button" onClick={() => updateCount(field, "dec")} className="text-[#00AEEF] font-bold text-lg">-</button>
+                        <button type="button" onClick={() => updateCount(field, "dec")} className="text-[#C8813A] font-bold text-lg">-</button>
                         <span className="text-gray-900 font-bold text-xs w-4 text-center">{formData[field]}</span>
-                        <button type="button" onClick={() => updateCount(field, "inc")} className="text-[#00AEEF] font-bold text-lg">+</button>
+                        <button type="button" onClick={() => updateCount(field, "inc")} className="text-[#C8813A] font-bold text-lg">+</button>
                       </div>
                     </div>
                   ))}
@@ -343,7 +343,7 @@ export default function TravelBookingUI() {
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
                 <h2 className="text-gray-900 text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Select <span className="italic text-[#00AEEF]">Transport</span>
+                  Select <span className="italic text-[#C8813A]">Transport</span>
                 </h2>
 
                 <div>
@@ -363,7 +363,7 @@ export default function TravelBookingUI() {
                         <div className="flex items-center gap-3">
                           {driver.profileImage
                             ? <img src={driver.profileImage} alt={driver.name} className="w-8 h-8 rounded-full object-cover" />
-                            : <User size={16} className={formData.selectedDriver?._id === driver._id ? "text-white" : "text-[#00AEEF]"} />}
+                            : <User size={16} className={formData.selectedDriver?._id === driver._id ? "text-white" : "text-[#C8813A]"} />}  
                           <div>
                             <p className="font-bold text-[11px] uppercase">{driver.name}</p>
                             <p className="text-[9px] opacity-60">{driver.vehicleType} — 📞 {driver.phone}</p>
@@ -389,7 +389,7 @@ export default function TravelBookingUI() {
                         onClick={() => setFormData(prev => ({ ...prev, selectedVehicle: vehicle }))}
                         className={`${cardBase} ${formData.selectedVehicle?._id === vehicle._id ? cardActive : cardIdle}`}>
                         <div className="flex items-center gap-3">
-                          <Car size={16} className={formData.selectedVehicle?._id === vehicle._id ? "text-white" : "text-[#00AEEF]"} />
+                          <Car size={16} className={formData.selectedVehicle?._id === vehicle._id ? "text-white" : "text-[#C8813A]"} />
                           <div>
                             <p className="font-bold text-[11px] uppercase">{vehicle.make} {vehicle.model}</p>
                             <p className="text-[9px] opacity-60">{vehicle.type} · {vehicle.seatingCapacity} seats · LKR {vehicle.pricePerKm}/km</p>
@@ -409,7 +409,7 @@ export default function TravelBookingUI() {
             {step === 4 && (
               <motion.div key="summary" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <h2 className="text-gray-900 text-4xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Booking <span className="italic text-[#00AEEF]">Summary</span>
+                  Booking <span className="italic text-[#C8813A]">Summary</span>
                 </h2>
                 <div className="bg-white p-8 rounded-[3rem] text-gray-800 shadow-sm border border-gray-100 space-y-4">
 
@@ -433,7 +433,7 @@ export default function TravelBookingUI() {
 
                   <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <span className="font-bold uppercase text-sm italic">Grand Total</span>
-                    <span className="text-4xl font-bold text-[#00AEEF] italic drop-shadow-md"
+                    <span className="text-4xl font-bold text-[#C8813A] italic drop-shadow-md"
                           style={{ fontFamily: "'Playfair Display', serif" }}>
                       LKR {formData.selectedRoom?.finalPrice?.toLocaleString() || "—"}
                     </span>
@@ -446,7 +446,7 @@ export default function TravelBookingUI() {
           <div className="mt-12 flex justify-between items-center">
             {step > 1
               ? <button type="button" onClick={prevStep}
-                  className="text-gray-900 font-bold uppercase text-[10px] flex items-center gap-2 hover:text-[#00AEEF] transition-colors duration-500 tracking-widest">
+                  className="text-gray-900 font-bold uppercase text-[10px] flex items-center gap-2 hover:text-[#C8813A] transition-colors duration-500 tracking-widest">
                   <ArrowLeft size={14} /> BACK
                 </button>
               : <div />}
@@ -455,7 +455,7 @@ export default function TravelBookingUI() {
               disabled={isSubmitting}
               type="button"
               onClick={step === totalSteps ? handleBookingSubmit : nextStep}
-              className={`${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#00AEEF] hover:bg-[#0096CE]"} text-white px-12 py-4 rounded-full font-bold uppercase text-[10px] tracking-widest flex items-center gap-3 shadow-xl transition-all duration-500 active:scale-95`}>
+              className={`${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#C8813A] hover:bg-[#A66A28]"} text-white px-12 py-4 rounded-full font-bold uppercase text-[10px] tracking-widest flex items-center gap-3 shadow-xl transition-all duration-500 active:scale-95`}>
               {isSubmitting ? "PROCESSING..." : step === totalSteps ? "CONFIRM BOOKING" : "NEXT STEP"} <ArrowRight size={14} />
             </button>
           </div>
@@ -469,7 +469,7 @@ function Row({ label, value, highlight }) {
   return (
     <div className="flex justify-between border-b border-gray-100 pb-3">
       <span className="opacity-50 uppercase text-[10px] font-bold">{label}</span>
-      <span className={`font-bold italic ${highlight ? "text-[#00AEEF]" : ""}`}>{value}</span>
+      <span className={`font-bold italic ${highlight ? "text-[#C8813A]" : ""}`}>{value}</span>
     </div>
   );
 }

@@ -96,10 +96,10 @@ const AdminVehicleCreatePage = () => {
       <Toaster position="top-right" />
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#00AEEF] transition-all">
+          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#C8813A] transition-all">
             <ArrowLeft size={20} /> <span className="font-medium">Back to Vehicles</span>
           </Link>
-          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Add <span className="text-[#00AEEF]">New Vehicle</span></h1>
+          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Add <span className="text-[#C8813A]">New Vehicle</span></h1>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm hover:shadow-2xl p-8 md:p-12 border border-gray-100 space-y-8 transition-all duration-500">
@@ -107,13 +107,13 @@ const AdminVehicleCreatePage = () => {
           {/* Basic Info */}
           <div>
             <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <Car className="text-[#00AEEF]" size={20} /> Vehicle Details
+              <Car className="text-[#C8813A]" size={20} /> Vehicle Details
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Vehicle Type</label>
-                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none"
+                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none"
                   value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})}>
                   <option value="Car">Car</option>
                   <option value="Van">Van</option>
@@ -123,12 +123,12 @@ const AdminVehicleCreatePage = () => {
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Registration Number</label>
-                <input required type="text" placeholder="WP CAS-1234" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none"
+                <input required type="text" placeholder="WP CAS-1234" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none"
                   value={formData.registrationNumber} onChange={(e) => setFormData({...formData, registrationNumber: e.target.value})} />
               </div>
-              <input required placeholder="Make (e.g. Toyota)" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none"
+              <input required placeholder="Make (e.g. Toyota)" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none"
                 value={formData.make} onChange={(e) => setFormData({...formData, make: e.target.value})} />
-              <input required placeholder="Model (e.g. Prius)" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none"
+              <input required placeholder="Model (e.g. Prius)" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none"
                 value={formData.model} onChange={(e) => setFormData({...formData, model: e.target.value})} />
             </div>
           </div>
@@ -136,7 +136,7 @@ const AdminVehicleCreatePage = () => {
           {/* Specifications - Luggage Added Here */}
           <div>
             <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <Settings className="text-[#00AEEF]" size={20} /> Specifications
+              <Settings className="text-[#C8813A]" size={20} /> Specifications
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -175,21 +175,21 @@ const AdminVehicleCreatePage = () => {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Price per KM (LKR)</label>
-                <input required type="number" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none font-bold text-[#00AEEF]" min="0"
+                <input required type="number" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none font-bold text-[#C8813A]" min="0"
                   value={formData.pricePerKm} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) setFormData({...formData, pricePerKm: val}); }} />
               </div>
 
               {/* AC / NON-AC TOGGLE */}
-              <div className="md:col-span-2 flex items-center gap-4 bg-[#00AEEF]/5 p-4 rounded-2xl border border-[#00AEEF]/10">
-                <Wind size={20} className="text-[#00AEEF]" />
+              <div className="md:col-span-2 flex items-center gap-4 bg-[#C8813A]/5 p-4 rounded-2xl border border-[#C8813A]/10">
+                <Wind size={20} className="text-[#C8813A]" />
                 <span className="text-sm font-bold text-gray-700">Air Conditioning (A/C)</span>
-                <input type="checkbox" className="w-5 h-5 accent-[#00AEEF]" 
+                <input type="checkbox" className="w-5 h-5 accent-[#C8813A]" 
                   checked={formData.hasAC} onChange={(e) => setFormData({...formData, hasAC: e.target.checked})} />
               </div>
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-gray-700 mb-2">Assign Driver (Optional)</label>
-                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#00AEEF] outline-none"
+                <select className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:border-[#C8813A] outline-none"
                   value={formData.driverId} onChange={(e) => setFormData({...formData, driverId: e.target.value})}>
                   <option value="">No Driver Assigned</option>
                   {drivers.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
@@ -201,12 +201,12 @@ const AdminVehicleCreatePage = () => {
           {/* Photos */}
           <div>
             <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <Upload className="text-[#00AEEF]" size={20} /> Photos
+              <Upload className="text-[#C8813A]" size={20} /> Photos
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <label className="cursor-pointer border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center h-32 hover:bg-[#00AEEF]/5 transition-all group">
+              <label className="cursor-pointer border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center h-32 hover:bg-[#C8813A]/5 transition-all group">
                 <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageChange} disabled={uploading} />
-                {uploading ? <FiLoader className="animate-spin text-[#00AEEF]" /> : <FiUploadCloud className="text-2xl text-gray-400 group-hover:text-[#00AEEF]" />}
+                {uploading ? <FiLoader className="animate-spin text-[#C8813A]" /> : <FiUploadCloud className="text-2xl text-gray-400 group-hover:text-[#C8813A]" />}
                 <span className="text-[10px] font-bold text-gray-500 mt-2 uppercase">Upload</span>
               </label>
               {images.map((url, idx) => (
@@ -220,7 +220,7 @@ const AdminVehicleCreatePage = () => {
             </div>
           </div>
 
-          <button type="submit" disabled={loading || uploading} className="w-full py-5 rounded-full font-black uppercase tracking-widest text-white bg-[#00AEEF] hover:bg-[#0095cc] transition-all shadow-xl disabled:bg-gray-300">
+          <button type="submit" disabled={loading || uploading} className="w-full py-5 rounded-full font-black uppercase tracking-widest text-white bg-[#C8813A] hover:bg-[#A66A28] transition-all shadow-xl disabled:bg-gray-300">
             {loading ? "Creating..." : "Register Vehicle"}
           </button>
         </form>

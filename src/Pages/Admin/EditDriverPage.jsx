@@ -86,7 +86,7 @@ const EditDriverPage = () => {
   if (fetching) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-[#00AEEF] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-[#C8813A] border-t-transparent rounded-full animate-spin"></div>
         <p className="mt-4 text-gray-500 font-medium animate-pulse font-[Inter]">Fetching driver details...</p>
       </div>
     );
@@ -99,14 +99,14 @@ const EditDriverPage = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
           <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">
-            Edit <span className="text-[#00AEEF]">Driver</span>
+            Edit <span className="text-[#C8813A]">Driver</span>
           </h1>
           <p className="text-gray-500 mt-2 text-lg italic font-[Inter]">Modifying: {formData.name}</p>
-          <div className="w-24 h-1.5 bg-[#00AEEF] mt-4 rounded-full"></div>
+          <div className="w-24 h-1.5 bg-[#C8813A] mt-4 rounded-full"></div>
         </div>
         <button 
           onClick={() => navigate("/admin/drivers")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 hover:bg-[#00AEEF] hover:text-white hover:border-[#00AEEF] transition-all duration-500 w-fit font-semibold uppercase tracking-widest text-xs"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 hover:bg-[#C8813A] hover:text-white hover:border-[#C8813A] transition-all duration-500 w-fit font-semibold uppercase tracking-widest text-xs"
         >
           <ArrowLeft size={14}/> Back to Fleet
         </button>
@@ -119,21 +119,21 @@ const EditDriverPage = () => {
             <p className="text-gray-400 text-sm mt-1 font-[Inter]">Keep the driver information up to date.</p>
           </div>
           <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-lg border border-white/10">
-            <IdCard className="text-[#00AEEF] w-6 h-6" />
+            <IdCard className="text-[#C8813A] w-6 h-6" />
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-10 space-y-8">
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-36 h-36 group">
-              <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#00AEEF]/10 shadow-xl bg-gray-50 flex items-center justify-center">
+              <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#C8813A]/10 shadow-xl bg-gray-50 flex items-center justify-center">
                 {preview ? (
                   <img src={preview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <User className="text-gray-300 w-16 h-16" />
                 )}
               </div>
-              <label className="absolute bottom-2 right-2 bg-[#00AEEF] p-3 rounded-full text-white cursor-pointer hover:bg-[#0095cc] transition-all duration-500 shadow-lg border-2 border-white">
+              <label className="absolute bottom-2 right-2 bg-[#C8813A] p-3 rounded-full text-white cursor-pointer hover:bg-[#A66A28] transition-all duration-500 shadow-lg border-2 border-white">
                 <Camera size={16} />
                 <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
               </label>
@@ -153,19 +153,19 @@ const EditDriverPage = () => {
 
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
-                <MapPin className="text-[#00AEEF]" size={14}/> Permanent Address
+                <MapPin className="text-[#C8813A]" size={14}/> Permanent Address
               </label>
               <textarea name="address" value={formData.address} onChange={handleChange} required rows="2"
-                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 resize-none font-[Inter]"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 resize-none font-[Inter]"
               ></textarea>
             </div>
 
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1 flex items-center gap-2">
-                <FileText className="text-[#00AEEF]" size={14}/> Driver Bio / Description
+                <FileText className="text-[#C8813A]" size={14}/> Driver Bio / Description
               </label>
               <textarea name="description" value={formData.description} onChange={handleChange} required rows="4"
-                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
+                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 font-[Inter]"
                 placeholder="Briefly describe the driver's experience and skills..."
               ></textarea>
             </div>
@@ -173,7 +173,7 @@ const EditDriverPage = () => {
 
           <div className="pt-6">
             <button type="submit" disabled={loading}
-              className="w-full bg-[#00AEEF] hover:bg-[#0095cc] text-white font-bold py-5 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl uppercase tracking-widest active:scale-[0.98] disabled:bg-gray-400"
+              className="w-full bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-5 rounded-full transition-all duration-500 flex items-center justify-center gap-3 shadow-xl uppercase tracking-widest active:scale-[0.98] disabled:bg-gray-400"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ function InputGroup({ icon, label, ...props }) {
       <div className="relative">
         <span className="absolute inset-y-0 left-0 flex items-center pl-5 text-gray-400">{icon}</span>
         <input {...props} required
-          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#00AEEF]/10 focus:border-[#00AEEF] focus:bg-white outline-none transition-all duration-500 disabled:opacity-60 disabled:bg-gray-100 disabled:cursor-not-allowed font-[Inter]"
+          className="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500 disabled:opacity-60 disabled:bg-gray-100 disabled:cursor-not-allowed font-[Inter]"
         />
       </div>
     </div>

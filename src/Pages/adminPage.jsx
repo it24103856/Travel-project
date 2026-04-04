@@ -64,7 +64,7 @@ export default function AdminPage() {
 
     if (isLoading) return (
         <div className="h-screen flex flex-col items-center justify-center bg-[#FDFDFD]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00AEEF]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C8813A]"></div>
             <p className="mt-4 text-gray-600 font-medium font-[Inter]">Authenticating Admin...</p>
         </div>
     );
@@ -73,7 +73,7 @@ export default function AdminPage() {
         const isActive = location.pathname === to;
         return (
             <Link to={to} className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider ${
-                isActive ? "bg-[#00AEEF] text-white shadow-lg shadow-blue-100" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                isActive ? "bg-[#C8813A] text-white shadow-lg shadow-orange-100" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
             }`}>
                 <span className={isActive ? "text-white" : "text-gray-400 group-hover:text-gray-900"}>{icon}</span>
                 <span>{label}</span>
@@ -95,7 +95,7 @@ export default function AdminPage() {
                         </div>
                         <div className="hidden lg:block">
                             <h2 className="font-[Playfair_Display] text-gray-900 font-black text-sm uppercase tracking-tighter">Admin Panel</h2>
-                            <p className="text-[9px] text-[#00AEEF] font-bold tracking-[0.2em] uppercase">TravelMate</p>
+                            <p className="text-[9px] text-[#C8813A] font-bold tracking-[0.2em] uppercase">TravelMate</p>
                         </div>
                     </div>
 
@@ -160,13 +160,13 @@ export default function AdminPage() {
                         
                         <Route path="/" element={
                             <div className="animate-fade-in">
-                                <span className="text-[10px] font-bold text-[#00AEEF] uppercase tracking-[0.3em]">Management Console</span>
+                                <span className="text-[10px] font-bold text-[#C8813A] uppercase tracking-[0.3em]">Management Console</span>
                                 <h1 className="text-4xl md:text-5xl font-[Playfair_Display] font-black text-gray-900 mt-2 italic">
                                     Welcome, {user?.firstName}
                                 </h1>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-                                    <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] group hover:border-[#00AEEF] transition-all duration-500">
-                                        <div className="w-12 h-12 bg-[#00AEEF]/10 rounded-2xl flex items-center justify-center text-[#00AEEF] mb-6">
+                                    <div className="p-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] group hover:border-[#C8813A] transition-all duration-500">
+                                        <div className="w-12 h-12 bg-[#C8813A]/10 rounded-2xl flex items-center justify-center text-[#C8813A] mb-6">
                                             <LayoutDashboard size={20} />
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-2">System Status</h3>

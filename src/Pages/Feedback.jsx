@@ -98,11 +98,11 @@ export default function CustomerFeedback() {
                 <div className="lg:col-span-1">
                     <div className="bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-lg transition-all duration-500 border border-gray-50 sticky top-28">
                         <div className="mb-8">
-                            <p className="uppercase text-[10px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-2">Leave a Review</p>
+                            <p className="uppercase text-[10px] tracking-[0.3em] font-semibold text-[#C8813A] mb-2">Leave a Review</p>
                             <h2 className="text-3xl font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                                Share Your <span className="italic text-[#00AEEF]">Story</span>
+                                Share Your <span className="italic text-[#C8813A]">Story</span>
                             </h2>
-                            <div className="w-12 h-1 bg-[#00AEEF] mt-2 rounded-full"></div>
+                            <div className="w-12 h-1 bg-[#C8813A] mt-2 rounded-full"></div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -121,8 +121,8 @@ export default function CustomerFeedback() {
                                             onClick={() => setFormData({ ...formData, category: cat.id })}
                                             className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-500 ${
                                                 formData.category === cat.id
-                                                ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF] shadow-sm"
-                                                : "border-gray-100 bg-gray-50 text-gray-400 hover:border-[#00AEEF]/30"
+                                                ? "border-[#C8813A] bg-[#C8813A]/10 text-[#C8813A] shadow-sm"
+                                                : "border-gray-100 bg-gray-50 text-gray-400 hover:border-[#C8813A]/30"
                                             }`}
                                         >
                                             <span className="mb-1">{cat.icon}</span>
@@ -155,7 +155,7 @@ export default function CustomerFeedback() {
                                 <textarea
                                     required
                                     rows="4"
-                                    className="w-full mt-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#00AEEF]/20 focus:border-[#00AEEF] outline-none transition-all duration-500 text-gray-700 placeholder:text-gray-300"
+                                    className="w-full mt-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#C8813A]/20 focus:border-[#C8813A] outline-none transition-all duration-500 text-gray-700 placeholder:text-gray-300"
                                     placeholder="How was your trip?"
                                     value={formData.feedback}
                                     onChange={(e) => setFormData({ ...formData, feedback: e.target.value })}
@@ -165,7 +165,7 @@ export default function CustomerFeedback() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full py-4 bg-[#00AEEF] hover:bg-[#0096CE] text-white rounded-full font-bold shadow-lg shadow-[#00AEEF]/20 transition-all duration-500 flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest"
+                                className="w-full py-4 bg-[#C8813A] hover:bg-[#A66A28] text-white rounded-full font-bold shadow-lg shadow-[#C8813A]/20 transition-all duration-500 flex items-center justify-center gap-2 uppercase text-[11px] tracking-widest"
                             >
                                 {isLoading ? "Sending..." : <><Send size={16} /> Post Feedback</>}
                             </button>
@@ -178,7 +178,7 @@ export default function CustomerFeedback() {
                     <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                         <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>What People Say</h3>
                         <div className="flex items-center gap-2">
-                            <span className="bg-[#00AEEF]/10 text-[#00AEEF] px-3 py-1 rounded-full text-xs font-bold">
+                            <span className="bg-[#C8813A]/10 text-[#C8813A] px-3 py-1 rounded-full text-xs font-bold">
                                 {feedbacks.length} Reviews
                             </span>
                         </div>
@@ -195,7 +195,7 @@ export default function CustomerFeedback() {
                                 <div key={fb._id} className="group bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-lg border border-gray-50 transition-all duration-500 relative">
                                     <div className="flex justify-between items-start">
                                         <div className="flex gap-5">
-                                            <div className="w-14 h-14 bg-[#00AEEF]/10 text-[#00AEEF] rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <div className="w-14 h-14 bg-[#C8813A]/10 text-[#C8813A] rounded-2xl flex items-center justify-center flex-shrink-0">
                                                 {getCategoryIcon(fb.category)}
                                             </div>
                                             <div>

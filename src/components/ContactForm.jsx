@@ -89,7 +89,7 @@ export default function ContactForm() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsFormOpen(!isFormOpen)}
-        className="w-16 h-16 bg-[#00AEEF] text-white rounded-full flex items-center justify-center shadow-2xl border-4 border-white transition-all"
+        className="w-16 h-16 bg-[#C8813A] text-white rounded-full flex items-center justify-center shadow-2xl border-4 border-white transition-all"
       >
         {isFormOpen ? <X size={28} /> : <MessageCircle size={28} />}
       </motion.button>
@@ -106,7 +106,7 @@ export default function ContactForm() {
             {/* Header Section */}
             <div className="bg-gray-900 p-6 text-white">
               <h3 className="font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Contact <span className="italic text-[#00AEEF]">TravelEase</span>
+                Contact <span className="italic text-[#C8813A]">TravelEase</span>
               </h3>
               <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em] mt-1">We are here to help you</p>
             </div>
@@ -120,7 +120,7 @@ export default function ContactForm() {
                 <input
                   type="text"
                   name="customerName"
-                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#00AEEF] focus:bg-white transition-all"
+                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#C8813A] focus:bg-white transition-all"
                   placeholder="Your Full Name"
                   value={formData.customerName}
                   onChange={handleChange}
@@ -134,7 +134,7 @@ export default function ContactForm() {
                 <input
                   type="email"
                   name="customerEmail"
-                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#00AEEF] focus:bg-white transition-all"
+                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#C8813A] focus:bg-white transition-all"
                   placeholder="Email Address"
                   value={formData.customerEmail}
                   onChange={handleChange}
@@ -146,7 +146,7 @@ export default function ContactForm() {
               <input
                 type="text"
                 name="subject"
-                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#00AEEF] focus:bg-white transition-all"
+                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#C8813A] focus:bg-white transition-all"
                 placeholder="Subject of Inquiry"
                 value={formData.subject}
                 onChange={handleChange}
@@ -156,7 +156,7 @@ export default function ContactForm() {
               {/* Message */}
               <textarea
                 name="message"
-                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#00AEEF] focus:bg-white transition-all resize-none"
+                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:border-[#C8813A] focus:bg-white transition-all resize-none"
                 placeholder="How can we assist you today?"
                 rows="4"
                 value={formData.message}
@@ -168,7 +168,7 @@ export default function ContactForm() {
               <button 
                 type="submit" 
                 disabled={isSending}
-                className="w-full bg-[#00AEEF] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 uppercase text-[11px] tracking-[0.2em] transition-all shadow-lg hover:bg-[#0096ce] disabled:opacity-70 active:scale-[0.98]"
+                className="w-full bg-[#C8813A] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 uppercase text-[11px] tracking-[0.2em] transition-all shadow-lg hover:bg-[#A66A28] disabled:opacity-70 active:scale-[0.98]"
               >
                 {isSending ? "Sending..." : <><Send size={16} /> Send Message</>}
               </button>

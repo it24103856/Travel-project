@@ -3,8 +3,8 @@
 @theme {
     --color-primary: #FDFDFD;
     --color-secondary: #111827;
-    --color-accent: #00AEEF;
-    --color-accent-dark: #0096CE;
+    --color-accent: #C8813A;
+    --color-accent-dark: #A66A28;
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
@@ -39,12 +39,12 @@
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    background-color: #00AEEF;
+    background-color: #C8813A;
     border-radius: 4px;
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background-color: #0096CE;
+    background-color: #A66A28;
   }
 
   /* Glassmorphism utility */

@@ -78,14 +78,14 @@ export default function ForgotPassword() {
               <input
                 type="email"
                 placeholder="Email Address"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#C8813A]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <button
                 disabled={isLoading}
-                className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
+                className="w-full bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg shadow-[#C8813A]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
               >
                 {isLoading ? "Sending OTP..." : "Send OTP"}
               </button>
@@ -99,7 +99,7 @@ export default function ForgotPassword() {
                 name='otp-code'
                 autoComplete='one-time-code'
                 placeholder="Enter 6-digit OTP"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#C8813A]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
@@ -108,7 +108,7 @@ export default function ForgotPassword() {
               <input
                 type="password"
                 placeholder="New Password"
-                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
+                className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#C8813A]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
@@ -118,7 +118,7 @@ export default function ForgotPassword() {
                 type="password"
                 placeholder="Confirm New Password"
                 className={`w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 transition-all duration-500 outline-none text-gray-800 shadow-inner ${
-                  confirmPassword && newPassword !== confirmPassword ? "focus:ring-red-500 ring-2 ring-red-500" : "focus:ring-[#00AEEF]/50"
+                  confirmPassword && newPassword !== confirmPassword ? "focus:ring-red-500 ring-2 ring-red-500" : "focus:ring-[#C8813A]/50"
                 }`}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -131,7 +131,7 @@ export default function ForgotPassword() {
 
               <button
                 disabled={isLoading}
-                className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
+                className="w-full bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg shadow-[#C8813A]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
               >
                 {isLoading ? "Resetting..." : "Reset Password"}
               </button>
@@ -139,7 +139,7 @@ export default function ForgotPassword() {
           )}
 
           <div className="mt-8">
-            <Link to="/login" className="text-[#00AEEF] font-bold hover:underline text-sm">
+            <Link to="/login" className="text-[#C8813A] font-bold hover:underline text-sm">
               Back to Sign In
             </Link>
           </div>

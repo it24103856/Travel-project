@@ -25,9 +25,9 @@ export default function About() {
       {/* 2. Who We Are Section */}
       <section className="max-w-7xl mx-auto py-24 px-6 grid md:grid-cols-2 gap-16 items-center">
         <div className="space-y-6">
-          <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF]">About Us</p>
+          <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A]">About Us</p>
           <h2 className="text-4xl font-bold text-gray-900 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-            We Are Your Ultimate <span className="italic text-[#00AEEF]">Travel Mate</span>
+            We Are Your Ultimate <span className="italic text-[#C8813A]">Travel Mate</span>
           </h2>
           <p className="text-gray-500 leading-relaxed text-lg">
             At TravelEase, we believe that traveling is more than just visiting a destination; it's about creating memories that last a lifetime. Based in the heart of Sri Lanka, we specialize in curated experiences that showcase the true soul of our island.
@@ -36,7 +36,7 @@ export default function About() {
             From the misty mountains of Ella to the golden shores of Mirissa, our mission is to provide authentic, sustainable, and luxury travel solutions for every wanderer.
           </p>
           <div className="pt-4">
-             <Link to="/contact" className="inline-block bg-[#00AEEF] hover:bg-[#0096CE] text-white px-10 py-4 rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#00AEEF]/20 uppercase text-[11px] tracking-widest hover:scale-105">
+             <Link to="/contact" className="inline-block bg-[#C8813A] hover:bg-[#A66A28] text-white px-10 py-4 rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#C8813A]/20 uppercase text-[11px] tracking-widest hover:scale-105">
                Contact Our Team
              </Link>
           </div>
@@ -47,18 +47,18 @@ export default function About() {
             alt="Travel Group"
             className="rounded-[15rem] shadow-sm hover:shadow-2xl transition-all duration-500 z-10 relative"
           />
-          <div className="absolute -bottom-6 -left-6 w-64 h-64 bg-[#00AEEF]/10 rounded-full -z-0 opacity-70 blur-3xl"></div>
+          <div className="absolute -bottom-6 -left-6 w-64 h-64 bg-[#C8813A]/10 rounded-full -z-0 opacity-70 blur-3xl"></div>
         </div>
       </section>
 
       {/* 3. Why Choose Us (Icon Cards) */}
       <section className="bg-[#FAFAFA] py-24 px-6">
         <div className="max-w-7xl mx-auto text-center mb-16">
-          <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-3">Our Promise</p>
+          <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A] mb-3">Our Promise</p>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
             Why Travelers <span className="italic">Love Us</span>
           </h2>
-          <div className="w-20 h-1 bg-[#00AEEF] mx-auto mt-4 rounded-full"></div>
+          <div className="w-20 h-1 bg-[#C8813A] mx-auto mt-4 rounded-full"></div>
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -69,7 +69,7 @@ export default function About() {
             { icon: <Award size={28} />, title: "Best Prices", desc: "Guaranteed value for every penny you spend." }
           ].map((item, index) => (
             <div key={index} className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-50 text-center group">
-              <div className="text-[#00AEEF] mb-5 flex justify-center group-hover:scale-110 transition-transform duration-500">
+              <div className="text-[#C8813A] mb-5 flex justify-center group-hover:scale-110 transition-transform duration-500">
                 {item.icon}
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>{item.title}</h3>

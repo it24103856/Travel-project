@@ -11,7 +11,7 @@ export default function Footer() {
         {/* 1. About section */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Travel<span className="text-[#00AEEF]">Ease</span>
+            Travel<span className="text-[#C8813A]">Ease</span>
           </h2>
           <p className="text-sm leading-7 text-gray-400">
             Your ultimate travel companion, providing the best destinations and luxury experiences across Sri Lanka.
@@ -49,7 +49,7 @@ export default function Footer() {
               { to: "/contact", label: "Contact" },
             ].map((link) => (
               <li key={link.to}>
-                <Link to={link.to} className="hover:text-[#00AEEF] transition-all duration-500">
+                <Link to={link.to} className="hover:text-[#C8813A] transition-all duration-500">
                   {link.label}
                 </Link>
               </li>
@@ -62,15 +62,15 @@ export default function Footer() {
           <h3 className="text-lg font-semibold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>Contact Us</h3>
           <ul className="space-y-4 text-sm">
             <li className="flex items-center gap-3">
-              <MapPin size={16} className="text-[#00AEEF] flex-shrink-0" />
+              <MapPin size={16} className="text-[#C8813A] flex-shrink-0" />
               No. 123, Galle Road, Colombo, Sri Lanka
             </li>
             <li className="flex items-center gap-3">
-              <Phone size={16} className="text-[#00AEEF] flex-shrink-0" />
+              <Phone size={16} className="text-[#C8813A] flex-shrink-0" />
               +94 77 123 4567
             </li>
             <li className="flex items-center gap-3">
-              <Mail size={16} className="text-[#00AEEF] flex-shrink-0" />
+              <Mail size={16} className="text-[#C8813A] flex-shrink-0" />
               travelease@gmail.com
             </li>
           </ul>
@@ -86,7 +86,7 @@ export default function Footer() {
               placeholder="Your Email"
               className="w-full px-5 py-3 bg-transparent text-white outline-none text-sm placeholder:text-gray-500"
             />
-            <button className="bg-[#00AEEF] hover:bg-[#0096CE] text-white px-6 py-3 transition-all duration-500 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap">
+            <button className="bg-[#C8813A] hover:bg-[#A66A28] text-white px-6 py-3 transition-all duration-500 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap">
               Join
             </button>
           </div>

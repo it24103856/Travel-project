@@ -35,8 +35,8 @@ const HotelPage = () => {
     return (
       <div className="flex flex-col items-center pt-50 justify-center min-h-screen bg-[#FDFDFD]">
         <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#00AEEF]"></div>
-          <Hotel className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#00AEEF] animate-pulse" />
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#C8813A]"></div>
+          <Hotel className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#C8813A] animate-pulse" />
         </div>
         <p className="mt-6 font-bold text-gray-800 tracking-widest uppercase text-[10px]">Finding Luxury Stays...</p>
       </div>
@@ -53,14 +53,14 @@ const HotelPage = () => {
         <div className="relative z-10 text-center text-white px-6">
           <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Premium Accommodations</p>
           <h1 className="text-4xl md:text-7xl font-bold tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Stay in <span className="italic text-[#00AEEF]">Style</span>
+            Stay in <span className="italic text-[#C8813A]">Style</span>
           </h1>
           <p className="mt-3 text-sm md:text-xl font-light max-w-2xl mx-auto text-white/80">
             Experience Sri Lankan hospitality at the finest hand-picked hotels.
           </p>
 
           <div className="mt-8 max-w-xl mx-auto relative group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#00AEEF] transition-colors" size={18} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C8813A] transition-colors" size={18} />
             <input
               type="text"
               placeholder="Search city or hotel..."
@@ -85,9 +85,9 @@ const HotelPage = () => {
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-none" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Explore <span className="italic text-[#00AEEF]">Hotels</span>
+              Explore <span className="italic text-[#C8813A]">Hotels</span>
             </h2>
-            <div className="w-16 h-1 bg-[#00AEEF] mt-3 rounded-full mx-auto md:mx-0"></div>
+            <div className="w-16 h-1 bg-[#C8813A] mt-3 rounded-full mx-auto md:mx-0"></div>
           </div>
           <p className="text-gray-400 text-xs md:text-sm font-medium max-w-xs italic">
             Tap or hover on a card to view details.
@@ -143,13 +143,13 @@ const HotelPage = () => {
 
       {/* SECTION 4: BOTTOM CTA */}
       <section className="bg-gray-900 py-16 px-6 rounded-[3rem] md:rounded-[4rem] mx-4 md:mx-6 mb-16 text-center relative overflow-hidden shadow-2xl">
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#00AEEF]/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#C8813A]/20 rounded-full blur-3xl"></div>
         <div className="relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
             Ready to <span className="italic">explore?</span>
           </h2>
           <p className="text-gray-400 text-sm md:text-base mb-10 max-w-xs md:max-w-lg mx-auto opacity-80 font-medium">Our travel experts are ready to plan your perfect Sri Lankan getaway.</p>
-          <Link to="/contact" className="inline-block bg-[#00AEEF] hover:bg-[#0096CE] text-white px-10 py-4 rounded-full font-bold text-[11px] uppercase tracking-widest shadow-2xl hover:scale-105 transition-all duration-500">
+          <Link to="/contact" className="inline-block bg-[#C8813A] hover:bg-[#A66A28] text-white px-10 py-4 rounded-full font-bold text-[11px] uppercase tracking-widest shadow-2xl hover:scale-105 transition-all duration-500">
             Get in Touch
           </Link>
         </div>
@@ -163,7 +163,7 @@ const HotelPage = () => {
 // Sub-component for Trust Badges
 const Badge = ({ icon, text }) => (
   <div className="flex items-center gap-3 justify-center px-6">
-    <div className="text-[#00AEEF]">{icon}</div>
+    <div className="text-[#C8813A]">{icon}</div>
     <span className="font-bold text-gray-800 uppercase tracking-widest text-[10px] whitespace-nowrap">{text}</span>
   </div>
 );

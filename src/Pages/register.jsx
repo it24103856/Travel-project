@@ -102,7 +102,7 @@ export default function RegisterPage() {
                     <img src="/logo.png" alt="Travel Logo" className="w-40 mb-8 mx-auto md:mx-0 drop-shadow-2xl" />
                     <h1 className="text-white font-bold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
                         Start Your <br />
-                        <span className="italic text-[#00AEEF]">Adventure</span> Today.
+                        <span className="italic text-[#C8813A]">Adventure</span> Today.
                     </h1>
                     <p className="mt-6 text-gray-200 text-xl font-light tracking-wide italic drop-shadow-md">
                         "Join our community of world travelers and discover hidden gems."
@@ -115,7 +115,7 @@ export default function RegisterPage() {
                     <p className="text-white/60 text-sm mb-8 self-start">Sign up to get started on your journey.</p>
 
                     <div className="relative mb-8 group">
-                        <div className="w-24 h-24 rounded-full border-4 border-[#00AEEF] overflow-hidden bg-white/20 shadow-xl">
+                        <div className="w-24 h-24 rounded-full border-4 border-[#C8813A] overflow-hidden bg-white/20 shadow-xl">
                             {preview ? (
                                 <img src={preview} alt="preview" className="w-full h-full object-cover" />
                             ) : (
@@ -124,7 +124,7 @@ export default function RegisterPage() {
                                 </div>
                             )}
                         </div>
-                        <label className="absolute bottom-0 right-0 bg-[#00AEEF] p-2 rounded-full cursor-pointer hover:bg-[#0096CE] transition-all duration-500 shadow-lg border-2 border-white/50">
+                        <label className="absolute bottom-0 right-0 bg-[#C8813A] p-2 rounded-full cursor-pointer hover:bg-[#A66A28] transition-all duration-500 shadow-lg border-2 border-white/50">
                             <BiCamera size={20} className="text-white" />
                             <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                         </label>
@@ -152,7 +152,7 @@ export default function RegisterPage() {
                                         onClick={() => toggleInterest(cat)}
                                         className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all duration-300 border ${
                                             interests.includes(cat) 
-                                            ? "bg-[#00AEEF] border-[#00AEEF] text-white shadow-md" 
+                                            ? "bg-[#C8813A] border-[#C8813A] text-white shadow-md" 
                                             : "bg-white/10 border-white/10 text-white/50 hover:border-white/30"
                                         }`}
                                     >
@@ -166,14 +166,14 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 mt-8 uppercase text-[11px] tracking-widest"
+                        className="w-full bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg shadow-[#C8813A]/40 active:scale-[0.98] transition-all duration-500 mt-8 uppercase text-[11px] tracking-widest"
                     >
                         {isLoading ? "Creating Account..." : "Join Now"}
                     </button>
 
                     <p className="text-white/70 mt-8 text-sm">
                         Already have an account?{" "}
-                        <Link to="/login" className="text-[#00AEEF] font-bold hover:underline">
+                        <Link to="/login" className="text-[#C8813A] font-bold hover:underline">
                             Login
                         </Link>
                     </p>
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                     transition: all 0.5s;
                 }
                 .input-field:focus {
-                    box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.5);
+                    box-shadow: 0 0 0 4px rgba(200, 129, 58, 0.5);
                 }
                 .input-field::placeholder {
                     color: #9ca3af;

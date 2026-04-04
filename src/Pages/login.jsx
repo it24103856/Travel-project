@@ -97,7 +97,7 @@ export default function LoginPage() {
         <div className="text-center md:text-left max-w-[550px]">
           <img src="/logo.png" alt="Travel Logo" className="w-40 mb-8 mx-auto md:mx-0 drop-shadow-2xl" />
           <h1 className="text-white font-bold text-5xl md:text-6xl leading-[1.1] drop-shadow-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Explore the <span className="italic text-[#00AEEF]">World</span> <br />
+            Explore the <span className="italic text-[#C8813A]">World</span> <br />
             with Ease.
           </h1>
           <p className="mt-6 text-gray-200 text-xl font-light tracking-wide italic drop-shadow-md">
@@ -117,7 +117,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email Address"
-              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
+              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#C8813A]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
             />
 
             <input
@@ -126,12 +126,12 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="Password"
-              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#00AEEF]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
+              className="w-full p-4 rounded-xl bg-white/90 border-none focus:ring-4 focus:ring-[#C8813A]/50 transition-all duration-500 outline-none text-gray-800 shadow-inner"
             />
           </div>
 
           <div className="w-full flex justify-end mt-3 mb-6">
-            <Link to="/forget-password" className="text-white/80 text-sm hover:text-[#00AEEF] transition-colors duration-500 italic">
+            <Link to="/forget-password" className="text-white/80 text-sm hover:text-[#C8813A] transition-colors duration-500 italic">
               Forgot password?
             </Link>
           </div>
@@ -139,7 +139,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#00AEEF] hover:bg-[#0096CE] text-white font-bold py-4 rounded-full shadow-lg shadow-[#00AEEF]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
+            className="w-full bg-[#C8813A] hover:bg-[#A66A28] text-white font-bold py-4 rounded-full shadow-lg shadow-[#C8813A]/40 active:scale-[0.98] transition-all duration-500 uppercase text-[11px] tracking-widest"
           >
             {isLoading ? "Authenticating..." : "Sign In"}
           </button>
@@ -163,7 +163,7 @@ export default function LoginPage() {
 
           <p className="text-white/70 mt-8 text-sm">
             Not a member?{" "}
-            <Link to="/register" className="text-[#00AEEF] font-bold hover:underline">
+            <Link to="/register" className="text-[#C8813A] font-bold hover:underline">
               Join for Free
             </Link>
           </p>

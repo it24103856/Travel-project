@@ -52,7 +52,7 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto py-24 px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-4">
           <div>
-            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-3">Featured Places</p>
+            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A] mb-3">Featured Places</p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
               Top Destinations
             </h2>
@@ -60,7 +60,7 @@ export default function HomePage() {
               Explore the best of Sri Lanka with our curated tours.
             </p>
           </div>
-          <Link to="/destinations" className="text-gray-900 font-bold hover:text-[#00AEEF] transition-all duration-500 flex items-center gap-1 uppercase text-[10px] tracking-widest border-b-2 border-gray-900 hover:border-[#00AEEF] pb-1">
+          <Link to="/destinations" className="text-gray-900 font-bold hover:text-[#C8813A] transition-all duration-500 flex items-center gap-1 uppercase text-[10px] tracking-widest border-b-2 border-gray-900 hover:border-[#C8813A] pb-1">
             View All <ArrowUpRight size={16} />
           </Link>
         </div>
@@ -100,7 +100,7 @@ export default function HomePage() {
 
                 {/* Visual Indicator Circle */}
                 <div className="mt-4 flex justify-center">
-                   <div className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 transition-all duration-500 group-hover:bg-[#00AEEF] group-hover:border-[#00AEEF] group-hover:text-white group-hover:scale-110">
+                   <div className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 transition-all duration-500 group-hover:bg-[#C8813A] group-hover:border-[#C8813A] group-hover:text-white group-hover:scale-110">
                       <ArrowUpRight size={20} />
                    </div>
                 </div>
@@ -114,9 +114,9 @@ export default function HomePage() {
       <section className="py-24 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-left">
-            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#00AEEF] mb-3">Testimonials</p>
+            <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-[#C8813A] mb-3">Testimonials</p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
-              What Our <span className="italic text-[#00AEEF]">Travelers Say</span>
+              What Our <span className="italic text-[#C8813A]">Travelers Say</span>
             </h2>
             <p className="text-gray-500 mt-4 text-lg font-medium">Real stories from our luxury experiences</p>
           </div>
@@ -124,10 +124,10 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {testimonials.map((item) => (
               <div key={item.id} className="bg-white p-12 rounded-[3.5rem] shadow-sm flex flex-col items-center text-center transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]">
-                <div className="w-24 h-24 rounded-full p-1 border-2 border-[#00AEEF] mb-6">
+                <div className="w-24 h-24 rounded-full p-1 border-2 border-[#C8813A] mb-6">
                   <img src={item.img} alt={item.name} className="w-full h-full object-cover rounded-full" />
                 </div>
-                <div className="flex gap-1 mb-6 text-[#00AEEF]">
+                <div className="flex gap-1 mb-6 text-[#C8813A]">
                   {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
                 </div>
                 <p className="text-gray-600 text-lg italic leading-relaxed mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>"{item.text}"</p>

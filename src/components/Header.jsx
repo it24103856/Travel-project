@@ -74,7 +74,7 @@ export default function Header() {
       <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
         <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
         <span className="text-white font-bold text-2xl tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>
-          Travel<span className="text-[#00AEEF]">Ease</span>
+          Travel<span className="text-[#C8813A]">Ease</span>
         </span>
       </div>
 
@@ -84,7 +84,7 @@ export default function Header() {
           <Link
             key={link.to}
             to={link.to}
-            className="hover:text-[#00AEEF] transition-all duration-500 uppercase tracking-widest text-[11px] font-semibold"
+            className="hover:text-[#C8813A] transition-all duration-500 uppercase tracking-widest text-[11px] font-semibold"
           >
             {link.label}
           </Link>
@@ -99,7 +99,7 @@ export default function Header() {
           <div className="relative">
             <button 
               onClick={() => setShowDropdown(!showDropdown)}
-              className={`transition-all p-2 relative rounded-full ${showDropdown ? 'bg-white/10 text-[#00AEEF]' : 'text-white/80 hover:text-[#00AEEF]'}`}
+              className={`transition-all p-2 relative rounded-full ${showDropdown ? 'bg-white/10 text-[#C8813A]' : 'text-white/80 hover:text-[#C8813A]'}`}
             >
               <Bell size={22} />
               {notifications.length > 0 && (
@@ -114,7 +114,7 @@ export default function Header() {
               <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 overflow-hidden z-[110] animate-in fade-in zoom-in duration-200">
                 <div className="p-4 border-b border-gray-50 bg-gray-50/80 text-gray-800 font-bold text-sm flex justify-between items-center">
                   <span>Notifications</span>
-                  {notifications.length > 0 && <span className="text-[10px] bg-[#00AEEF]/10 text-[#00AEEF] px-2 py-0.5 rounded-full">{notifications.length} New</span>}
+                  {notifications.length > 0 && <span className="text-[10px] bg-[#C8813A]/10 text-[#C8813A] px-2 py-0.5 rounded-full">{notifications.length} New</span>}
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {notifications.length > 0 ? (
@@ -125,12 +125,12 @@ export default function Header() {
                         className="p-4 border-b border-gray-50 hover:bg-blue-50/50 cursor-pointer transition-colors group"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="w-2 h-2 mt-1.5 rounded-full bg-[#00AEEF] shrink-0" />
+                          <div className="w-2 h-2 mt-1.5 rounded-full bg-[#C8813A] shrink-0" />
                           <div>
-                            <p className="text-[11px] font-bold text-[#00AEEF] uppercase tracking-tighter">New Admin Reply</p>
+                            <p className="text-[11px] font-bold text-[#C8813A] uppercase tracking-tighter">New Admin Reply</p>
                             <p className="text-sm text-gray-700 line-clamp-1 font-semibold">Re: {notif.subject}</p>
                             <p className="text-[11px] text-gray-500 mt-1 line-clamp-2 italic">"{notif.adminReply}"</p>
-                            <p className="text-[9px] text-gray-400 mt-2 font-medium group-hover:text-[#00AEEF]">Click to open conversation →</p>
+                            <p className="text-[9px] text-gray-400 mt-2 font-medium group-hover:text-[#C8813A]">Click to open conversation →</p>
                           </div>
                         </div>
                       </div>
@@ -147,7 +147,7 @@ export default function Header() {
                 {notifications.length > 0 && (
                   <div 
                     onClick={() => { setShowDropdown(false); navigate('/my-inquiries'); }}
-                    className="p-3 text-center bg-gray-50 text-[10px] font-bold text-gray-500 hover:text-[#00AEEF] cursor-pointer transition-colors border-t border-gray-100"
+                    className="p-3 text-center bg-gray-50 text-[10px] font-bold text-gray-500 hover:text-[#C8813A] cursor-pointer transition-colors border-t border-gray-100"
                   >
                     VIEW ALL INQUIRIES
                   </div>
@@ -165,7 +165,7 @@ export default function Header() {
         ) : (
           <Link
             to="/login"
-            className="bg-[#00AEEF] hover:bg-[#0096CE] text-white px-7 py-2.5 rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#00AEEF]/20 uppercase text-[10px] tracking-widest"
+            className="bg-[#C8813A] hover:bg-[#A66A28] text-white px-7 py-2.5 rounded-full font-bold transition-all duration-500 shadow-lg shadow-[#C8813A]/20 uppercase text-[10px] tracking-widest"
           >
             Sign In
           </Link>
@@ -188,7 +188,7 @@ export default function Header() {
               key={link.to}
               to={link.to}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-white/90 hover:text-[#00AEEF] transition-all duration-500 uppercase tracking-widest text-[11px] font-semibold"
+              className="text-white/90 hover:text-[#C8813A] transition-all duration-500 uppercase tracking-widest text-[11px] font-semibold"
             >
               {link.label}
             </Link>

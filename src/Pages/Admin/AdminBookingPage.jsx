@@ -51,13 +51,13 @@ export default function AdminBookingPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
           <div>
             <h1 className="text-3xl font-[Playfair_Display] font-bold text-gray-900 flex items-center gap-3">
-              <span className="p-3 bg-[#00AEEF] text-white rounded-2xl shadow-lg"><CalendarCheck size={20} /></span>
+              <span className="p-3 bg-[#C8813A] text-white rounded-2xl shadow-lg"><CalendarCheck size={20} /></span>
               Booking Management
             </h1>
             <p className="text-gray-400 text-sm mt-2 font-medium">Monitor and manage customer travel reservations in real-time.</p>
           </div>
           <button onClick={fetchBookings} disabled={loading}
-            className="flex items-center gap-2 px-6 py-3 bg-white text-[#00AEEF] font-bold rounded-full shadow-sm hover:shadow-md transition-all duration-500 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-xs border border-gray-100">
+            className="flex items-center gap-2 px-6 py-3 bg-white text-[#C8813A] font-bold rounded-full shadow-sm hover:shadow-md transition-all duration-500 active:scale-95 disabled:opacity-50 uppercase tracking-widest text-xs border border-gray-100">
             <RefreshCw className={loading ? "animate-spin" : ""} size={16} />
             {loading ? "Refreshing..." : "Refresh Data"}
           </button>
@@ -66,7 +66,7 @@ export default function AdminBookingPage() {
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-500">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-gradient-to-r from-[#00AEEF] to-[#0095cc] text-white text-[10px] font-black uppercase tracking-widest">
+              <thead className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white text-[10px] font-black uppercase tracking-widest">
                 <tr>
                   <th className="px-8 py-5">Customer Details</th>
                   <th className="px-8 py-5">Date & Package</th>
@@ -78,10 +78,10 @@ export default function AdminBookingPage() {
               <tbody className="divide-y divide-gray-50">
                 {bookings.length > 0 ? (
                   bookings.map((booking) => (
-                    <tr key={booking._id} className="hover:bg-[#00AEEF]/5 transition-all duration-500 group">
+                    <tr key={booking._id} className="hover:bg-[#C8813A]/5 transition-all duration-500 group">
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-[#00AEEF]/5 rounded-full flex items-center justify-center text-[#00AEEF] overflow-hidden border-2 border-[#00AEEF]/10">
+                          <div className="w-12 h-12 bg-[#C8813A]/5 rounded-full flex items-center justify-center text-[#C8813A] overflow-hidden border-2 border-[#C8813A]/10">
                             {booking.userId?.image ? (
                               <img src={booking.userId.image} alt="Profile" className="w-full h-full object-cover" />
                             ) : (<User size={18} />)}
@@ -96,7 +96,7 @@ export default function AdminBookingPage() {
                       </td>
                       <td className="px-8 py-6">
                         <p className="text-sm font-semibold text-gray-700">{booking.date ? new Date(booking.date).toLocaleDateString() : "N/A"}</p>
-                        <p className="text-[10px] text-[#00AEEF] font-bold uppercase tracking-wider">{booking.category || "GENERAL TOUR"}</p>
+                        <p className="text-[10px] text-[#C8813A] font-bold uppercase tracking-wider">{booking.category || "GENERAL TOUR"}</p>
                       </td>
                       <td className="px-8 py-6 text-center">
                         <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-tighter inline-flex items-center gap-1 ${
@@ -111,7 +111,7 @@ export default function AdminBookingPage() {
                       </td>
                       <td className="px-8 py-6 text-center">
                         <select value={booking.status} onChange={(e) => handleStatusChange(booking._id, e.target.value)}
-                          className="bg-gray-50 border border-gray-200 text-gray-600 text-[11px] font-bold rounded-full px-3 py-2 outline-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:border-[#00AEEF] transition-all duration-500 cursor-pointer">
+                          className="bg-gray-50 border border-gray-200 text-gray-600 text-[11px] font-bold rounded-full px-3 py-2 outline-none focus:ring-2 focus:ring-[#C8813A]/20 focus:border-[#C8813A] transition-all duration-500 cursor-pointer">
                           <option value="Pending">Pending</option>
                           <option value="Confirmed">Confirmed</option>
                           <option value="Cancelled">Cancelled</option>

@@ -61,7 +61,7 @@ const BankTransferPage = () => {
             const publicUrl = await uploadFile(receiptFile);
             toast.loading("AI is verifying your transaction...", { id: loadingToast });
 
-            // User දුන්නොත් ඒක use කරනවා, නැත්නම් auto-generate
+          
             const finalTransactionId = formData.transactionId.trim() || generateFallbackId();
 
             const submissionData = {
@@ -104,7 +104,7 @@ const BankTransferPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12 px-4 flex items-center justify-center font-sans">
+        <div className="min-h-screen bg-[#f1ebe3] py-12 px-4 flex items-center justify-center font-sans">
             <Toaster position="top-center" />
             <div className="max-w-3xl w-full">
 
@@ -116,7 +116,7 @@ const BankTransferPage = () => {
                     <FaChevronLeft /> Back
                 </button>
 
-                <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
+                <div className="bg-[#f7f3f0] rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
 
                     {/* ── Header ── */}
                     <div className="bg-blue-600 p-8 text-white flex justify-between items-center shadow-lg">

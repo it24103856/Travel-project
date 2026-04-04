@@ -56,14 +56,14 @@ export default function MyInquiries() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-[Playfair_Display] font-bold text-gray-900">
-            My <span className="text-[#00AEEF]">Inquiries</span>
+            My <span className="text-[#C8813A]">Inquiries</span>
           </h1>
           <p className="text-gray-500 mt-2">Track your questions and our responses here.</p>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#00AEEF]"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C8813A]"></div>
           </div>
         ) : messages.length > 0 ? (
           <div className="space-y-4">
@@ -71,7 +71,7 @@ export default function MyInquiries() {
               <div 
                 key={msg._id} 
                 className={`bg-white rounded-2xl border transition-all duration-300 ${
-                  expandedId === msg._id ? "shadow-md border-[#00AEEF]/30" : "border-gray-100 shadow-sm"
+                  expandedId === msg._id ? "shadow-md border-[#C8813A]/30" : "border-gray-100 shadow-sm"
                 }`}
               >
                 {/* Header Section */}
@@ -81,7 +81,7 @@ export default function MyInquiries() {
                 >
                   <div className="flex items-center gap-4">
                     <div className={`p-3 rounded-xl ${msg.adminReply ? "bg-green-50" : "bg-blue-50"}`}>
-                      <MessageSquare size={20} className={msg.adminReply ? "text-green-500" : "text-[#00AEEF]"} />
+                      <MessageSquare size={20} className={msg.adminReply ? "text-green-500" : "text-[#C8813A]"} />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-800">{msg.subject}</h3>
