@@ -21,6 +21,9 @@ const BankTransferPage = () => {
     const [statusMessage, setStatusMessage] = useState('');
     const [failedTransactionId, setFailedTransactionId] = useState('');
 
+    // Hardcoded remark for verification
+    const HARDCODED_REMARK = "Cabs Guide";
+
     const [formData, setFormData] = useState({
         customerName:  '',
         country:       '',
@@ -76,6 +79,7 @@ const BankTransferPage = () => {
                 paymentMethod: "bank_transfer",
                 receiptUrl:    publicUrl,
                 transactionId: finalTransactionId,
+                expectedRemark: HARDCODED_REMARK,  // AI will scan receipt for this remark
                 paymentDetails: {
                     customerName: formData.customerName,
                     country:      formData.country,
@@ -83,6 +87,7 @@ const BankTransferPage = () => {
                     branch:       formData.branch,
                     paymentDate:  formData.paymentDate,
                     paidAmount:   Number(formData.paidAmount) || amount,
+                    remark:       HARDCODED_REMARK,
                 },
             };
 
@@ -97,18 +102,20 @@ const BankTransferPage = () => {
             const { data }   = await axios.post(`${backendUrl}/payments/create`, submissionData, config);
 
             // ── Handle Different Verification Responses ──
-            if (data.success) {
+            if (data.isDuplicate) {
+                setVerificationStatus('duplicate');
+                setFailedTransactionId(finalTransactionId);
+                setStatusMessage(data.message || "Duplicate Transaction ID detected!");
+            } else if (data.verificationPassed) {
+                // ✅ AI Verification PASSED - Show green success box
                 setVerificationStatus('success');
                 setStatusMessage(data.aiNote || "Payment Verified Successfully!");
                 // Auto redirect after 3 seconds
                 setTimeout(() => navigate('/my-payments'), 3000);
-            } else if (data.isDuplicate) {
-                setVerificationStatus('duplicate');
-                setFailedTransactionId(finalTransactionId);
-                setStatusMessage(data.message || "Duplicate Transaction ID detected!");
-            } else if (data.verificationFailed) {
+            } else if (data.success && !data.verificationPassed) {
+                // ❌ AI Verification FAILED - Show red failed box
                 setVerificationStatus('failed');
-                setStatusMessage(data.message || "AI Verification Failed - Manual Verification Required");
+                setStatusMessage(data.aiNote || "Payment verification failed - Manual review required");
             } else {
                 setVerificationStatus('failed');
                 setStatusMessage(data.message || "Verification Error - Please contact support");
@@ -122,9 +129,9 @@ const BankTransferPage = () => {
                 setVerificationStatus('duplicate');
                 setFailedTransactionId(formData.transactionId);
                 setStatusMessage(errorData?.message || "This Transaction ID already exists!");
-            } else if (errorData?.verificationFailed) {
+            } else if (errorData?.verificationPassed === false) {
                 setVerificationStatus('failed');
-                setStatusMessage(errorData?.message || "AI Verification Failed - Manual Verification Required");
+                setStatusMessage(errorData?.aiNote || "AI Verification Failed - Manual Verification Required");
             } else {
                 setVerificationStatus('failed');
                 setStatusMessage(errorData?.message || "Internal Server Error (500)");
@@ -136,7 +143,7 @@ const BankTransferPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f1ebe3] py-12 px-4 flex items-center justify-center font-sans">
+        <div className="min-h-screen bg-[#f1ebe3] py-30 px-4 flex items-center justify-center font-sans">
             <Toaster position="top-center" />
 
             {/* ── Status Box Modal ── */}
@@ -350,6 +357,29 @@ const BankTransferPage = () => {
                             <p className="text-[10px] text-slate-400 mt-2 ml-2 leading-relaxed">
                                 Bank slip හෝ bank app  Reference / Transaction ID 
                             </p>
+                        </div>
+
+                        {/* ── Payment Details Section ── */}
+                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-6 border-2 border-blue-200 shadow-md">
+                            <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-4">📋 Payment Details</p>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center bg-white rounded-2xl p-4 shadow-sm">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Bank Name</span>
+                                    <span className="text-sm font-black text-slate-800">BOC</span>
+                                </div>
+                                <div className="flex justify-between items-center bg-white rounded-2xl p-4 shadow-sm">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Bank Number</span>
+                                    <span className="text-sm font-black text-blue-600 tracking-wider">92269156</span>
+                                </div>
+                                <div className="flex justify-between items-center bg-white rounded-2xl p-4 shadow-sm">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Account Holder</span>
+                                    <span className="text-sm font-black text-slate-800">Abeykoon.KM</span>
+                                </div>
+                                <div className="flex justify-between items-center bg-white rounded-2xl p-4 shadow-sm">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Remark</span>
+                                    <span className="text-sm font-black text-green-600">Cabs Guide</span>
+                                </div>
+                            </div>
                         </div>
 
                         {/* ── Receipt Upload ── */}
