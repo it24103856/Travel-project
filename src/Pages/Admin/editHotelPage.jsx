@@ -34,7 +34,7 @@ export default function EditHotelPage() {
     const fetchHotel = async () => {
       try {
         const token = localStorage.getItem("token");
-        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotels/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotels/get/${id}`, { headers: { Authorization: `Bearer ${token}` } });
         if (data.data) setFormData(data.data);
       } catch (error) { toast.error("Failed to load hotel data"); navigate("/admin/hotels"); } finally { setLoading(false); }
     };
@@ -75,7 +75,7 @@ export default function EditHotelPage() {
       setTimeout(() => navigate("/admin/hotels"), 1500);
     } catch (error) { toast.error(error.response?.data?.message || "Failed to update hotel"); } finally { setSubmitting(false); }
   };
-
+  
   if (loading) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FDFDFD]">
       <Loader2 className="animate-spin text-[#C8813A] mb-4" size={40} />
@@ -91,12 +91,12 @@ export default function EditHotelPage() {
           <button onClick={() => navigate("/admin/hotels")} className="flex items-center gap-2 text-gray-500 hover:text-[#C8813A] transition-all duration-500">
             <ArrowLeft size={20} /> <span className="font-medium">Back to Hotels</span>
           </button>
-          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Edit <span className="text-[#C8813A]">Hotel</span></h1>
+          <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Edit <span className="text-[#6366F1]">Hotel</span></h1>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm hover:shadow-2xl p-8 md:p-12 border border-gray-100 space-y-8 transition-all duration-500">
           <div>
-            <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2"><Hotel className="text-[#C8813A]" size={20} /> Hotel Information</h3>
+            <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2"><Hotel className="text-[#6366F1]" size={20} /> Hotel Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InputField label="Hotel Name" name="name" value={formData.name} onChange={handleChange} />
               <InputField label="Category" name="category" value={formData.category} onChange={handleChange} />
@@ -106,30 +106,30 @@ export default function EditHotelPage() {
             </div>
             <div className="mt-6">
               <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
-              <textarea name="description" value={formData.description} onChange={handleChange} rows="3" required className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] focus:bg-white outline-none transition-all duration-500"></textarea>
+              <textarea name="description" value={formData.description} onChange={handleChange} rows="3" required className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#6366F1]/10 focus:border-[#6366F1] focus:bg-white outline-none transition-all duration-500"></textarea>
             </div>
           </div>
 
           <div>
-            <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2"><MapPin className="text-[#C8813A]" size={20} /> Location</h3>
+            <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 mb-6 flex items-center gap-2"><MapPin className="text-[#6366F1]" size={20} /> Location</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Province</label>
-                <select name="province" value={formData.province} onChange={handleChange} required className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500">
+                <select name="province" value={formData.province} onChange={handleChange} required className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#6366F1] transition-all duration-500">
                   <option value="">Select Province</option>
                   {Object.keys(SRI_LANKA_DATA).map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">District</label>
-                <select name="district" value={formData.district} onChange={handleChange} required disabled={!formData.province} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500 disabled:opacity-50">
+                <select name="district" value={formData.district} onChange={handleChange} required disabled={!formData.province} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#6366F1] transition-all duration-500 disabled:opacity-50">
                   <option value="">Select District</option>
                   {formData.province && Object.keys(SRI_LANKA_DATA[formData.province]).map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
-                <select name="city" value={formData.city} onChange={handleChange} required disabled={!formData.district} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#C8813A] transition-all duration-500 disabled:opacity-50">
+                <select name="city" value={formData.city} onChange={handleChange} required disabled={!formData.district} className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-[#6366F1] transition-all duration-500 disabled:opacity-50">
                   <option value="">Select City</option>
                   {formData.district && SRI_LANKA_DATA[formData.province]?.[formData.district]?.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -139,8 +139,8 @@ export default function EditHotelPage() {
 
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 flex items-center gap-2"><BedDouble className="text-[#C8813A]" size={20} /> Room Types</h3>
-              <button type="button" onClick={addRoom} className="flex items-center gap-1 px-4 py-2 bg-[#C8813A]/10 text-[#C8813A] rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#C8813A] hover:text-white transition-all duration-500"><Plus size={14} /> Add Room</button>
+              <h3 className="text-lg font-[Playfair_Display] font-bold text-gray-800 flex items-center gap-2"><BedDouble className="text-[#6366F1]" size={20} /> Room Types</h3>
+              <button type="button" onClick={addRoom} className="flex items-center gap-1 px-4 py-2 bg-[#6366F1]/10 text-[#6366F1] rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#6366F1] hover:text-white transition-all duration-500"><Plus size={14} /> Add Room</button>
             </div>
             {formData.roomTypes.map((room, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 relative">
@@ -148,7 +148,7 @@ export default function EditHotelPage() {
                 <InputField label="Original Price" value={room.originalPrice} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleRoomChange(index, "originalPrice", val); }} type="number" min="0" />
                 <InputField label="Final Price" value={room.finalPrice} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleRoomChange(index, "finalPrice", val); }} type="number" min="0" />
                 <div className="md:col-span-2 flex gap-4">
-                  <div className="flex-1"><label className="block text-sm font-bold text-gray-700 mb-2">Description</label><input value={room.description} onChange={(e) => handleRoomChange(index, "description", e.target.value)} className="w-full px-5 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] outline-none transition-all duration-500" /></div>
+                  <div className="flex-1"><label className="block text-sm font-bold text-gray-700 mb-2">Description</label><input value={room.description} onChange={(e) => handleRoomChange(index, "description", e.target.value)} className="w-full px-5 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-[#6366F1]/10 focus:border-[#6366F1] outline-none transition-all duration-500" /></div>
                   {formData.roomTypes.length > 1 && <button type="button" onClick={() => removeRoom(index)} className="self-end p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-500"><Trash2 size={18} /></button>}
                 </div>
               </div>

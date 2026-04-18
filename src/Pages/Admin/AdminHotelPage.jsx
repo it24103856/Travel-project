@@ -64,7 +64,7 @@ export default function AdminHotelPage() {
       <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100 transition-all duration-500">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+            <tr className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
               <th className="p-4 text-xs font-black uppercase tracking-widest">Hotel Details</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">Location</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest text-center">Rooms</th>
@@ -75,10 +75,10 @@ export default function AdminHotelPage() {
           <tbody>
             {hotels.length > 0 ? (
               hotels.map((hotel) => (
-                <tr key={hotel._id} className="border-b border-gray-50 hover:bg-[#C8813A]/5 transition-all duration-500">
+                <tr key={hotel._id} className="border-b border-gray-50 hover:bg-[#6366F1]/5 transition-all duration-500">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-16 h-12 rounded-lg overflow-hidden border border-gray-100 bg-[#C8813A]/5 flex items-center justify-center text-[#C8813A] shadow-sm">
+                      <div className="w-16 h-12 rounded-lg overflow-hidden border border-gray-100 bg-[#6366F1]/5 flex items-center justify-center text-[#6366F1] shadow-sm">
                         {hotel.images && hotel.images[0] ? (
                           <img src={hotel.images[0]} alt={hotel.name} className="w-full h-full object-cover" />
                         ) : (
@@ -87,7 +87,7 @@ export default function AdminHotelPage() {
                       </div>
                       <div className="flex flex-col">
                         <span className="font-bold text-gray-700 leading-tight font-[Inter]">{hotel.name}</span>
-                        <div className="flex items-center gap-1 text-[10px] text-[#C8813A] font-bold mt-1">
+                        <div className="flex items-center gap-1 text-[10px] text-[#6366F1] font-bold mt-1">
                           <Star size={10} /> {hotel.rating || "N/A"} Category: {hotel.category}
                         </div>
                       </div>
@@ -95,12 +95,12 @@ export default function AdminHotelPage() {
                   </td>
                   <td className="p-4">
                     <div className="text-sm text-gray-600 space-y-1 font-[Inter]">
-                      <div className="flex items-center gap-2 font-medium"><MapPin className="text-[#C8813A]" size={10} /> {hotel.city}</div>
+                      <div className="flex items-center gap-2 font-medium"><MapPin className="text-[#6366F1]" size={10} /> {hotel.city}</div>
                       <div className="text-[11px] text-gray-400">{hotel.district}, {hotel.province}</div>
                     </div>
                   </td>
                   <td className="p-4 text-center">
-                    <span className="px-3 py-1 bg-[#C8813A]/10 text-[#C8813A] rounded-full text-xs font-bold">
+                    <span className="px-3 py-1 bg-[#6366F1]/10 text-[#6366F1] rounded-full text-xs font-bold">
                       {hotel.roomTypes?.length || 0} Types
                     </span>
                   </td>
@@ -112,7 +112,7 @@ export default function AdminHotelPage() {
                   </td>
                   <td className="p-4">
                     <div className="flex justify-center gap-2">
-                      <button onClick={() => navigate(`/admin/hotels/edit/${hotel._id}`)} className="p-2 bg-[#C8813A]/10 text-[#C8813A] rounded-xl hover:bg-[#C8813A] hover:text-white transition-all duration-500">
+                      <button onClick={() => navigate(`/admin/hotels/edit/${hotel._id}`)} className="p-2 bg-[#6366F1]/10 text-[#6366F1] rounded-xl hover:bg-[#6366F1] hover:text-white transition-all duration-500">
                         <Pencil size={20} />
                       </button>
                       <button onClick={() => handleDeleteClick(hotel)} className="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-500">
@@ -133,7 +133,7 @@ export default function AdminHotelPage() {
         </table>
       </div>
 
-      <Link to="/admin/add-hotel" className="fixed bottom-10 right-10 w-16 h-16 bg-[#C8813A] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#A66A28] hover:scale-110 transition-all duration-500 z-50 group">
+      <Link to="/admin/add-hotel" className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366F1] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#4F46E5] hover:scale-110 transition-all duration-500 z-50 group">
         <Plus size={24} />
         <span className="absolute right-20 bg-gray-800 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-[Inter]">Add New Hotel</span>
       </Link>

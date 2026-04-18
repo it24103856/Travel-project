@@ -86,7 +86,7 @@ const EditDriverPage = () => {
   if (fetching) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-[#C8813A] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-[#6366F1] border-t-transparent rounded-full animate-spin"></div>
         <p className="mt-4 text-gray-500 font-medium animate-pulse font-[Inter]">Fetching driver details...</p>
       </div>
     );

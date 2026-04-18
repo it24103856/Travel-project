@@ -48,7 +48,7 @@ const HotelPage = () => {
 
       {/* SECTION 1: HERO SECTION */}
       <section className="relative h-[50vh] md:h-[55vh] flex items-center justify-center bg-fixed bg-center bg-cover"
-               style={{ backgroundImage: "url('https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
+               style={{ backgroundImage: "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 text-center text-white px-6">
           <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Premium Accommodations</p>
@@ -111,7 +111,9 @@ const HotelPage = () => {
                   {/* Circular Glassmorphism Rating Badge */}
                   <div className="absolute top-3.5 right-3.5 w-14 h-14 rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
                     <Star size={14} className="text-amber-500" fill="currentColor" />
-                    <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">4.8</span>
+                    <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">
+                      {(hotel.averageRating || 4.5).toFixed(1)}
+                    </span>
                   </div>
                 </div>
 

@@ -77,6 +77,7 @@ const AddHotelPage = () => {
   const [loading, setLoading] = useState(false);
   const [hotelImageFiles, setHotelImageFiles] = useState([]); 
   const [hotelPreviews, setHotelPreviews] = useState([]);
+  const [phoneError, setPhoneError] = useState("");
 
   // --- Dynamic Location Logic ---
   const provinces = useMemo(() => Object.keys(SRI_LANKA_DATA), []);
@@ -136,6 +137,12 @@ const AddHotelPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.phone || formData.phone.length !== 10) {
+      setPhoneError("Phone number must be exactly 10 digits");
+      return toast.error("Phone number must be exactly 10 digits!");
+    }
+    
     if (!formData.province || !formData.district || !formData.city) {
       return toast.error("Please complete the location details!");
     }
@@ -215,7 +222,33 @@ const AddHotelPage = () => {
               <InputGroup label="Hotel ID" name="hotelID" value={formData.hotelID} onChange={handleChange} />
               <InputGroup label="Hotel Name" name="name" value={formData.name} onChange={handleChange} />
               <InputGroup label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
-              <InputGroup label="Phone" name="phone" value={formData.phone} onChange={(e) => { const val = e.target.value.replace(/\D/g, '').slice(0, 10); setFormData({...formData, phone: val}); }} type="tel" maxLength="10" />
+              <div className="space-y-2">
+                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Phone</label>
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  value={formData.phone} 
+                  onChange={(e) => { 
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 10); 
+                    setFormData({...formData, phone: val}); 
+                    if (val && val.length !== 10) {
+                      setPhoneError("Phone number must be exactly 10 digits");
+                    } else {
+                      setPhoneError("");
+                    }
+                  }}
+                  onBlur={() => {
+                    if (formData.phone && formData.phone.length !== 10) {
+                      setPhoneError("Phone number must be exactly 10 digits");
+                    }
+                  }}
+                  maxLength="10" 
+                  className={`w-full p-5 bg-slate-50 border rounded-2xl outline-none font-bold text-slate-700 shadow-sm transition-all ${phoneError ? "border-red-300 focus:border-red-500 focus:bg-red-50" : "border-slate-200 focus:border-blue-500 focus:bg-white"}`}
+                  placeholder="10 digit number"
+                />
+                {phoneError && <p className="text-red-500 text-[11px] font-bold uppercase tracking-wide flex items-center gap-1">⚠ {phoneError}</p>}
+                {!phoneError && formData.phone.length === 10 && <p className="text-green-500 text-[11px] font-bold uppercase tracking-wide flex items-center gap-1">✓ Valid</p>}
+              </div>
               <div className="md:col-span-2">
                 <InputGroup label="Amenities" name="amenities" value={formData.amenities} onChange={handleChange} placeholder="Pool, WiFi, Gym (Comma separated)" />
               </div>

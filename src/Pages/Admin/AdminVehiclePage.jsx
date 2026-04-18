@@ -51,7 +51,7 @@ export default function AdminVehiclePage() {
     }
   };
 
-  if (loading) return <div className="text-center mt-20 text-[#C8813A] animate-pulse font-[Inter]">Loading Fleet Assets...</div>;
+  if (loading) return <div className="text-center mt-20 text-[#6366F1] animate-pulse font-[Inter]">Loading Fleet Assets...</div>;
 
   return (
     <div className="relative min-h-screen p-6 bg-[#FDFDFD] font-[Inter]">
@@ -63,7 +63,7 @@ export default function AdminVehiclePage() {
           <h1 className="text-3xl font-[Playfair_Display] font-bold text-gray-900">Fleet Management</h1>
           <p className="text-gray-500">Monitor and manage all transport assets in the inventory</p>
         </div>
-        <Link to="/admin/vehicles/create" className="bg-[#C8813A] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#A66A28] transition-all shadow-lg shadow-[#C8813A]/20 uppercase tracking-widest text-xs">
+        <Link to="/admin/vehicles/create" className="bg-[#6366F1] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#4F46E5] transition-all shadow-lg shadow-[#6366F1]/20 uppercase tracking-widest text-xs">
           <Plus size={18} /> Add Asset
         </Link>
       </div>
@@ -72,7 +72,7 @@ export default function AdminVehiclePage() {
       <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100 transition-all duration-500">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+            <tr className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
               <th className="p-4 text-[10px] font-black uppercase tracking-widest">Asset Image</th>
               <th className="p-4 text-[10px] font-black uppercase tracking-widest">Vehicle Details</th>
               <th className="p-4 text-[10px] font-black uppercase tracking-widest">Reg. Number</th>
@@ -82,7 +82,7 @@ export default function AdminVehiclePage() {
           </thead>
           <tbody>
             {vehicles.map((v) => (
-              <tr key={v._id} className="border-b border-gray-50 hover:bg-[#C8813A]/5 transition-all duration-500">
+              <tr key={v._id} className="border-b border-gray-50 hover:bg-[#6366F1]/5 transition-all duration-500">
                 <td className="p-4">
                   <div className="w-20 h-12 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
                     <img src={v.images?.[0]} alt="vehicle" className="w-full h-full object-cover" />
@@ -91,7 +91,7 @@ export default function AdminVehiclePage() {
                 <td className="p-4">
                   <div className="flex flex-col">
                     <span className="font-bold text-gray-700">{v.make} {v.model}</span>
-                    <span className="text-[10px] text-[#C8813A] font-bold uppercase tracking-tighter">{v.type}</span>
+                    <span className="text-[10px] text-[#6366F1] font-bold uppercase tracking-tighter">{v.type}</span>
                   </div>
                 </td>
                 <td className="p-4 font-mono text-sm text-gray-600">{v.registrationNumber}</td>
@@ -103,7 +103,7 @@ export default function AdminVehiclePage() {
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
-                    <button onClick={() => navigate(`/admin/vehicles/update/${v._id}`)} className="p-2 bg-[#C8813A]/10 text-[#C8813A] rounded-xl hover:bg-[#C8813A] hover:text-white transition-all">
+                    <button onClick={() => navigate(`/admin/vehicles/update/${v._id}`)} className="p-2 bg-[#6366F1]/10 text-[#6366F1] rounded-xl hover:bg-[#6366F1] hover:text-white transition-all">
                       <Pencil size={18} />
                     </button>
                     <button onClick={() => handleDeleteClick(v)} className="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">

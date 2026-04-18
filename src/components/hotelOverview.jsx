@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 const HotelOverviewPage = () => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Overview"); 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -27,6 +28,16 @@ const HotelOverviewPage = () => {
           setHotel(response.data.data);
         } else {
           toast.error("Hotel data not found");
+        }
+
+        // Fetch reviews for this hotel
+        try {
+          const reviewResponse = await axios.get(`${backendUrl}/reviews/hotel/${cleanId}`);
+          if (reviewResponse.data?.success) {
+            setReviews(reviewResponse.data.data);
+          }
+        } catch (err) {
+          console.error("Error fetching reviews:", err);
         }
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -75,9 +86,16 @@ const HotelOverviewPage = () => {
                 <FaMapMarkerAlt className="text-amber-400" /> {hotel.city}, {hotel.district}
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex items-center gap-2 md:gap-4">
-               <FaStar className="text-amber-400 text-sm md:text-2xl" /> 
-               <span className="text-sm md:text-2xl font-bold">{hotel.rating}</span>
+            <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex flex-col items-center gap-1">
+               <div className="flex items-center gap-2">
+                 <FaStar className="text-rose-400 text-sm md:text-lg fill-rose-400" /> 
+                 <span className="text-sm md:text-xl font-bold">
+                   {reviews.length > 0 
+                     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+                     : "0"}
+                 </span>
+               </div>
+               <span className="text-[10px] text-white/70 italic">(from reviews)</span>
             </div>
           </div>
         </section>
@@ -87,6 +105,7 @@ const HotelOverviewPage = () => {
           <TabButton label="Overview" active={activeTab === "Overview"} onClick={() => setActiveTab("Overview")} icon={<FaHotel />} />
           <TabButton label="Rooms" active={activeTab === "Rooms"} onClick={() => setActiveTab("Rooms")} icon={<FaBed />} />
           <TabButton label="Dining" active={activeTab === "Dining"} onClick={() => setActiveTab("Dining")} icon={<FaUtensils />} />
+          <TabButton label="Reviews" active={activeTab === "Reviews"} onClick={() => setActiveTab("Reviews")} icon={<FaStar />} />
         </nav>
 
         {/* 3. DYNAMIC CONTENT AREA */}
@@ -152,6 +171,63 @@ const HotelOverviewPage = () => {
                    <FoodCard img="https://images.unsplash.com/photo-1544025162-d76694265947" name="Grilled Salmon" price="LKR 6,200" />
                 </div>
              </div>
+          )}
+
+          {/* --- VIEW 4: REVIEWS --- */}
+          {activeTab === "Reviews" && (
+            <div className="max-w-4xl mx-auto animate-fadeIn">
+              <div className="mb-8">
+                <h2 className="text-3xl md:text-5xl font-black text-slate-800 mb-4">Guest Reviews</h2>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-start">
+                    <div className="flex items-center gap-2">
+                      <FaStar className="text-rose-400 text-2xl fill-rose-400" />
+                      <span className="text-2xl font-bold text-slate-800">
+                        {reviews.length > 0 
+                          ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+                          : "0"}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-neutral-400 italic">({reviews.length} reviews)</span>
+                  </div>
+                </div>
+              </div>
+
+              {reviews.length > 0 ? (
+                <div className="space-y-4">
+                  {reviews.map((review, idx) => (
+                    <div key={idx} className="bg-white border border-slate-100 rounded-[1.5rem] p-6 shadow-sm">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <p className="font-black text-slate-800 text-lg">
+                            {review.userId?.firstName} {review.userId?.lastName}
+                          </p>
+                          <p className="text-slate-400 text-sm">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <FaStar 
+                              key={i} 
+                              className={i < review.rating ? "text-amber-400" : "text-slate-300"} 
+                              size={16}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-slate-600 leading-relaxed">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-white rounded-[1.5rem] border border-slate-100">
+                  <FaStar className="text-slate-300 text-4xl mx-auto mb-3" />
+                  <p className="text-slate-500 font-semibold">No reviews yet</p>
+                  <p className="text-slate-400 text-sm">Be the first to review this hotel</p>
+                </div>
+              )}
+            </div>
           )}
         </div>
 

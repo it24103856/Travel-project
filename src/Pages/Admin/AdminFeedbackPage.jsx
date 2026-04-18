@@ -11,7 +11,9 @@ export default function AdminFeedback() {
     const [filters, setFilters] = useState({ category: "", rating: "" });
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const COLORS = ['#C8813A', '#D99955', '#E6B888', '#F0D0BB', '#F7E6D9'];
+
+    // ✅ New color palette — teal/indigo/violet/rose/amber
+    const COLORS = ['#6366F1', '#0EA5E9', '#10B981', '#F59E0B', '#F43F5E'];
 
     const fetchData = async () => {
         try {
@@ -23,7 +25,17 @@ export default function AdminFeedback() {
                 axios.get(`${backendUrl}/feedback/stats`, config)
             ]);
             setFeedbacks(fbRes.data.feedbacks || []);
-            if (statsRes.data.success) setStats(statsRes.data.stats);
+            if (statsRes.data.success) {
+                // ✅ Fix typo: normalize "driverse" → "drivers" in category stats
+                const rawStats = statsRes.data.stats;
+                if (rawStats?.category) {
+                    rawStats.category = rawStats.category.map(item => ({
+                        ...item,
+                        _id: item._id?.toLowerCase() === "driverse" ? "drivers" : item._id
+                    }));
+                }
+                setStats(rawStats);
+            }
         } catch (error) { toast.error("Data synchronization failed."); } finally { setIsLoading(false); }
     };
 
@@ -47,18 +59,21 @@ export default function AdminFeedback() {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                     <div>
-                        <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">Feedback <span className="text-[#C8813A]">Intelligence</span></h1>
+                        <h1 className="text-4xl font-[Playfair_Display] font-bold text-gray-900">Feedback <span className="text-[#6366F1]">Intelligence</span></h1>
                         <p className="text-gray-500 font-medium">Advanced analytics for customer satisfaction</p>
                     </div>
                     <div className="flex bg-white p-2 rounded-full shadow-sm border border-gray-100">
                         <select className="px-4 py-2 text-sm font-bold bg-transparent outline-none border-r border-gray-100" onChange={(e) => setFilters({...filters, category: e.target.value})}>
-                            <option value="">All Services</option>
+                            <option value="">Other Services</option>
                             <option value="Vehicles">Vehicles</option>
-                            <option value="driverse">Drivers</option>
+                            <option value="drivers">Drivers</option>
                         </select>
                         <select className="px-4 py-2 text-sm font-bold bg-transparent outline-none" onChange={(e) => setFilters({...filters, rating: e.target.value})}>
                             <option value="">All Ratings</option>
                             <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
                             <option value="1">1 Star</option>
                         </select>
                     </div>
@@ -66,9 +81,10 @@ export default function AdminFeedback() {
 
                 {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                    {/* Bar Chart */}
                     <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-500">
                         <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <BarChart3 className="text-[#C8813A]" size={18} /> Rating Distribution
+                            <BarChart3 className="text-[#6366F1]" size={18} /> Rating Distribution
                         </h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
@@ -76,21 +92,31 @@ export default function AdminFeedback() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                                     <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                                    <Tooltip cursor={{fill: '#f0f9ff'}} contentStyle={{borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
-                                    <Bar dataKey="count" fill="#C8813A" radius={[10, 10, 0, 0]} barSize={40} />
+                                    <Tooltip cursor={{fill: '#eef2ff'}} contentStyle={{borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                                    <Bar dataKey="count" fill="#6366F1" radius={[10, 10, 0, 0]} barSize={40} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
+                    {/* Pie Chart */}
                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-500">
                         <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <Globe className="text-[#C8813A]" size={18} /> Category Share
+                            <Globe className="text-[#6366F1]" size={18} /> Category Share
                         </h3>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={stats?.category || []} dataKey="count" nameKey="_id" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5}>
+                                    <Pie
+                                        data={stats?.category || []}
+                                        dataKey="count"
+                                        nameKey="_id"
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                    >
                                         {stats?.category?.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
@@ -110,7 +136,7 @@ export default function AdminFeedback() {
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white text-[10px] uppercase font-black tracking-[0.2em]">
+                            <thead className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white text-[10px] uppercase font-black tracking-[0.2em]">
                                 <tr>
                                     <th className="px-8 py-4">User Details</th>
                                     <th className="px-8 py-4">Experience</th>
@@ -120,13 +146,13 @@ export default function AdminFeedback() {
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {feedbacks.map((fb) => (
-                                    <tr key={fb._id} className="hover:bg-[#C8813A]/5 transition-all duration-500">
+                                    <tr key={fb._id} className="hover:bg-[#6366F1]/5 transition-all duration-500">
                                         <td className="px-8 py-5">
                                             <div className="flex items-center gap-3">
                                                 {fb.userId?.image ? (
                                                     <img src={fb.userId.image} alt="Profile" className="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm" />
                                                 ) : (
-                                                    <div className="w-10 h-10 bg-[#C8813A] text-white rounded-full flex items-center justify-center font-bold text-sm uppercase">
+                                                    <div className="w-10 h-10 bg-[#6366F1] text-white rounded-full flex items-center justify-center font-bold text-sm uppercase">
                                                         {fb.userId?.firstName?.charAt(0) || "U"}
                                                     </div>
                                                 )}
@@ -144,10 +170,13 @@ export default function AdminFeedback() {
                                         </td>
                                         <td className="px-8 py-5">
                                             <div className="flex items-center gap-4">
-                                                <div className="flex text-[#C8813A]">
-                                                    {[...Array(fb.rating)].map((_, i) => <Star key={i} size={10} fill="#C8813A" />)}
+                                                <div className="flex text-[#6366F1]">
+                                                    {[...Array(fb.rating)].map((_, i) => <Star key={i} size={10} fill="#6366F1" />)}
                                                 </div>
-                                                <span className="text-[9px] px-2 py-0.5 bg-[#C8813A]/10 text-[#C8813A] rounded-md font-bold uppercase">{fb.category}</span>
+                                                {/* ✅ Fix typo display in category badge too */}
+                                                <span className="text-[9px] px-2 py-0.5 bg-[#6366F1]/10 text-[#6366F1] rounded-md font-bold uppercase">
+                                                    {fb.category?.toLowerCase() === "driverse" ? "drivers" : fb.category}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-5 text-right">

@@ -96,7 +96,7 @@ const AdminVehicleCreatePage = () => {
       <Toaster position="top-right" />
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#C8813A] transition-all">
+          <Link to="/admin/vehicles" className="flex items-center gap-2 text-gray-500 hover:text-[#6366F1] transition-all">
             <ArrowLeft size={20} /> <span className="font-medium">Back to Vehicles</span>
           </Link>
           <h1 className="text-2xl font-[Playfair_Display] font-bold text-gray-900">Add <span className="text-[#C8813A]">New Vehicle</span></h1>

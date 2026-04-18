@@ -32,14 +32,14 @@ const CryptoPayment = () => {
             address: '1A1z7agoat2YLZW51Uc8w6LFCHF7PhmQqe',
             name: 'Bitcoin',
             symbol: 'BTC',
-            color: 'from-orange-500 to-orange-600',
+            color: 'from-[#6366F1] to-[#4F46E5]',
             icon: Bitcoin
         },
         ethereum: {
             address: '0x742d35Cc6634C0532925a3b844Bc9e7595f42e1',
             name: 'Ethereum',
             symbol: 'ETH',
-            color: 'from-purple-500 to-purple-600',
+            color: 'from-[#6366F1] to-[#4F46E5]',
             icon: Zap
         }
     };
@@ -112,7 +112,7 @@ const CryptoPayment = () => {
                                     activeTab === key ? `bg-white text-gray-900 shadow-sm` : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                <wallet.icon size={18} className={activeTab === key ? 'text-orange-500' : ''} />
+                                <wallet.icon size={18} className={activeTab === key ? 'text-[#6366F1]' : ''} />
                                 {wallet.name}
                             </button>
                         ))}
@@ -148,7 +148,7 @@ const CryptoPayment = () => {
                                     type="text"
                                     required
                                     placeholder="Paste your transaction hash here"
-                                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none font-mono text-xs"
+                                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none font-mono text-xs focus:ring-2 focus:ring-[#6366F1]/30 focus:border-[#6366F1] focus:bg-white transition-all"
                                     value={transactionId}
                                     onChange={(e) => setTransactionId(e.target.value)}
                                 />
@@ -158,7 +158,7 @@ const CryptoPayment = () => {
                                 type="submit"
                                 disabled={isSubmitting}
                                 className={`w-full py-4 rounded-2xl font-black text-white shadow-lg flex items-center justify-center gap-3 transition-all ${
-                                    isSubmitting ? 'bg-gray-300' : 'bg-gray-900 hover:bg-black'
+                                    isSubmitting ? 'bg-gray-300' : 'bg-[#6366F1] hover:bg-[#4F46E5]'
                                 }`}
                             >
                                 <Send size={20} />
@@ -166,9 +166,9 @@ const CryptoPayment = () => {
                             </button>
                         </form>
 
-                        <div className="mt-8 flex justify-center gap-6 opacity-50">
-                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"><Shield size={14}/> Secure</div>
-                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"><TrendingUp size={14}/> Verified</div>
+                        <div className="mt-8 flex justify-center gap-6">
+                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#6366F1]"><Shield size={14}/> Secure</div>
+                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#6366F1]"><TrendingUp size={14}/> Verified</div>
                         </div>
                     </div>
                 </div>

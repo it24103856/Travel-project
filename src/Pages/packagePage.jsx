@@ -97,7 +97,7 @@ const PackagePage = () => {
         className="relative h-[50vh] md:h-[55vh] flex items-center justify-center bg-fixed bg-center bg-cover"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1600&q=80')",
+            "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
         }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
@@ -262,10 +262,12 @@ const PackageCard = ({ pkg }) => (
         alt={pkg.title}
         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
       />
-      {/* Circular Glassmorphism Price Badge */}
+      {/* Circular Glassmorphism Rating Badge (Top Right) */}
       <div className="absolute top-3.5 right-3.5 w-[4.2rem] h-[4.2rem] rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
-        <span className="text-[8px] text-gray-400 font-medium leading-none">LKR</span>
-        <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">{pkg.price?.toLocaleString()}</span>
+        <FaStar className="text-amber-500 text-[10px]" />
+        <span className="text-[10px] font-bold text-gray-800 leading-tight mt-0.5">
+          {(pkg.averageRating || 4.5).toFixed(1)}
+        </span>
       </div>
     </div>
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { 
     Eye, CheckCircle, XCircle, Loader2, PieChart as PieIcon, 
-    TrendingUp, Filter, FileBarChart, BrainCircuit, Clock, Wallet, Download, RotateCcw
+    TrendingUp, Filter, FileBarChart, BrainCircuit, Clock, Wallet, Download, RotateCcw, Trash2
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { 
@@ -15,7 +15,7 @@ import {
 const STATUS_COLORS = {
     COMPLETED:        '#10b981',   // emerald
     PROCESSING:       '#f59e0b',   // amber
-    PENDING:          '#C8813A',   // brand orange
+    PENDING:          '#6366F1',   // brand indigo
     FAILED:           '#ef4444',   // red
     CANCEL_REQUESTED: '#8b5cf6',   // purple
     REFUNDED:         '#06b6d4',   // cyan
@@ -33,6 +33,11 @@ const AdminPaymentPage = () => {
     const [cancelModal, setCancelModal]         = useState(false);
     const [cancelPayment, setCancelPayment]     = useState(null);
     const [cancelLoading, setCancelLoading]     = useState(false);
+    // Delete modal
+    const [deleteModal, setDeleteModal]         = useState(false);
+    const [deletePayment, setDeletePayment]     = useState(null);
+    const [deleteLoading, setDeleteLoading]     = useState(false);
+    const [deleteSuccess, setDeleteSuccess]     = useState(false);
 
     const reportRef = useRef(null);
     const navigate  = useNavigate();
@@ -72,7 +77,7 @@ const AdminPaymentPage = () => {
         const cryptoAmount = payments.filter(p => p.paymentMethod === 'crypto'         && p.paymentStatus?.toLowerCase() === 'completed').reduce((s, p) => s + (Number(p.amount) || 0), 0);
         const paymentMethodData = [
             { name: 'Bank Transfer',   amount: bankAmount,   fill: '#3b82f6' },
-            { name: 'Cryptocurrency',  amount: cryptoAmount, fill: '#C8813A' },
+            { name: 'Cryptocurrency',  amount: cryptoAmount, fill: '#fb923c' },
         ];
 
         return { totalRevenue, pendingCount, cryptoCount, cancelRequestCount, statusData, revenueData, paymentMethodData };
@@ -130,6 +135,30 @@ const AdminPaymentPage = () => {
             toast.error(err.response?.data?.message || 'Failed.', { id: t });
         } finally {
             setCancelLoading(false);
+        }
+    };
+
+    // ── Delete payment ───────────────────────────────────────────────────────
+    const handleDeletePayment = async () => {
+        setDeleteLoading(true);
+        const t = toast.loading('Deleting payment...');
+        try {
+            const res = await axios.delete(
+                `${API_URL}/payments/admin/delete/${deletePayment._id}`,
+                { headers: authHeader }
+            );
+            if (res.data.success) {
+                toast.dismiss(t);
+                setDeleteModal(false);
+                setDeleteSuccess(true);
+                setDeletePayment(null);
+                setIsModalOpen(false);
+                fetchPayments();
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to delete payment.', { id: t });
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -213,11 +242,11 @@ const AdminPaymentPage = () => {
                 {/* Header */}
                 <header className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
-                        <p className="text-[#C8813A] text-[10px] font-mono uppercase tracking-[0.4em] mb-3 flex items-center gap-2">
-                            <span className="inline-block w-6 h-px bg-[#C8813A]" /> Admin Management Portal
+                        <p className="text-[#6366F1] text-[10px] font-mono uppercase tracking-[0.4em] mb-3 flex items-center gap-2">
+                            <span className="inline-block w-6 h-px bg-[#6366F1]" /> Admin Management Portal
                         </p>
                         <h2 className="text-5xl md:text-6xl font-[Playfair_Display] font-bold leading-none tracking-tighter text-gray-900">
-                            Financial <span className="text-[#C8813A]">Management</span>
+                            Financial <span className="text-[#6366F1]">Management</span>
                         </h2>
                     </div>
                     <div className="flex gap-3">
@@ -226,7 +255,7 @@ const AdminPaymentPage = () => {
                             <Download size={16} /> Export PDF
                         </button>
                         <button onClick={() => navigate('/admin/payment-report')}
-                            className="flex items-center gap-3 bg-[#C8813A] text-white px-7 py-3.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-500 text-[11px] uppercase tracking-widest">
+                            className="flex items-center gap-3 bg-[#6366F1] text-white px-7 py-3.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-500 text-[11px] uppercase tracking-widest">
                             <FileBarChart size={16} /> Payment Status
                         </button>
                     </div>
@@ -271,14 +300,14 @@ const AdminPaymentPage = () => {
                         </div>
                     </div>
                     {/* Crypto */}
-                    <div className="group relative overflow-hidden bg-white border border-[#C8813A]/20 p-7 rounded-3xl hover:border-[#C8813A]/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl shadow-sm">
+                    <div className="group relative overflow-hidden bg-white border border-[#6366F1]/20 p-7 rounded-3xl hover:border-[#6366F1]/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl shadow-sm">
                         <div className="flex items-center gap-5">
-                            <div className="bg-[#C8813A]/10 border border-[#C8813A]/20 text-[#C8813A] p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                            <div className="bg-[#6366F1]/10 border border-[#6366F1]/20 text-[#6366F1] p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                                 <Wallet size={24} strokeWidth={1.5} />
                             </div>
                             <div>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C8813A]/70 mb-1">Crypto Volume</p>
-                                <h4 className="text-2xl font-black text-gray-800"><span className="text-[#C8813A]">{stats.cryptoCount}</span><span className="text-sm font-bold text-gray-400 ml-1">Txns</span></h4>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6366F1]/70 mb-1">Crypto Volume</p>
+                                <h4 className="text-2xl font-black text-gray-800"><span className="text-[#6366F1]">{stats.cryptoCount}</span><span className="text-sm font-bold text-gray-400 ml-1">Txns</span></h4>
                             </div>
                         </div>
                     </div>
@@ -289,8 +318,8 @@ const AdminPaymentPage = () => {
                     {/* Revenue Area Chart */}
                     <div className="lg:col-span-2 bg-white border border-gray-100 p-7 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500">
                         <div className="flex items-center mb-7 gap-3 border-b border-gray-100 pb-4">
-                            <div className="p-2 bg-[#C8813A]/10 rounded-xl border border-[#C8813A]/20">
-                                <TrendingUp className="text-[#C8813A]" size={16} />
+                            <div className="p-2 bg-[#6366F1]/10 rounded-xl border border-[#6366F1]/20">
+                                <TrendingUp className="text-[#6366F1]" size={16} />
                             </div>
                             <h3 className="font-black text-gray-400 uppercase text-[20px] tracking-[0.3em]">Revenue Growth</h3>
                         </div>
@@ -299,15 +328,15 @@ const AdminPaymentPage = () => {
                                 <AreaChart data={stats.revenueData}>
                                     <defs>
                                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%"  stopColor="#C8813A" stopOpacity={0.15}/>
-                                            <stop offset="95%" stopColor="#C8813A" stopOpacity={0}/>
+                                            <stop offset="5%"  stopColor="#6366F1" stopOpacity={0.15}/>
+                                            <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fontSize:10,fontWeight:800,fill:'#94a3b8'}} />
                                     <YAxis axisLine={false} tickLine={false} tickFormatter={v=>`Rs.${v/1000}k`} tick={{fontSize:10,fontWeight:600,fill:'#94a3b8'}} />
                                     <Tooltip contentStyle={{borderRadius:'16px',border:'1px solid #e2e8f0',background:'#fff',fontWeight:'bold',boxShadow:'0 10px 40px rgba(0,0,0,0.08)'}} />
-                                    <Area type="monotone" dataKey="amount" stroke="#C8813A" fill="url(#colorRev)" strokeWidth={2.5} />
+                                    <Area type="monotone" dataKey="amount" stroke="#6366F1" fill="url(#colorRev)" strokeWidth={2.5} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
@@ -316,8 +345,8 @@ const AdminPaymentPage = () => {
                     {/* Status Pie Chart — now shows all statuses with correct colors */}
                     <div className="bg-white border border-gray-100 p-7 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500">
                         <div className="flex items-center mb-7 gap-3 border-b border-gray-100 pb-4">
-                            <div className="p-2 bg-[#C8813A]/10 rounded-xl border border-[#C8813A]/20">
-                                <PieIcon className="text-[#C8813A]" size={16} />
+                            <div className="p-2 bg-[#6366F1]/10 rounded-xl border border-[#6366F1]/20">
+                                <PieIcon className="text-[#6366F1]" size={16} />
                             </div>
                             <h3 className="font-black text-gray-400 uppercase text-[20px] tracking-[0.3em]">Status Ratio</h3>
                         </div>
@@ -348,8 +377,8 @@ const AdminPaymentPage = () => {
                 {/* Payment Method Bar Chart */}
                 <div className="bg-white border border-gray-100 p-7 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 mb-12">
                     <div className="flex items-center mb-7 gap-3 border-b border-gray-100 pb-4">
-                        <div className="p-2 bg-[#C8813A]/10 rounded-xl border border-[#C8813A]/20">
-                            <TrendingUp className="text-[#C8813A]" size={16} />
+                        <div className="p-2 bg-[#6366F1]/10 rounded-xl border border-[#6366F1]/20">
+                            <TrendingUp className="text-[#6366F1]" size={16} />
                         </div>
                         <h3 className="font-black text-gray-400 uppercase text-[20px] tracking-[0.3em]">Amount by Payment Method</h3>
                     </div>
@@ -360,7 +389,7 @@ const AdminPaymentPage = () => {
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize:11,fontWeight:700,fill:'#64748b'}} />
                                 <YAxis axisLine={false} tickLine={false} tickFormatter={v=>`Rs.${v/1000}k`} tick={{fontSize:10,fontWeight:600,fill:'#94a3b8'}} />
                                 <Tooltip contentStyle={{borderRadius:'12px',border:'1px solid #e2e8f0',background:'#fff',fontWeight:'bold'}} formatter={v=>`Rs. ${v.toLocaleString()}`} />
-                                <Bar dataKey="amount" fill="#C8813A" radius={[8,8,0,0]} />
+                                <Bar dataKey="amount" fill="#6366F1" radius={[8,8,0,0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -369,9 +398,9 @@ const AdminPaymentPage = () => {
                 {/* Filters */}
                 <div className="flex justify-end mb-5">
                     <div className="flex items-center gap-3 bg-white border border-gray-200 p-1.5 pl-5 pr-2 rounded-full shadow-sm">
-                        <Filter size={14} className="text-[#C8813A]" />
+                        <Filter size={14} className="text-[#6366F1]" />
                         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
-                            className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest focus:ring-0 cursor-pointer text-gray-500 border-r border-gray-200 pr-4 py-2 outline-none hover:text-[#C8813A] transition-colors">
+                            className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest focus:ring-0 cursor-pointer text-gray-500 border-r border-gray-200 pr-4 py-2 outline-none hover:text-[#6366F1] transition-colors">
                             <option value="all">All Status</option>
                             <option value="completed">Completed</option>
                             <option value="processing">Processing</option>
@@ -380,7 +409,7 @@ const AdminPaymentPage = () => {
                             <option value="failed">Rejected</option>
                         </select>
                         <select value={filterMethod} onChange={e => setFilterMethod(e.target.value)}
-                            className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest focus:ring-0 cursor-pointer text-gray-500 pl-2 pr-4 py-2 outline-none hover:text-[#C8813A] transition-colors">
+                            className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest focus:ring-0 cursor-pointer text-gray-500 pl-2 pr-4 py-2 outline-none hover:text-[#6366F1] transition-colors">
                             <option value="all">All Methods</option>
                             <option value="bank_transfer">Bank</option>
                             <option value="crypto">Crypto</option>
@@ -392,7 +421,7 @@ const AdminPaymentPage = () => {
                 <div className="bg-white border border-gray-100 shadow-sm rounded-3xl overflow-hidden mb-12 hover:shadow-xl transition-all duration-500">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
-                            <thead className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+                            <thead className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
                                 <tr>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Customer / Method</th>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Amount</th>
@@ -402,10 +431,10 @@ const AdminPaymentPage = () => {
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {filteredPayments.map((payment) => (
-                                    <tr key={payment._id} className="hover:bg-[#C8813A]/5 transition-all duration-300 group">
+                                    <tr key={payment._id} className="hover:bg-[#6366F1]/5 transition-all duration-300 group">
                                         <td className="px-8 py-5">
                                             <div className="font-black text-gray-800 text-sm uppercase tracking-tight">{payment.userId?.firstName || 'Guest'}</div>
-                                            <div className="text-[9px] text-[#C8813A] font-black uppercase tracking-widest mt-1">{payment.paymentMethod?.replace('_',' ')}</div>
+                                            <div className="text-[9px] text-[#6366F1] font-black uppercase tracking-widest mt-1">{payment.paymentMethod?.replace('_',' ')}</div>
                                         </td>
                                         <td className="px-8 py-5">
                                             <div className="font-black text-gray-800 text-xl leading-none">{payment.amount?.toLocaleString()}<span className="text-[9px] font-bold text-gray-300 ml-1">LKR</span></div>
@@ -429,8 +458,15 @@ const AdminPaymentPage = () => {
                                                 )}
                                                 <button
                                                     onClick={() => { setSelectedPayment(payment); setIsModalOpen(true); }}
-                                                    className="p-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-xl hover:bg-[#C8813A] hover:text-white hover:border-[#C8813A] hover:shadow-lg transition-all duration-300">
+                                                    className="p-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-xl hover:bg-[#6366F1] hover:text-white hover:border-[#6366F1] hover:shadow-lg transition-all duration-300"
+                                                    title="View Details">
                                                     <Eye size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => { setDeletePayment(payment); setDeleteModal(true); }}
+                                                    className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl hover:bg-red-600 hover:text-white hover:border-red-600 hover:shadow-lg transition-all duration-300"
+                                                    title="Delete Payment">
+                                                    <Trash2 size={16} />
                                                 </button>
                                             </div>
                                         </td>
@@ -513,34 +549,99 @@ const AdminPaymentPage = () => {
                 </div>
             )}
 
+            {/* ── Delete Confirmation Modal ──────────────────────────────────────── */}
+            {deleteModal && deletePayment && (
+                <div className="fixed inset-0 bg-gray-900/30 backdrop-blur-md flex items-center justify-center p-4 z-[60]">
+                    <div className="bg-white border border-gray-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl">
+                        <div className="p-8 space-y-5 flex flex-col items-center text-center">
+                            {/* Warning Icon */}
+                            <div className="w-20 h-20 rounded-full border-[3px] border-[#6366F1] flex items-center justify-center mb-4">
+                                <p className="text-4xl font-black text-[#6366F1]">!</p>
+                            </div>
+
+                            {/* Question Text */}
+                            <h3 className="text-3xl font-bold text-gray-800 mb-3">Are you sure?</h3>
+                            <p className="text-base text-gray-600 font-medium leading-relaxed">
+                                This message will be permanently deleted!
+                            </p>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-4 w-full mt-6">
+                                {/* Cancel Button */}
+                                <button
+                                    onClick={() => { setDeleteModal(false); setDeletePayment(null); }}
+                                    disabled={deleteLoading}
+                                    className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all duration-300 text-base uppercase tracking-wide disabled:opacity-60">
+                                    Cancel
+                                </button>
+                                {/* Confirm Delete Button */}
+                                <button
+                                    onClick={handleDeletePayment}
+                                    disabled={deleteLoading}
+                                    className="flex-1 bg-[#6366F1] hover:bg-[#4F46E5] text-white py-3 rounded-lg font-bold transition-all duration-300 text-base uppercase tracking-wide disabled:opacity-60">
+                                    {deleteLoading ? <Loader2 size={18} className="animate-spin mx-auto" /> : 'Yes, delete it!' }
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Delete Success Modal ───────────────────────────────────────────── */}
+            {deleteSuccess && (
+                <div className="fixed inset-0 bg-gray-900/30 backdrop-blur-md flex items-center justify-center p-4 z-[60]">
+                    <div className="bg-white border border-gray-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl">
+                        <div className="p-8 space-y-5 flex flex-col items-center text-center">
+                            {/* Success Icon */}
+                            <div className="w-20 h-20 rounded-full border-[3px] border-emerald-400 flex items-center justify-center mb-4">
+                                <CheckCircle size={48} className="text-emerald-400" />
+                            </div>
+
+                            {/* Success Text */}
+                            <h3 className="text-3xl font-bold text-gray-800 mb-3">Deleted!</h3>
+                            <p className="text-base text-gray-600 font-medium leading-relaxed">
+                                The message has been deleted.
+                            </p>
+
+                            {/* OK Button */}
+                            <button
+                                onClick={() => setDeleteSuccess(false)}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold transition-all duration-300 text-base uppercase tracking-wide mt-6">
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* ── Payment Detail Modal ──────────────────────────────────────────── */}
             {isModalOpen && selectedPayment && (
                 <div className="fixed inset-0 bg-gray-900/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
                     <div className="bg-white border border-gray-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl">
-                        <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-[#C8813A]/10 to-white">
+                        <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-[#6366F1]/10 to-white">
                             <div>
                                 <h3 className="text-xl font-bold text-gray-800 uppercase tracking-tight">
                                     {selectedPayment.paymentMethod === 'crypto' ? 'On-Chain Details' : 'Payment Receipt'}
                                 </h3>
-                                <p className="text-[9px] text-[#C8813A] font-mono tracking-[0.3em] uppercase mt-0.5">Admin Review Panel</p>
+                                <p className="text-[9px] text-[#6366F1] font-mono tracking-[0.3em] uppercase mt-0.5">Admin Review Panel</p>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-300 hover:text-gray-700 text-2xl w-9 h-9 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors">×</button>
                         </div>
                         <div className="p-8">
                             <div className="grid grid-cols-2 gap-4 mb-7">
                                 {selectedPayment.paymentMethod === 'crypto' ? (
-                                    <div className="p-5 bg-[#C8813A]/5 rounded-2xl border border-[#C8813A]/20 col-span-2">
-                                        <span className="text-[9px] text-[#C8813A] font-black uppercase tracking-widest block mb-2">TxHash Identifier</span>
-                                        <p className="text-[11px] font-mono break-all text-gray-600 bg-white p-3 rounded-xl border border-[#C8813A]/10">{selectedPayment.transactionId}</p>
+                                    <div className="p-5 bg-[#6366F1]/5 rounded-2xl border border-[#6366F1]/20 col-span-2">
+                                        <span className="text-[9px] text-[#6366F1] font-black uppercase tracking-widest block mb-2">TxHash Identifier</span>
+                                        <p className="text-[11px] font-mono break-all text-gray-600 bg-white p-3 rounded-xl border border-[#6366F1]/10">{selectedPayment.transactionId}</p>
                                     </div>
                                 ) : (
                                     <>
-                                        <div className="p-5 bg-[#C8813A]/5 rounded-2xl border border-[#C8813A]/10">
-                                            <span className="text-[9px] text-[#C8813A] font-black uppercase tracking-widest block mb-2">Bank</span>
+                                        <div className="p-5 bg-[#6366F1]/5 rounded-2xl border border-[#6366F1]/10">
+                                            <span className="text-[9px] text-[#6366F1] font-black uppercase tracking-widest block mb-2">Bank</span>
                                             <p className="text-gray-800 font-black text-xs uppercase">{selectedPayment.paymentDetails?.bankName || 'N/A'}</p>
                                         </div>
-                                        <div className="p-5 bg-[#C8813A]/5 rounded-2xl border border-[#C8813A]/10">
-                                            <span className="text-[9px] text-[#C8813A] font-black uppercase tracking-widest block mb-2">Branch</span>
+                                        <div className="p-5 bg-[#6366F1]/5 rounded-2xl border border-[#6366F1]/10">
+                                            <span className="text-[9px] text-[#6366F1] font-black uppercase tracking-widest block mb-2">Branch</span>
                                             <p className="text-gray-800 font-black text-xs uppercase">{selectedPayment.paymentDetails?.branch || 'N/A'}</p>
                                         </div>
                                     </>
@@ -550,10 +651,10 @@ const AdminPaymentPage = () => {
                                 {selectedPayment.paymentMethod === 'bank_transfer' ? (
                                     <img src={selectedPayment.receiptUrl} alt="Receipt" className="max-h-[220px] rounded-2xl border border-gray-200 shadow-lg hover:scale-[1.02] transition-transform duration-500" />
                                 ) : (
-                                    <div className="h-44 w-full bg-gradient-to-br from-[#C8813A]/5 to-[#C8813A]/10 rounded-2xl flex flex-col items-center justify-center border border-[#C8813A]/20">
-                                        <Wallet size={44} className="mb-4 text-[#C8813A] animate-pulse"/>
+                                    <div className="h-44 w-full bg-gradient-to-br from-[#6366F1]/5 to-[#6366F1]/10 rounded-2xl flex flex-col items-center justify-center border border-[#6366F1]/20">
+                                        <Wallet size={44} className="mb-4 text-[#6366F1] animate-pulse"/>
                                         <a href={`https://blockchain.info/tx/${selectedPayment.transactionId}`} target="_blank" rel="noreferrer"
-                                            className="bg-[#C8813A] text-white text-[9px] font-black px-6 py-2.5 rounded-full hover:shadow-lg transition-all uppercase tracking-widest hover:scale-105">
+                                            className="bg-[#6366F1] text-white text-[9px] font-black px-6 py-2.5 rounded-full hover:shadow-lg transition-all uppercase tracking-widest hover:scale-105">
                                             Verify On Explorer
                                         </a>
                                     </div>

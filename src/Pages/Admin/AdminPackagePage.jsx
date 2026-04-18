@@ -75,7 +75,7 @@ export default function AdminPackagePage() {
       <div className="bg-white rounded-[1.5rem] shadow-xl shadow-gray-200/50 overflow-hidden border border-gray-100">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-[#2D3748] text-white">
+            <tr className="bg-[#6366F1] text-white">
               <th className="p-4 text-xs font-black uppercase tracking-widest">Package Details</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">Location</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest text-center">Duration</th>
@@ -94,7 +94,7 @@ export default function AdminPackagePage() {
                   {/* Package Details */}
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-16 h-12 rounded-lg overflow-hidden border border-gray-100 bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm flex-shrink-0">
+                      <div className="w-16 h-12 rounded-lg overflow-hidden border border-gray-100 bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm flex-shrink-0">
                         {pkg.gallery?.[0] ? (
                           <img
                             src={pkg.gallery[0]}
@@ -117,7 +117,7 @@ export default function AdminPackagePage() {
                   {/* Location */}
                   <td className="p-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600 font-medium">
-                      <FaMapMarkerAlt className="text-amber-500 text-[10px]" /> {pkg.location}
+                      <FaMapMarkerAlt className="text-indigo-500 text-[10px]" /> {pkg.location}
                     </div>
                   </td>
 
@@ -134,7 +134,7 @@ export default function AdminPackagePage() {
                       {pkg.categories?.slice(0, 2).map((cat, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[10px] font-bold"
+                          className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-bold"
                         >
                           {cat}
                         </span>

@@ -52,7 +52,7 @@ const MyBookings = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${backendUrl}/reviews`, {
+      const response = await axios.post(`${backendUrl}/reviews`, {
         bookingId: selectedBooking._id,
         rating,
         comment
@@ -64,8 +64,21 @@ const MyBookings = () => {
       setIsModalOpen(false);
       setComment("");
       setRating(5);
-      // දත්ත Refresh කරන්න (සමහරවිට button එක අයින් කරන්න අවශ්‍ය නම්)
-      fetchBookings();
+      
+      // Redirect to appropriate overview page
+      if (response.data?.redirect) {
+        const { page, id } = response.data.redirect;
+        setTimeout(() => {
+          if (page === 'package_overview') {
+            navigate(`/package-details/${id}`);
+          } else if (page === 'hotel_overview') {
+            navigate(`/hotel-details/${id}`);
+          }
+        }, 1500);
+      } else {
+        // Fallback: refresh bookings
+        fetchBookings();
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to submit review.");
     } finally {

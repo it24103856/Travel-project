@@ -68,7 +68,7 @@ export default function CustomerFeedback() {
 
     const getCategoryIcon = (category) => {
         if (category === "Vehicles") return <Car size={20} />;
-        if (category === "driverse") return <UserCheck size={20} />;
+        if (category === "drivers") return <UserCheck size={20} />;
         return <Globe size={20} />;
     };
 
@@ -112,8 +112,8 @@ export default function CustomerFeedback() {
                                 <div className="grid grid-cols-3 gap-3 mt-3">
                                     {[
                                         { id: "Vehicles", icon: <Car size={20} />, label: "Vehicle" },
-                                        { id: "driverse", icon: <UserCheck size={20} />, label: "Driver" },
-                                        { id: "All", icon: <Globe size={20} />, label: "Other" }
+                                        { id: "drivers", icon: <UserCheck size={20} />, label: "Driver" },
+                                        { id: "Other", icon: <Globe size={20} />, label: "Other" }
                                     ].map((cat) => (
                                         <button
                                             key={cat.id}

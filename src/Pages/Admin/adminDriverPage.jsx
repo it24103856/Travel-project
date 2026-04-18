@@ -71,7 +71,7 @@ export default function AdminDriverPage() {
       <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100 transition-all duration-500">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+            <tr className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
               <th className="p-4 text-xs font-black uppercase tracking-widest">Driver</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">Contact</th>
               <th className="p-4 text-xs font-black uppercase tracking-widest">License</th>
@@ -82,10 +82,10 @@ export default function AdminDriverPage() {
           <tbody>
             {drivers.length > 0 ? (
               drivers.map((driver) => (
-                <tr key={driver._id} className="border-b border-gray-50 hover:bg-[#C8813A]/5 transition-all duration-500">
+                <tr key={driver._id} className="border-b border-gray-50 hover:bg-[#6366F1]/5 transition-all duration-500">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#C8813A]/10 bg-[#C8813A]/5 flex items-center justify-center text-[#C8813A] shadow-sm">
+                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#6366F1]/10 bg-[#6366F1]/5 flex items-center justify-center text-[#6366F1] shadow-sm">
                        {driver.profileImage ? (
                         <img src={driver.profileImage} alt={driver.name} className="w-full h-full object-cover" />
                       ) : (
@@ -106,7 +106,7 @@ export default function AdminDriverPage() {
                   </td>
                   <td className="p-4 text-sm font-medium text-gray-600 font-[Inter]">{driver.licenseNumber}</td>
                   <td className="p-4">
-                    <span className="px-3 py-1 bg-[#C8813A]/10 text-[#C8813A] rounded-full text-xs font-bold uppercase">
+                    <span className="px-3 py-1 bg-[#6366F1]/10 text-[#6366F1] rounded-full text-xs font-bold uppercase">
                       {driver.vehicleType}
                     </span>
                   </td>
@@ -114,7 +114,7 @@ export default function AdminDriverPage() {
                     <div className="flex justify-center gap-2">
                       <button 
                         onClick={() => navigate(`/admin/drivers/edit/${driver.email}`)}
-                        className="p-2 bg-[#C8813A]/10 text-[#C8813A] rounded-xl hover:bg-[#C8813A] hover:text-white transition-all duration-500"
+                        className="p-2 bg-[#6366F1]/10 text-[#6366F1] rounded-xl hover:bg-[#6366F1] hover:text-white transition-all duration-500"
                       >
                         <Pencil size={20} />
                       </button>
@@ -142,7 +142,7 @@ export default function AdminDriverPage() {
       {/* Floating Add Button */}
       <Link 
         to="/admin/add-drivers" 
-        className="fixed bottom-10 right-10 w-16 h-16 bg-[#C8813A] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#A66A28] hover:scale-110 transition-all duration-500 z-50 group"
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366F1] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#4F46E5] hover:scale-110 transition-all duration-500 z-50 group"
       >
         <Plus size={24} />
         <span className="absolute right-20 bg-gray-800 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-[Inter]">

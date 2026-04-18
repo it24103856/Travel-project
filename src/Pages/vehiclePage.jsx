@@ -50,7 +50,7 @@ const Vehicles = () => {
     <main className="w-full min-h-screen pt-10 bg-[#FDFDFD]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* 1. Hero Section */}
       <section className="relative h-[45vh] md:h-[50vh] flex items-center justify-center bg-fixed bg-center bg-cover"
-               style={{ backgroundImage: "url('https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
+               style={{ backgroundImage: "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative z-10 text-center text-white px-6">
           <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Premium Vehicles</p>

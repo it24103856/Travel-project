@@ -12,6 +12,7 @@ import toast, { Toaster } from "react-hot-toast";
 const PackageOverviewPage = () => {
   const { id } = useParams();
   const [pkg, setPkg] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("Travel Itinerary");
   const [openFaq, setOpenFaq] = useState(null);
@@ -26,6 +27,7 @@ const PackageOverviewPage = () => {
     "Transport",
     "Gallery",
     "FAQs & tips",
+    "Reviews",
   ];
 
   useEffect(() => {
@@ -37,6 +39,16 @@ const PackageOverviewPage = () => {
           setPkg(response.data.data);
         } else {
           toast.error("Package not found");
+        }
+
+        // Fetch reviews for this package
+        try {
+          const reviewResponse = await axios.get(`${backendUrl}/reviews/package/${cleanId}`);
+          if (reviewResponse.data?.success) {
+            setReviews(reviewResponse.data.data);
+          }
+        } catch (err) {
+          console.error("Error fetching reviews:", err);
         }
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -105,6 +117,17 @@ const PackageOverviewPage = () => {
             </div>
             {/* Right badges */}
             <div className="flex flex-col gap-3 items-end">
+              <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex flex-col items-center gap-1">
+                <div className="flex items-center gap-2">
+                  <FaStar className="text-rose-400 text-sm md:text-lg fill-rose-400" />
+                  <span className="text-sm md:text-xl font-bold">
+                    {reviews.length > 0 
+                      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+                      : "0"}
+                  </span>
+                </div>
+                <span className="text-[10px] text-white/70 italic">(from reviews)</span>
+              </div>
               <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex items-center gap-2 md:gap-4">
                 <FaCalendarAlt className="text-amber-400 text-sm md:text-2xl" />
                 <span className="text-sm md:text-2xl font-bold">{pkg.no_of_days} Days</span>
@@ -270,6 +293,61 @@ const PackageOverviewPage = () => {
                 </div>
               )}
             </div>
+          </section>
+
+          {/* ── GUEST REVIEWS ── */}
+          <section id="reviews" className="scroll-mt-24">
+            <div className="mb-8">
+              <SectionTitle title="Guest Reviews" />
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col items-start">
+                  <div className="flex items-center gap-2">
+                    <FaStar className="text-rose-400 text-2xl fill-rose-400" />
+                    <span className="text-2xl font-bold text-slate-800">
+                      {reviews.length > 0 
+                        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+                        : "0"}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-neutral-400 italic">({reviews.length} reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            {reviews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {reviews.map((review, idx) => (
+                  <div key={idx} className="bg-white border border-slate-100 rounded-[1.5rem] p-6 shadow-sm">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <p className="font-black text-slate-800 text-base">
+                          {review.userId?.firstName} {review.userId?.lastName}
+                        </p>
+                        <p className="text-slate-400 text-xs">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <FaStar 
+                            key={i} 
+                            className={i < review.rating ? "text-amber-400" : "text-slate-300"} 
+                            size={14}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-slate-600 leading-relaxed text-sm">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-[1.5rem] border border-slate-100">
+                <FaStar className="text-slate-300 text-4xl mx-auto mb-3" />
+                <p className="text-slate-500 font-semibold">No reviews yet</p>
+                <p className="text-slate-400 text-sm">Be the first to review this package</p>
+              </div>
+            )}
           </section>
 
         </div>

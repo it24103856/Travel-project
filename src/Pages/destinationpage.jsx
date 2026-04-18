@@ -36,7 +36,7 @@ const DestinationPage = () => {
     <main className="w-full min-h-screen bg-[#FDFDFD]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* 1. Hero Section */}
       <section className="relative h-[45vh] md:h-[50vh] flex items-center justify-center bg-fixed bg-center bg-cover"
-               style={{ backgroundImage: "url('https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1')" }}>
+               style={{ backgroundImage: "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}>
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 text-center text-white px-6">
           <p className="uppercase text-[11px] tracking-[0.3em] font-semibold text-white/60 mb-4">Explore Sri Lanka</p>

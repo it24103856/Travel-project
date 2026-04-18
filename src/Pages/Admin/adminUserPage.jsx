@@ -71,7 +71,7 @@ export default function AdminUserPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+                <thead className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
                   <tr>
                     <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">Profile</th>
                     <th className="px-6 py-4 text-xs font-black uppercase tracking-widest">Name</th>
@@ -83,16 +83,16 @@ export default function AdminUserPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {users.map((item) => (
-                    <tr key={item.email} className={`${item.isblocked ? "bg-red-50" : "hover:bg-[#C8813A]/5"} transition-all duration-500`}>
+                    <tr key={item.email} className={`${item.isblocked ? "bg-red-50" : "hover:bg-[#6366F1]/5"} transition-all duration-500`}>
                       <td className="px-6 py-4">
-                        <img src={item.image || "https://via.placeholder.com/40"} className="w-10 h-10 rounded-full object-cover border-2 border-[#C8813A]/10" alt="avatar" />
+                        <img src={item.image || "https://via.placeholder.com/40"} className="w-10 h-10 rounded-full object-cover border-2 border-[#6366F1]/10" alt="avatar" />
                       </td>
                       <td className="px-6 py-4 font-bold text-gray-800 font-[Inter]">{item.firstName} {item.lastName}</td>
                       <td className="px-6 py-4 text-gray-600 font-[Inter]">{item.email}</td>
                       <td className="px-6 py-4 text-center">
                         <select value={item.role} onChange={(e) => handleRoleChange(item, e.target.value)}
                           className={`px-3 py-1 rounded-full text-[11px] font-black uppercase border-none outline-none cursor-pointer transition-all duration-500 ${
-                            item.role === "admin" ? "bg-purple-100 text-purple-700" : "bg-[#C8813A]/10 text-[#C8813A]"
+                            item.role === "admin" ? "bg-indigo-100 text-indigo-700" : "bg-[#6366F1]/10 text-[#6366F1]"
                           }`}>
                           <option value="customer">Customer</option>
                           <option value="admin">Admin</option>
@@ -107,12 +107,12 @@ export default function AdminUserPage() {
                       <td className="px-6 py-4">
                         <div className="flex justify-center gap-2">
                           <button onClick={() => handleToggleBlock(item)}
-                            className={`p-2 rounded-xl text-white transition-all duration-500 ${item.isblocked ? "bg-green-500 hover:bg-green-600" : "bg-[#C8813A] hover:bg-[#A66A28]"}`}
+                            className={`p-2 rounded-xl text-white transition-all duration-500 ${item.isblocked ? "bg-green-500 hover:bg-green-600" : "bg-[#6366F1] hover:bg-[#4F46E5]"}`}
                             title={item.isblocked ? "Unblock User" : "Block User"}>
                             {item.isblocked ? <ShieldCheck size={18} /> : <ShieldBan size={18} />}
                           </button>
                           <button onClick={() => navigate(`/admin/update-user/${item.email}`, { state: item })}
-                            className="bg-[#C8813A]/10 hover:bg-[#C8813A] text-[#C8813A] hover:text-white p-2 rounded-xl transition-all duration-500" title="Edit User">
+                            className="bg-[#6366F1]/10 hover:bg-[#6366F1] text-[#6366F1] hover:text-white p-2 rounded-xl transition-all duration-500" title="Edit User">
                             <Pencil size={18} />
                           </button>
                           <button onClick={() => openDeleteConfirm(item)} className="bg-red-50 hover:bg-red-500 text-red-500 hover:text-white p-2 rounded-xl transition-all duration-500" title="Delete User">

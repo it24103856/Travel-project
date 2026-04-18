@@ -169,7 +169,7 @@ const VehicleOverview = () => {
             {/* Booking CTA */}
             <div className="pt-6">
                 <button 
-                  onClick={() => navigate("/booking")}
+                  onClick={() => navigate("/hotel")}
                   className="w-full md:w-auto bg-[#C8813A] hover:bg-[#A66A28] text-white px-12 py-5 rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl shadow-[#C8813A]/20 hover:shadow-2xl hover:-translate-y-1 active:scale-95 text-center"
                 >
                   Book this Vehicle

@@ -60,7 +60,7 @@ export default function AdminMessages() {
       text: "This message will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#C8813A",
+      confirmButtonColor: "#6366F1",
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
@@ -92,11 +92,11 @@ export default function AdminMessages() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-3 bg-[#C8813A] rounded-2xl shadow-lg">
+                <div className="p-3 bg-[#6366F1] rounded-2xl shadow-lg">
                   <Mail className="text-white w-5 h-5" />
                 </div>
                 <h1 className="text-3xl sm:text-4xl font-[Playfair_Display] font-bold text-gray-900">
-                  Customer <span className="text-[#C8813A]">Inquiries</span>
+                  Customer <span className="text-[#6366F1]">Inquiries</span>
                 </h1>
               </div>
               <p className="text-gray-600 ml-0 sm:ml-16">Manage and respond to messages from your visitors</p>
@@ -105,7 +105,7 @@ export default function AdminMessages() {
             <div className="flex items-center gap-2 bg-white px-5 py-3 rounded-full shadow-sm border border-gray-100">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-gray-600 font-medium">Total Messages:</span>
-              <span className="text-2xl font-bold text-[#C8813A]">{messages.length}</span>
+              <span className="text-2xl font-bold text-[#6366F1]">{messages.length}</span>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function AdminMessages() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gradient-to-r from-[#C8813A] to-[#A66A28] text-white">
+                  <tr className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
                     <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Date</th>
                     <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Customer</th>
                     <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-wider">Subject</th>
@@ -131,19 +131,19 @@ export default function AdminMessages() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {messages.map((msg, index) => (
-                    <tr key={msg._id} className={`transition-all duration-300 hover:bg-[#C8813A]/5 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}>
+                    <tr key={msg._id} className={`transition-all duration-300 hover:bg-[#6366F1]/5 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}`}>
                       <td className="px-6 py-5 text-sm text-gray-600">
                         {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString() : "N/A"}
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#C8813A] flex items-center justify-center text-white font-bold text-sm shadow-md">
+                          <div className="w-10 h-10 rounded-full bg-[#6366F1] flex items-center justify-center text-white font-bold text-sm shadow-md">
                             {/* charAt Error එක මෙතනින් නිවැරදි කර ඇත */}
                             {msg?.firstName ? msg.firstName.charAt(0).toUpperCase() : (msg?.customerName ? msg.customerName.charAt(0).toUpperCase() : "C")}
                           </div>
                           <div>
                             <div className="font-bold text-gray-900 text-sm">{msg?.firstName || msg?.customerName || "Unknown"}</div>
-                            <div className="text-xs text-[#C8813A] font-medium">{msg?.customerEmail || "No Email"}</div>
+                            <div className="text-xs text-[#6366F1] font-medium">{msg?.customerEmail || "No Email"}</div>
                           </div>
                         </div>
                       </td>
@@ -183,7 +183,7 @@ export default function AdminMessages() {
       {selectedMsg && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100">
-            <div className="bg-[#C8813A] p-8 text-white flex justify-between items-center">
+              <div className="bg-[#6366F1] p-8 text-white flex justify-between items-center">
               <div>
                 <h2 className="text-2xl font-bold font-[Playfair_Display]">Inquiry Details</h2>
                 <p className="text-sm opacity-80 mt-1">From: {selectedMsg?.firstName || selectedMsg?.customerName}</p>
@@ -200,7 +200,7 @@ export default function AdminMessages() {
               </div>
 
               <div className="mb-8 p-6 bg-gray-50 rounded-3xl border border-gray-100 relative">
-                <label className="text-[10px] uppercase font-bold text-[#C8813A] tracking-[0.2em]">Message Body</label>
+                <label className="text-[10px] uppercase font-bold text-[#6366F1] tracking-[0.2em]">Message Body</label>
                 <p className="text-gray-700 mt-3 leading-relaxed text-lg">{selectedMsg?.message}</p>
                 <div className="mt-6 text-[11px] text-gray-400 flex items-center gap-2">
                     <Clock size={12}/> Received: {selectedMsg?.createdAt ? new Date(selectedMsg.createdAt).toLocaleString() : "Unknown date"}
@@ -216,7 +216,7 @@ export default function AdminMessages() {
                 ) : (
                   <div className="space-y-4">
                     <textarea
-                      className="w-full p-5 bg-gray-50 border border-gray-200 rounded-3xl focus:ring-4 focus:ring-[#C8813A]/10 focus:border-[#C8813A] outline-none transition-all min-h-[150px] resize-none"
+                      className="w-full p-5 bg-gray-50 border border-gray-200 rounded-3xl focus:ring-4 focus:ring-[#6366F1]/10 focus:border-[#6366F1] outline-none transition-all min-h-[150px] resize-none"
                       placeholder="Write your response to the customer..."
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
@@ -224,8 +224,8 @@ export default function AdminMessages() {
                     <button
                       onClick={handleReply}
                       disabled={isSending}
-                      className="w-full bg-[#C8813A] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#A66A28] shadow-lg shadow-[#C8813A]/20 transition-all active:scale-[0.98] disabled:opacity-50"
-                    >
+                      className="w-full bg-[#6366F1] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#4F46E5] shadow-lg shadow-[#6366F1]/20 transition-all active:scale-[0.98] disabled:opacity-50">
+                    
                       {isSending ? "Sending Reply..." : <><Send size={20} /> Send Message</>}
                     </button>
                   </div>
