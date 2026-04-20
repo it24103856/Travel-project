@@ -7,6 +7,8 @@ import {
   FaCheckCircle, FaLeaf, FaChevronDown, FaStar
 } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import { getBehaviourRecommendations } from "../api/interactions";
+import { FaRobot } from "react-icons/fa";
 
 const PackagePage = () => {
   const [packages, setPackages] = useState([]);
@@ -18,6 +20,24 @@ const PackagePage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedDays, setSelectedDays] = useState("");
   const [filtersApplied, setFiltersApplied] = useState(false);
+  const [showAllTop, setShowAllTop] = useState(false);
+
+  // ── Behaviour recommendations (returning users) ──
+const [forYou, setForYou]             = useState(null);
+const [forYouLoading, setForYouLoading] = useState(false);
+const token = localStorage.getItem("token");
+
+useEffect(() => {
+    if (!token) return;
+    setForYouLoading(true);
+    getBehaviourRecommendations()
+        .then(data => {
+            if (data.has_data && data.results?.length > 0)
+                setForYou(data.results);
+        })
+        .catch(() => {})
+        .finally(() => setForYouLoading(false));
+}, [token]);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -71,9 +91,9 @@ const PackagePage = () => {
     return matchesSearch && matchesLocation && matchesCategory && matchesDays(pkg);
   });
 
-  // Top rated = first 3 from filtered list (or all if less)
-  const topRated = filteredPackages.slice(0, 3);
-  const remaining = filteredPackages.slice(3);
+  // Top rated = first 10 from filtered list (or all if less)
+  const topRated = filteredPackages.slice(0, 10);
+  const remaining = filteredPackages.slice(10);
 
   if (loading) {
     return (
@@ -97,7 +117,7 @@ const PackagePage = () => {
         className="relative h-[50vh] md:h-[55vh] flex items-center justify-center bg-fixed bg-center bg-cover"
         style={{
           backgroundImage:
-            "url('https://images.pexels.com/photos/2108845/pexels-photo-2108845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
+            "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1600&q=80')",
         }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
@@ -171,22 +191,35 @@ const PackagePage = () => {
         </div>
       </section>
 
-      {/* ── SECTION 4: TOP RATED PACKAGES ── */}
-      <section className="max-w-7xl mx-auto py-10 md:py-14 px-4 md:px-6">
-        <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-8">
-          Top rated packages
-        </h2>
+        {/* ── SECTION 4: TOP RATED PACKAGES ── */}
+<section className="max-w-7xl mx-auto py-10 md:py-14 px-4 md:px-6">
+  <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-8">
+    Top rated packages
+  </h2>
 
-        {topRated.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
-            {topRated.map((pkg) => (
-              <PackageCard key={pkg._id} pkg={pkg} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState />
-        )}
-      </section>
+  {topRated.length > 0 ? (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
+        {(showAllTop ? topRated : topRated.slice(0, 4)).map((pkg) => (
+          <PackageCard key={pkg._id} pkg={pkg} />
+        ))}
+      </div>
+
+      {topRated.length > 4 && (
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={() => setShowAllTop(prev => !prev)}
+            className="bg-slate-900 text-white px-10 py-3 rounded-full font-black text-sm hover:scale-105 transition-all"
+          >
+            {showAllTop ? "Show Less ↑" : `View More (${topRated.length - 4} more) ↓`}
+          </button>
+        </div>
+      )}
+    </>
+  ) : (
+    <EmptyState />
+  )}
+</section>
 
       {/* ── SECTION 5: AI BANNER ── */}
       <section className="max-w-5xl mx-auto px-4 mb-10">
@@ -202,6 +235,43 @@ const PackagePage = () => {
           </Link>
         </div>
       </section>
+
+      {/* ── SECTION 5b: FOR YOU (returning users only) ── */}
+      {token && (
+        <section className="max-w-7xl mx-auto py-10 px-4 md:px-6">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-none">
+                Picked <span className="text-amber-500">For You</span>
+              </h2>
+              <p className="text-gray-400 text-sm mt-2 font-medium">
+                Based on your views, ratings and bookings
+              </p>
+              <div className="w-16 h-1 bg-amber-500 mt-3 rounded-full"></div>
+            </div>
+          </div>
+
+          {forYouLoading ? (
+            <div className="flex items-center gap-3 text-gray-400 text-sm font-medium py-8">
+              <div className="w-5 h-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+              Loading your personalised picks...
+            </div>
+          ) : forYou === null ? (
+            <div className="text-center py-12 bg-gray-50 rounded-[2rem] border-2 border-dashed border-gray-200">
+              <FaLeaf className="mx-auto text-4xl text-gray-300 mb-3" />
+              <p className="text-gray-400 text-sm font-bold italic">
+                Browse and rate some packages to unlock your personalised picks.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7">
+              {forYou.map((pkg) => (
+                <ForYouCard key={pkg.id || pkg._id} pkg={pkg} />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ── SECTION 6: ALL OTHER PACKAGES ── */}
       {remaining.length > 0 && (
@@ -250,44 +320,114 @@ const PackagePage = () => {
 };
 
 // ─── PACKAGE CARD (NEW MINIMALIST DESIGN) ────────────────────────
-const PackageCard = ({ pkg }) => (
-  <div
-    className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)] hover:scale-[1.03] transition-all duration-500 overflow-hidden"
-    style={{ fontFamily: "'Poppins', sans-serif" }}
-  >
-    {/* Image */}
-    <div className="relative h-52 overflow-hidden">
-      <img
-        src={pkg.gallery?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
-        alt={pkg.title}
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-      />
-      {/* Circular Glassmorphism Rating Badge (Top Right) */}
-      <div className="absolute top-3.5 right-3.5 w-[4.2rem] h-[4.2rem] rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
-        <FaStar className="text-amber-500 text-[10px]" />
-        <span className="text-[10px] font-bold text-gray-800 leading-tight mt-0.5">
-          {(pkg.averageRating || 4.5).toFixed(1)}
-        </span>
+const PackageCard = ({ pkg }) => {
+  const [avgRating, setAvgRating] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  useEffect(() => {
+    axios.get(`${backendUrl}/reviews/package/${pkg._id}`)
+      .then(res => {
+        const reviews = res.data?.data || [];
+        if (reviews.length > 0) {
+          const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+          setAvgRating(avg.toFixed(1));
+        }
+      })
+      .catch(() => {});
+  }, [pkg._id, backendUrl]);
+
+  return (
+    <div
+      className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)]  transition-all duration-500 overflow-hidden"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
+      {/* Image */}
+      <div className="relative h-52 overflow-hidden">
+        <img
+          src={pkg.gallery?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
+          alt={pkg.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        {/* Circular Glassmorphism Price Badge */}
+        <div className="absolute top-3.5 right-3.5 w-[4.2rem] h-[4.2rem] rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
+          <span className="text-[8px] text-gray-400 font-medium leading-none">LKR</span>
+          <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">{pkg.price?.toLocaleString()}</span>
+        </div>
+        {/* Rating Badge */}
+        {avgRating && (
+          <div className="absolute top-3.5 left-3.5 bg-white/80 backdrop-blur-lg border border-white/30 shadow-lg rounded-full px-2.5 py-1.5 flex items-center gap-1 z-10">
+            <FaStar className="text-amber-400 text-[10px]" />
+            <span className="text-[11px] font-black text-gray-800">{avgRating}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="bg-white px-5 py-7 text-center">
+        <h3 className="text-[1.05rem] font-bold text-gray-800 mb-1.5 leading-snug">
+          {pkg.title}
+        </h3>
+        <p className="text-[11px] text-gray-400 mb-4 font-medium">
+          {pkg.location} · {pkg.no_of_days} days
+        </p>
+        <Link
+          to={`/package-details/${pkg._id}`}
+          className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm hover:text-[#A66A28] hover:gap-3 transition-all duration-300">
+          View <span className="text-base">→</span>
+        </Link>
       </div>
     </div>
+  );
+};
 
-    {/* Content */}
-    <div className="bg-white px-5 py-7 text-center">
-      <h3 className="text-[1.05rem] font-bold text-gray-800 mb-1.5 leading-snug">
-        {pkg.title}
-      </h3>
-      <p className="text-[11px] text-gray-400 mb-4 font-medium">
-        {pkg.location} · {pkg.no_of_days} days
-      </p>
-      <Link
-        to={`/package-details/${pkg._id}`}
-        className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm hover:text-[#A66A28] hover:gap-3 transition-all duration-300"
-      >
-        Add to Cart <span className="text-base">→</span>
-      </Link>
+// ─── FOR YOU CARD (with match score badge) ───────────────────────
+const ForYouCard = ({ pkg }) => {
+  const scoreColor =
+    pkg.match_score >= 70 ? "bg-green-500" :
+    pkg.match_score >= 40 ? "bg-amber-500" : "bg-gray-400";
+
+  return (
+    <div
+      className="group bg-white rounded-t-[2.5rem] rounded-b-2xl border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)] hover:scale-[1.03] transition-all duration-500 overflow-hidden"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
+      <div className="relative h-52 overflow-hidden">
+        <img
+          src={pkg.gallery?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"}
+          alt={pkg.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        {/* Match score badge */}
+        <div className={`absolute top-3.5 left-3.5 ${scoreColor} text-white rounded-full px-2.5 py-1.5 flex flex-col items-center shadow-lg z-10`}>
+          <span className="text-[11px] font-black leading-none">{pkg.match_score}%</span>
+          <span className="text-[8px] font-medium opacity-80 leading-none mt-0.5">match</span>
+        </div>
+        {/* Price badge */}
+        <div className="absolute top-3.5 right-3.5 w-[4.2rem] h-[4.2rem] rounded-full bg-white/50 backdrop-blur-lg border border-white/30 shadow-lg flex flex-col items-center justify-center z-10">
+          <span className="text-[8px] text-gray-400 font-medium leading-none">LKR</span>
+          <span className="text-[11px] font-bold text-gray-800 leading-tight mt-0.5">
+            {pkg.price?.toLocaleString()}
+          </span>
+        </div>
+      </div>
+
+      <div className="bg-white px-5 py-5 text-center">
+        <h3 className="text-[1.05rem] font-bold text-gray-800 mb-1 leading-snug">
+          {pkg.title}
+        </h3>
+        <p className="text-[11px] text-gray-400 mb-3 font-medium">
+          {pkg.location} · {pkg.no_of_days} days
+        </p>
+        <Link
+          to={`/package-details/${pkg.id || pkg._id}`}
+          className="inline-flex items-center gap-1.5 text-[#C8813A] font-semibold text-sm hover:text-[#A66A28] hover:gap-3 transition-all duration-300"
+        >
+          View  <span className="text-base">→</span>
+        </Link>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── FILTER SELECT ───────────────────────────────────────────────
 const FilterSelect = ({ label, value, onChange, options }) => (

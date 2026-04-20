@@ -195,8 +195,10 @@ const AdminPaymentPage = () => {
                 <div class="stat-card"><div class="stat-label">Cancel Requests</div><div class="stat-value">${stats.cancelRequestCount}</div></div>
             </div>
             <h3 style="color:#C8813A;border-bottom:2px solid #C8813A;padding-bottom:8px">Recent Transactions</h3>
-            <table><tr><th>Customer</th><th>Method</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+            <table><tr><th>Payment ID</th><th>Booking ID</th><th>Customer</th><th>Method</th><th>Amount</th><th>Status</th><th>Date</th></tr>
             ${filteredPayments.slice(0, 20).map(p => `<tr>
+                <td>${p._id?.slice(-8).toUpperCase() || 'N/A'}</td>
+                <td>${p.bookingId ? p.bookingId._id?.slice(-8).toUpperCase() : 'No Booking'}</td>
                 <td>${p.userId?.firstName || 'Guest'}</td>
                 <td>${p.paymentMethod === 'crypto' ? 'Cryptocurrency' : 'Bank Transfer'}</td>
                 <td>Rs. ${p.amount?.toLocaleString()}</td>
@@ -423,6 +425,8 @@ const AdminPaymentPage = () => {
                         <table className="w-full text-left border-collapse">
                             <thead className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white">
                                 <tr>
+                                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Payment ID</th>
+                                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Booking ID</th>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Customer / Method</th>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em]">Amount</th>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em] text-center">Status</th>
@@ -432,19 +436,45 @@ const AdminPaymentPage = () => {
                             <tbody className="divide-y divide-gray-50">
                                 {filteredPayments.map((payment) => (
                                     <tr key={payment._id} className="hover:bg-[#6366F1]/5 transition-all duration-300 group">
+                                        {/* Payment ID */}
+                                        <td className="px-8 py-5">
+                                            <div className="font-mono text-sm font-black text-black tracking-tight bg-gray-100 px-4 py-2 rounded-lg w-fit">
+                                                {payment._id?.slice(-8).toUpperCase() || 'N/A'}
+                                            </div>
+                                            <div className="text-xs text-black font-bold mt-2">{payment._id || 'No ID'}</div>
+                                        </td>
+                                        {/* Booking ID */}
+                                        <td className="px-8 py-5">
+                                            {payment.bookingId ? (
+                                                <>
+                                                    <div className="font-mono text-sm font-black text-black tracking-tight bg-gray-100 px-4 py-2 rounded-lg w-fit">
+                                                        {payment.bookingId._id?.slice(-8).toUpperCase() || 'N/A'}
+                                                    </div>
+                                                    <div className="text-xs text-black font-bold mt-2">
+                                                        Status: <span className="font-bold uppercase">{payment.bookingId.status || 'Pending'}</span>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="text-sm font-bold text-gray-400 italic">No Booking</div>
+                                            )}
+                                        </td>
+                                        {/* Customer / Method */}
                                         <td className="px-8 py-5">
                                             <div className="font-black text-gray-800 text-sm uppercase tracking-tight">{payment.userId?.firstName || 'Guest'}</div>
                                             <div className="text-[9px] text-[#6366F1] font-black uppercase tracking-widest mt-1">{payment.paymentMethod?.replace('_',' ')}</div>
                                         </td>
+                                        {/* Amount */}
                                         <td className="px-8 py-5">
                                             <div className="font-black text-gray-800 text-xl leading-none">{payment.amount?.toLocaleString()}<span className="text-[9px] font-bold text-gray-300 ml-1">LKR</span></div>
                                             <div className="text-[9px] font-bold text-gray-300 mt-1">{new Date(payment.createdAt).toLocaleDateString()}</div>
                                         </td>
+                                        {/* Status */}
                                         <td className="px-8 py-5 text-center">
                                             <span className={`inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${rowStatusStyle(payment.paymentStatus)}`}>
                                                 {payment.paymentStatus?.replace('_',' ')}
                                             </span>
                                         </td>
+                                        {/* Actions */}
                                         <td className="px-8 py-5 text-center">
                                             <div className="flex items-center justify-center gap-2">
                                                 {/* Quick approve refund button — visible only for cancel_requested */}
@@ -473,7 +503,7 @@ const AdminPaymentPage = () => {
                                     </tr>
                                 ))}
                                 {filteredPayments.length === 0 && (
-                                    <tr><td colSpan="4" className="px-8 py-24 text-center text-gray-300 font-black uppercase text-[10px] tracking-[0.4em]">No matching records found.</td></tr>
+                                    <tr><td colSpan="6" className="px-8 py-24 text-center text-gray-300 font-black uppercase text-[10px] tracking-[0.4em]">No matching records found.</td></tr>
                                 )}
                             </tbody>
                         </table>
@@ -628,6 +658,27 @@ const AdminPaymentPage = () => {
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-300 hover:text-gray-700 text-2xl w-9 h-9 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors">×</button>
                         </div>
                         <div className="p-8">
+                            <div className="grid grid-cols-2 gap-4 mb-7">
+                                {/* Payment ID */}
+                                <div className="p-5 bg-gray-100 rounded-2xl border border-gray-200">
+                                    <span className="text-sm font-black text-black uppercase tracking-widest block mb-2">Payment ID</span>
+                                    <p className="text-gray-800 font-mono text-xs break-all font-bold">{selectedPayment._id}</p>
+                                </div>
+                                {/* Booking ID */}
+                                <div className="p-5 bg-gray-100 rounded-2xl border border-gray-200">
+                                    {selectedPayment.bookingId ? (
+                                        <>
+                                            <span className="text-sm font-black text-black uppercase tracking-widest block mb-2">Booking ID</span>
+                                            <p className="text-gray-800 font-mono text-xs break-all font-bold mb-1.5">{selectedPayment.bookingId._id}</p>
+                                            <span className="inline-block bg-gray-200 text-black text-xs font-bold px-2 py-1 rounded-full uppercase tracking-widest">
+                                                Status: {selectedPayment.bookingId.status}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <div className="text-gray-500 text-sm italic font-bold">No associated booking</div>
+                                    )}
+                                </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-4 mb-7">
                                 {selectedPayment.paymentMethod === 'crypto' ? (
                                     <div className="p-5 bg-[#6366F1]/5 rounded-2xl border border-[#6366F1]/20 col-span-2">

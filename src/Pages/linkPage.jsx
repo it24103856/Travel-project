@@ -23,6 +23,7 @@ import Vehicles from "./vehiclePage";
 import VehicleOverview from "../components/vehicleOverview";
 import PackageOverviewPage from "../components/packageOverview";
 import PackagePage from "./packagePage";
+import RecommendationsPage from "./recommendationsPage";
 
 export default function LinkPage() {
     return (
@@ -52,6 +53,7 @@ export default function LinkPage() {
                     <Route path="/vehicles" element={<Vehicles />} />
                     <Route path="/vehicle/:id" element={<VehicleOverview />} />
                     <Route path="/package-details/:id" element={<PackageOverviewPage />} />
+                    <Route path="/ai-recommendations" element={<RecommendationsPage />} />
                 </Routes>
             </main>
         </div>

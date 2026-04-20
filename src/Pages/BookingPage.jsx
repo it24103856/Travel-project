@@ -5,18 +5,14 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Bed, Car, User, Package } from "lucide-react";
-
-const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+import { logBooking } from "../api/interactions";
 
 export default function TravelBookingUI() {
-  const { id } = useParams();
+  const { id, type } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isPackageBooking = location.pathname.includes("/package/");
+  const isPackageBooking =  type === "package";
 
   const [step, setStep] = useState(1);
   const [details, setDetails]     = useState(null);
@@ -24,7 +20,6 @@ export default function TravelBookingUI() {
   const [vehicles, setVehicles]   = useState([]);
   const [loading, setLoading]     = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [emailError, setEmailError] = useState("");
 
   const [formData, setFormData] = useState({
     firstName:    "",
@@ -99,19 +94,7 @@ export default function TravelBookingUI() {
     }));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    
-    // Real-time email validation
-    if (name === "email") {
-      if (value && !validateEmail(value)) {
-        setEmailError("Invalid email format");
-      } else {
-        setEmailError("");
-      }
-    }
-  };
+  const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const updateCount = (field, type) =>
     setFormData(prev => ({
@@ -127,12 +110,6 @@ export default function TravelBookingUI() {
   const handleBookingSubmit = async () => {
     if (!formData.firstName || !formData.email || !formData.checkIn || !formData.checkOut) {
       toast.error("Please fill in all essential details (Name, Email, Dates)!");
-      setStep(1);
-      return;
-    }
-
-    if (!validateEmail(formData.email)) {
-      toast.error("Please enter a valid email address (e.g., user@example.com)");
       setStep(1);
       return;
     }
@@ -185,6 +162,10 @@ export default function TravelBookingUI() {
 
       if (res.data.success && res.data.data) {
         toast.success("Booking Successful!");
+        if (isPackageBooking) logBooking(id);
+        console.log("Attempting to log booking for package:", id);
+        console.log("isPackageBooking:", isPackageBooking);
+    
         setTimeout(() => navigate("/payment", {
           state: {
             bookingDetails: {
@@ -271,8 +252,7 @@ export default function TravelBookingUI() {
                     className="bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                 </div>
                 <input name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="Email Address"
-                  className={`w-full bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 border transition-all duration-500 ${emailError ? "focus:ring-red-500/30 border-red-300" : "focus:ring-[#C8813A]/30 border-gray-100"}`} />
-                {emailError && <p className="text-red-500 text-[11px] font-bold uppercase tracking-wide mt-2 flex items-center gap-1">⚠ {emailError}</p>}
+                  className="w-full bg-white rounded-2xl p-4 text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#C8813A]/30 border border-gray-100 transition-all duration-500" />
                 <div className="grid grid-cols-2 gap-4">
                   <input name="phone" value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}

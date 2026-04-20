@@ -10,9 +10,40 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { uploadFile } from "../../utils/meadiaUpload.js";
 
+// ── Matches Package.js enum exactly ──────────────────────────────────────────
 const CATEGORY_OPTIONS = [
-  "Adventure", "Wildlife", "Historical", "Beach",
-  "Family", "Cultural", "City Tours", "Wellness and Retreat"
+  { value: "adventure",  label: "Adventure" },
+  { value: "wildlife",   label: "Wildlife" },
+  { value: "historical", label: "Historical" },
+  { value: "cultural",   label: "Cultural" },
+  { value: "beach",      label: "Beach" },
+  { value: "wellness",   label: "Wellness" },
+  { value: "eco",        label: "Eco / Nature" },
+  { value: "family",     label: "Family" },
+];
+
+const WEATHER_OPTIONS = [
+  { value: "sunny",    label: "☀️ Sunny & Warm" },
+  { value: "tropical", label: "🌴 Tropical" },
+  { value: "humid",    label: "💧 Humid" },
+  { value: "cool",     label: "🍂 Cool & Crisp" },
+  { value: "dry",      label: "🏜️ Hot & Dry" },
+  { value: "rainy",    label: "🌧️ Rainy" },
+];
+
+const INTEREST_OPTIONS = [
+  { value: "hiking",             label: "🥾 Hiking" },
+  { value: "surfing",            label: "🏄 Surfing" },
+  { value: "nature_photography", label: "📷 Nature Photography" },
+  { value: "wildlife_spotting",  label: "🦁 Wildlife Spotting" },
+  { value: "camping",            label: "⛺ Camping" },
+  { value: "diving",             label: "🤿 Diving" },
+  { value: "paddling_boats",     label: "🚣 Paddling Boats" },
+  { value: "stargazing",         label: "🔭 Stargazing" },
+  { value: "cycling",            label: "🚴 Cycling" },
+  { value: "rock_climbing",      label: "🧗 Rock Climbing" },
+  { value: "bird_watching",      label: "🦜 Bird Watching" },
+  { value: "cultural_tours",     label: "🏛️ Cultural Tours" },
 ];
 
 const AddPackagePage = () => {
@@ -24,10 +55,14 @@ const AddPackagePage = () => {
 
   const [formData, setFormData] = useState({
     title: "", description: "", location: "", price: "", no_of_days: "",
+    min_group_size: 1, max_group_size: 20,                // ✦ new
   });
 
+  const [errors, setErrors] = useState({});
+
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [customCategory, setCustomCategory] = useState("");
+  const [selectedWeather, setSelectedWeather] = useState([]);      // ✦ new
+  const [selectedInterests, setSelectedInterests] = useState([]);  // ✦ new
 
   // ── Hotels & Destinations from DB ──
   const [allHotels, setAllHotels] = useState([]);
@@ -45,7 +80,6 @@ const AddPackagePage = () => {
   const [travellerTips, setTravellerTips] = useState([{ title: "", description: "" }]);
   const [loading, setLoading] = useState(false);
 
-  // ── Fetch all hotels & destinations on mount ──
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -62,21 +96,27 @@ const AddPackagePage = () => {
     fetchOptions();
   }, [backendUrl]);
 
-  // ── Edit mode prefill ──
   useEffect(() => {
     if (isEditing) {
       const fetchPackage = async () => {
         try {
           const res = await axios.get(`${backendUrl}/packages/get/${id}`);
           const pkg = res.data.data;
-          setFormData({ title: pkg.title || "", description: pkg.description || "", location: pkg.location || "", price: pkg.price || "", no_of_days: pkg.no_of_days || "" });
+          setFormData({
+            title: pkg.title || "", description: pkg.description || "",
+            location: pkg.location || "", price: pkg.price || "",
+            no_of_days: pkg.no_of_days || "",
+            min_group_size: pkg.min_group_size || 1,   // ✦ new
+            max_group_size: pkg.max_group_size || 20,  // ✦ new
+          });
           setSelectedCategories(pkg.categories || []);
+          setSelectedWeather(pkg.weather || []);        // ✦ new
+          setSelectedInterests(pkg.interests || []);    // ✦ new
           setGalleryPreviews(pkg.gallery || []);
           setItineraries(pkg.itineraries?.length ? pkg.itineraries.map(i => ({ ...i, activities: i.activities?.length ? i.activities : [{ time: "", task: "" }] })) : [{ day_no: 1, title: "", activities: [{ time: "", task: "" }] }]);
           setTransport(pkg.transport?.length ? pkg.transport : [""]);
           setFaqs(pkg.faqs?.length ? pkg.faqs : [{ question: "", answer: "" }]);
           setTravellerTips(pkg.traveller_tips?.length ? pkg.traveller_tips : [{ title: "", description: "" }]);
-          // Handle both populated objects and raw IDs
           setSelectedHotelIds((pkg.included_hotels || []).map(h => h._id || h));
           setSelectedDestinationIds((pkg.destinations || []).map(d => d._id || d));
         } catch { toast.error("Failed to load package data"); }
@@ -85,24 +125,20 @@ const AddPackagePage = () => {
     }
   }, [id, backendUrl, isEditing]);
 
-  const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-
-  // ── Category handlers ──
-  const toggleCategory = (cat) => setSelectedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
-  const addCustomCategory = () => {
-    const t = customCategory.trim();
-    if (!t) return;
-    if (selectedCategories.includes(t)) { toast.error("Already added"); return; }
-    setSelectedCategories(prev => [...prev, t]);
-    setCustomCategory("");
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(prev => ({ ...prev, [e.target.name]: "" }));
   };
-  const removeCategory = (cat) => setSelectedCategories(prev => prev.filter(c => c !== cat));
 
-  // ── Hotel / Destination toggles ──
+  const toggleCategory = (cat) => setSelectedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+
+  // ✦ new handlers
+  const toggleWeather = (w) => setSelectedWeather(prev => prev.includes(w) ? prev.filter(x => x !== w) : [...prev, w]);
+  const toggleInterest = (i) => setSelectedInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
+
   const toggleHotel = (hotelId) => setSelectedHotelIds(prev => prev.includes(hotelId) ? prev.filter(i => i !== hotelId) : [...prev, hotelId]);
   const toggleDestination = (destId) => setSelectedDestinationIds(prev => prev.includes(destId) ? prev.filter(i => i !== destId) : [...prev, destId]);
 
-  // ── Gallery ──
   const handleGalleryChange = (e) => {
     const files = Array.from(e.target.files);
     setGalleryFiles(prev => [...prev, ...files]);
@@ -110,7 +146,6 @@ const AddPackagePage = () => {
   };
   const removeGalleryImage = (i) => { setGalleryPreviews(prev => prev.filter((_, idx) => idx !== i)); setGalleryFiles(prev => prev.filter((_, idx) => idx !== i)); };
 
-  // ── Itinerary ──
   const addItinerary = () => setItineraries(prev => [...prev, { day_no: prev.length + 1, title: "", activities: [{ time: "", task: "" }] }]);
   const removeItinerary = (i) => setItineraries(prev => prev.filter((_, idx) => idx !== i).map((it, idx) => ({ ...it, day_no: idx + 1 })));
   const handleItineraryChange = (i, f, v) => setItineraries(prev => { const u = [...prev]; u[i] = { ...u[i], [f]: v }; return u; });
@@ -118,212 +153,277 @@ const AddPackagePage = () => {
   const removeActivity = (iIdx, aIdx) => setItineraries(prev => { const u = [...prev]; u[iIdx].activities = u[iIdx].activities.filter((_, i) => i !== aIdx); return u; });
   const handleActivityChange = (iIdx, aIdx, f, v) => setItineraries(prev => { const u = [...prev]; u[iIdx].activities[aIdx] = { ...u[iIdx].activities[aIdx], [f]: v }; return u; });
 
-  // ── Transport / FAQ / Tips ──
-  const addTransport = () => setTransport(p => [...p, ""]);
-  const removeTransport = (i) => setTransport(p => p.filter((_, idx) => idx !== i));
-  const handleTransportChange = (i, v) => setTransport(p => { const u = [...p]; u[i] = v; return u; });
-  const addFaq = () => setFaqs(p => [...p, { question: "", answer: "" }]);
-  const removeFaq = (i) => setFaqs(p => p.filter((_, idx) => idx !== i));
-  const handleFaqChange = (i, f, v) => setFaqs(p => { const u = [...p]; u[i] = { ...u[i], [f]: v }; return u; });
-  const addTip = () => setTravellerTips(p => [...p, { title: "", description: "" }]);
-  const removeTip = (i) => setTravellerTips(p => p.filter((_, idx) => idx !== i));
-  const handleTipChange = (i, f, v) => setTravellerTips(p => { const u = [...p]; u[i] = { ...u[i], [f]: v }; return u; });
+  const addTransport = () => setTransport(prev => [...prev, ""]);
+  const removeTransport = (i) => setTransport(prev => prev.filter((_, idx) => idx !== i));
+  const handleTransportChange = (i, v) => setTransport(prev => { const u = [...prev]; u[i] = v; return u; });
+
+  const addFaq = () => setFaqs(prev => [...prev, { question: "", answer: "" }]);
+  const removeFaq = (i) => setFaqs(prev => prev.filter((_, idx) => idx !== i));
+  const handleFaqChange = (i, f, v) => setFaqs(prev => { const u = [...prev]; u[i] = { ...u[i], [f]: v }; return u; });
+
+  const addTip = () => setTravellerTips(prev => [...prev, { title: "", description: "" }]);
+  const removeTip = (i) => setTravellerTips(prev => prev.filter((_, idx) => idx !== i));
+  const handleTipChange = (i, f, v) => setTravellerTips(prev => { const u = [...prev]; u[i] = { ...u[i], [f]: v }; return u; });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selectedCategories.length === 0) return toast.error("Please select at least one category");
-    if (!formData.title || !formData.location || !formData.price || !formData.no_of_days) return toast.error("Please fill all required fields");
+
+    // Validate required fields
+    const newErrors = {};
+    if (!formData.title.trim())       newErrors.title       = "Title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.location)           newErrors.location    = "Location is required";
+    if (!formData.price)              newErrors.price       = "Price is required";
+    else if (Number(formData.price) <= 0) newErrors.price   = "Price must be greater than 0";
+    if (!formData.no_of_days)         newErrors.no_of_days  = "Number of days is required";
+    else if (Number(formData.no_of_days) <= 0) newErrors.no_of_days = "Number of days must be greater than 0";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fix the highlighted fields");
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
-    const tId = toast.loading("Syncing with Cloud...");
     try {
-      let finalGallery = galleryPreviews.filter(p => p.startsWith("http"));
-      if (galleryFiles.length > 0) {
-        const uploaded = await Promise.all(galleryFiles.map(f => uploadFile(f)));
-        finalGallery = [...finalGallery, ...uploaded];
+      let galleryUrls = galleryPreviews.filter(p => !p.startsWith("blob:"));
+      for (const file of galleryFiles) {
+        const url = await uploadFile(file);
+        if (url) galleryUrls.push(url);
       }
-      const finalData = {
+      const payload = {
         ...formData,
-        price: Number(formData.price), no_of_days: Number(formData.no_of_days),
-        categories: selectedCategories,
+        categories:      selectedCategories,
+        weather:         selectedWeather,       // ✦ new
+        interests:       selectedInterests,     // ✦ new
+        gallery:         galleryUrls,
+        itineraries,
+        transport:       transport.filter(t => t.trim()),
+        faqs:            faqs.filter(f => f.question.trim()),
+        traveller_tips:  travellerTips.filter(t => t.title.trim()),
         included_hotels: selectedHotelIds,
-        destinations: selectedDestinationIds,
-        gallery: finalGallery, itineraries,
-        transport: transport.filter(t => t.trim() !== ""),
-        faqs, traveller_tips: travellerTips,
+        destinations:    selectedDestinationIds,
       };
-      const config = { headers: { Authorization: `Bearer ${token}` } };
       if (isEditing) {
-        await axios.put(`${backendUrl}/packages/update/${id}`, finalData, config);
-        toast.success("Package Updated!", { id: tId });
+        await axios.put(`${backendUrl}/packages/update/${id}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+        toast.success("Package updated!");
       } else {
-        await axios.post(`${backendUrl}/packages/create`, finalData, config);
-        toast.success("Package Created!", { id: tId });
+        await axios.post(`${backendUrl}/packages/create`, payload, { headers: { Authorization: `Bearer ${token}` } });
+        toast.success("Package created!");
       }
-      setTimeout(() => navigate("/admin/packages"), 1500);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Operation failed", { id: tId });
-    } finally { setLoading(false); }
+      navigate("/admin/packages");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredHotels = allHotels.filter(h => h.name?.toLowerCase().includes(hotelSearch.toLowerCase()) || h.city?.toLowerCase().includes(hotelSearch.toLowerCase()));
-  const filteredDestinations = allDestinations.filter(d => d.name?.toLowerCase().includes(destSearch.toLowerCase()));
+  const filteredHotels = allHotels.filter(h => h.name?.toLowerCase().includes(hotelSearch.toLowerCase()));
+  const filteredDests  = allDestinations.filter(d => d.name?.toLowerCase().includes(destSearch.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] py-12 px-4">
-      <Toaster position="top-center" />
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-slate-50" style={{ fontFamily: "'Poppins', sans-serif" }}>
+      <Toaster position="top-right" />
+      <div className="max-w-5xl mx-auto px-4 py-10">
 
-        {/* Header */}
-        <div className="text-center mb-12 relative">
-          <button onClick={() => navigate(-1)} className="absolute left-0 top-0 flex items-center gap-2 text-gray-500 font-bold hover:text-blue-600 transition-all border border-gray-200 px-4 py-2 rounded-xl bg-white shadow-sm">
-            <FaArrowLeft /> Back
-          </button>
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <FaSuitcase className="w-8 h-8 text-amber-500" />
-            <span className="bg-[#2D3748] text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-              {isEditing ? "Edit Package" : "New Tour Package"}
-            </span>
+        <div className="flex items-center gap-4 mb-10">
+          <button onClick={() => navigate(-1)} className="p-3 bg-white border border-slate-200 rounded-2xl hover:bg-slate-100 transition-all"><FaArrowLeft className="text-slate-600" /></button>
+          <div>
+            <h1 className="text-3xl font-black text-slate-900">{isEditing ? "Edit Package" : "Add New Package"}</h1>
+            <p className="text-slate-400 text-sm font-medium">Fill in the details below</p>
           </div>
-          <h1 className="text-5xl font-black text-slate-900">{isEditing ? "Update Package" : "Create Package"}</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-8">
 
-          {/* SECTION 1: Essentials */}
+          {/* SECTION 1: Basic Info */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-800"><FaSuitcase className="text-amber-500" /> Package Essentials</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="md:col-span-2"><InputGroup label="Package Title" name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Hill Country Escape" /></div>
-              <InputGroup label="Location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Ella, Bandarawela" />
-              <InputGroup label="Price (LKR)" name="price" type="number" value={formData.price} onChange={(e) => { const val = e.target.value; if(val === '' || parseFloat(val) >= 0) handleChange({target: {name: 'price', value: val}}); }} placeholder="e.g. 12000" min="0" />
-              <InputGroup label="Number of Days" name="no_of_days" type="number" value={formData.no_of_days} onChange={(e) => { const val = e.target.value; if(val === '' || parseInt(val) >= 1) handleChange({target: {name: 'no_of_days', value: val}}); }} placeholder="e.g. 5" min="1" />
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-800"><FaSuitcase className="text-blue-500" /> Basic Info</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-2">Description</label>
-                <textarea name="description" value={formData.description} onChange={handleChange} rows={4} placeholder="Describe what makes this package special..."
-                  className="w-full p-6 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-700 shadow-inner resize-none" />
+                <InputGroup
+                  label="Package Title *"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="e.g. Magical Hill Country Experience"
+                  hasError={!!errors.title}
+                />
+                {errors.title && <p className="text-red-500 text-xs font-bold mt-1 ml-2">⚠ {errors.title}</p>}
               </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2 mb-2">Description *</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the package experience..."
+                  rows={4}
+                  className={`w-full p-5 bg-slate-50 border rounded-2xl outline-none focus:bg-white transition-all text-slate-700 resize-none shadow-sm ${errors.description ? "border-red-400 focus:border-red-500" : "border-slate-200 focus:border-blue-500"}`}
+                />
+                {errors.description && <p className="text-red-500 text-xs font-bold mt-1 ml-2">⚠ {errors.description}</p>}
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2 mb-2">Location *</label>
+                <select
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className={`w-full p-5 bg-slate-50 border rounded-2xl outline-none focus:bg-white transition-all text-slate-700 font-bold appearance-none shadow-sm ${errors.location ? "border-red-400 focus:border-red-500" : "border-slate-200 focus:border-blue-500"}`}
+                >
+                  <option value="">Select location...</option>
+                  {["Colombo","Kandy","Galle","Jaffna","Anuradhapura","Polonnaruwa","Sigiriya","Ella","Nuwara Eliya","Trincomalee","Batticaloa","Hambantota","Mirissa","Hikkaduwa","Arugam Bay","Yala","Wilpattu","Udawalawe","Dambulla","Matara","Bentota","Negombo","Ratnapura","Badulla","Ampara","Multi-location"].map(l => (
+                    <option key={l} value={l}>{l}</option>
+                  ))}
+                </select>
+                {errors.location && <p className="text-red-500 text-xs font-bold mt-1 ml-2">⚠ {errors.location}</p>}
+              </div>
+
+              <div>
+                <InputGroup
+                  label="Price (LKR) *"
+                  name="price"
+                  type="number"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="e.g. 25000"
+                  hasError={!!errors.price}
+                />
+                {errors.price && <p className="text-red-500 text-xs font-bold mt-1 ml-2">⚠ {errors.price}</p>}
+              </div>
+
+              <div>
+                <InputGroup
+                  label="Number of Days *"
+                  name="no_of_days"
+                  type="number"
+                  value={formData.no_of_days}
+                  onChange={handleChange}
+                  placeholder="e.g. 5"
+                  hasError={!!errors.no_of_days}
+                />
+                {errors.no_of_days && <p className="text-red-500 text-xs font-bold mt-1 ml-2">⚠ {errors.no_of_days}</p>}
+              </div>
+
             </div>
           </div>
 
           {/* SECTION 2: Categories */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
             <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaTag className="text-purple-500" /> Categories</h2>
-            <p className="text-slate-400 text-sm mb-8">Select from the list or type a custom category</p>
-            <div className="flex flex-wrap gap-3 mb-6">
-              {CATEGORY_OPTIONS.map((cat) => {
-                const active = selectedCategories.includes(cat);
+            <p className="text-slate-400 text-xs font-medium mb-6">Select all that apply</p>
+            <div className="flex flex-wrap gap-3">
+              {CATEGORY_OPTIONS.map(({ value, label }) => {
+                const active = selectedCategories.includes(value);
                 return (
-                  <button key={cat} type="button" onClick={() => toggleCategory(cat)}
+                  <button key={value} type="button" onClick={() => toggleCategory(value)}
                     className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wide border-2 transition-all flex items-center gap-2 ${active ? "bg-[#2D3748] text-white border-[#2D3748] shadow-lg" : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-400"}`}>
-                    {active && <FaCheck size={9} />} {cat}
+                    {active && <FaCheck size={9} />} {label}
                   </button>
                 );
               })}
             </div>
-            <div className="flex gap-3 mb-6">
-              <input type="text" value={customCategory} onChange={(e) => setCustomCategory(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustomCategory())}
-                placeholder="Type a custom category and press Add..."
-                className="flex-1 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-purple-400 focus:bg-white transition-all text-slate-700 text-sm font-bold" />
-              <button type="button" onClick={addCustomCategory}
-                className="bg-purple-500 text-white px-6 py-3 rounded-2xl font-black hover:bg-purple-600 transition-all flex items-center gap-2 shadow-md shadow-purple-200">
-                <FaPlus size={12} /> Add
-              </button>
-            </div>
             {selectedCategories.length > 0 && (
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Selected Categories</p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedCategories.map((cat) => (
-                    <span key={cat} className="flex items-center gap-2 bg-amber-50 text-amber-800 border border-amber-200 px-4 py-2 rounded-full text-xs font-black">
-                      {cat} <button type="button" onClick={() => removeCategory(cat)} className="text-amber-400 hover:text-red-500"><FaTimes size={10} /></button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* SECTION 3: Included Hotels */}
-          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
-            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaHotel className="text-blue-500" /> Included Hotels</h2>
-            <p className="text-slate-400 text-sm mb-6">Select hotels from your database to include in this package</p>
-            <div className="relative mb-6">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
-              <input type="text" value={hotelSearch} onChange={(e) => setHotelSearch(e.target.value)} placeholder="Search hotels by name or city..."
-                className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-blue-400 focus:bg-white transition-all text-sm font-bold text-slate-700" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[420px] overflow-y-auto pr-1">
-              {filteredHotels.length > 0 ? filteredHotels.map((hotel) => {
-                const selected = selectedHotelIds.includes(hotel._id);
-                return (
-                  <button key={hotel._id} type="button" onClick={() => toggleHotel(hotel._id)}
-                    className={`relative text-left rounded-2xl border-2 overflow-hidden transition-all ${selected ? "border-blue-500 shadow-lg shadow-blue-100" : "border-slate-200 hover:border-slate-300"}`}>
-                    <div className="h-28 overflow-hidden">
-                      <img src={hotel.images?.[0] || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"} alt={hotel.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="p-3">
-                      <p className="font-black text-slate-800 text-sm leading-tight">{hotel.name}</p>
-                      <p className="text-slate-400 text-[10px] mt-0.5 flex items-center gap-1"><FaMapMarkerAlt size={8} /> {hotel.city}</p>
-                    </div>
-                    {selected && <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1.5 shadow-md"><FaCheck size={10} /></div>}
-                  </button>
-                );
-              }) : <p className="text-slate-400 text-sm italic col-span-3 py-4 text-center">No hotels found</p>}
-            </div>
-            {selectedHotelIds.length > 0 && (
-              <p className="mt-4 text-xs font-black text-blue-600 uppercase tracking-widest">
-                ✓ {selectedHotelIds.length} hotel{selectedHotelIds.length > 1 ? "s" : ""} selected
+              <p className="mt-4 text-xs font-black text-purple-600 uppercase tracking-widest">
+                ✓ {selectedCategories.length} categor{selectedCategories.length > 1 ? "ies" : "y"} selected
               </p>
             )}
           </div>
 
-          {/* SECTION 4: Destinations */}
+          {/* SECTION 3: Group Size ✦ new */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
-            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaMapMarkerAlt className="text-emerald-500" /> Destinations</h2>
-            <p className="text-slate-400 text-sm mb-6">Select destinations that are visited in this package</p>
-            <div className="relative mb-6">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
-              <input type="text" value={destSearch} onChange={(e) => setDestSearch(e.target.value)} placeholder="Search destinations by name..."
-                className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-emerald-400 focus:bg-white transition-all text-sm font-bold text-slate-700" />
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-800"><FaSuitcase className="text-teal-500" /> Group Size</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InputGroup label="Min Group Size" name="min_group_size" type="number" value={formData.min_group_size} onChange={handleChange} placeholder="e.g. 1" />
+              <InputGroup label="Max Group Size" name="max_group_size" type="number" value={formData.max_group_size} onChange={handleChange} placeholder="e.g. 20" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[420px] overflow-y-auto pr-1">
-              {filteredDestinations.length > 0 ? filteredDestinations.map((dest) => {
-                const selected = selectedDestinationIds.includes(dest._id);
-                return (
-                  <button key={dest._id} type="button" onClick={() => toggleDestination(dest._id)}
-                    className={`relative text-left rounded-2xl border-2 overflow-hidden transition-all ${selected ? "border-emerald-500 shadow-lg shadow-emerald-100" : "border-slate-200 hover:border-slate-300"}`}>
-                    <div className="h-28 overflow-hidden">
-                      <img src={dest.image || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"} alt={dest.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="p-3">
-                      <p className="font-black text-slate-800 text-sm leading-tight">{dest.name}</p>
-                      {dest.description && <p className="text-slate-400 text-[10px] mt-0.5 line-clamp-1">{dest.description}</p>}
-                    </div>
-                    {selected && <div className="absolute top-2 right-2 bg-emerald-500 text-white rounded-full p-1.5 shadow-md"><FaCheck size={10} /></div>}
-                  </button>
-                );
-              }) : <p className="text-slate-400 text-sm italic col-span-3 py-4 text-center">No destinations found</p>}
-            </div>
-            {selectedDestinationIds.length > 0 && (
-              <p className="mt-4 text-xs font-black text-emerald-600 uppercase tracking-widest">
-                ✓ {selectedDestinationIds.length} destination{selectedDestinationIds.length > 1 ? "s" : ""} selected
-              </p>
-            )}
           </div>
 
-          {/* SECTION 5: Itinerary */}
+          {/* SECTION 4: Weather ✦ new */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
-            <div className="flex justify-between items-center mb-10">
-              <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-800"><FaCalendarAlt className="text-blue-500" /> Travel Itinerary</h2>
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaCalendarAlt className="text-sky-500" /> Suitable Weather</h2>
+            <p className="text-slate-400 text-xs font-medium mb-6">Select the weather conditions this package is best suited for</p>
+            <div className="flex flex-wrap gap-3">
+              {WEATHER_OPTIONS.map(({ value, label }) => (
+                <button key={value} type="button" onClick={() => toggleWeather(value)}
+                  className={`px-5 py-2.5 rounded-full text-xs font-black border-2 transition-all ${selectedWeather.includes(value) ? "bg-sky-500 border-sky-500 text-white scale-[1.04]" : "bg-white border-slate-200 text-slate-500 hover:border-sky-400"}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 5: Related Interests ✦ new */}
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaCheck className="text-emerald-500" /> Related Interests</h2>
+            <p className="text-slate-400 text-xs font-medium mb-6">Select the traveller interests this package caters to</p>
+            <div className="flex flex-wrap gap-3">
+              {INTEREST_OPTIONS.map(({ value, label }) => (
+                <button key={value} type="button" onClick={() => toggleInterest(value)}
+                  className={`px-5 py-2.5 rounded-full text-xs font-black border-2 transition-all ${selectedInterests.includes(value) ? "bg-emerald-500 border-emerald-500 text-white scale-[1.04]" : "bg-white border-slate-200 text-slate-500 hover:border-emerald-400"}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 6: Destinations */}
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaMapMarkerAlt className="text-red-500" /> Destinations</h2>
+            <p className="text-slate-400 text-xs font-medium mb-6">{selectedDestinationIds.length} selected</p>
+            <div className="relative mb-4">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
+              <input value={destSearch} onChange={e => setDestSearch(e.target.value)} placeholder="Search destinations..."
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-red-400 text-sm" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-48 overflow-y-auto pr-1">
+              {filteredDests.map(dest => (
+                <button key={dest._id} type="button" onClick={() => toggleDestination(dest._id)}
+                  className={`flex items-center gap-2 p-3 rounded-2xl border-2 text-xs font-bold transition-all text-left ${selectedDestinationIds.includes(dest._id) ? "bg-red-50 border-red-400 text-red-700" : "bg-slate-50 border-slate-200 text-slate-600 hover:border-red-300"}`}>
+                  {selectedDestinationIds.includes(dest._id) && <FaCheck size={10} className="text-red-500 flex-shrink-0" />}
+                  {dest.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 7: Hotels */}
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-slate-800"><FaHotel className="text-amber-500" /> Included Hotels</h2>
+            <p className="text-slate-400 text-xs font-medium mb-6">{selectedHotelIds.length} selected</p>
+            <div className="relative mb-4">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
+              <input value={hotelSearch} onChange={e => setHotelSearch(e.target.value)} placeholder="Search hotels..."
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-amber-400 text-sm" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-48 overflow-y-auto pr-1">
+              {filteredHotels.map(hotel => (
+                <button key={hotel._id} type="button" onClick={() => toggleHotel(hotel._id)}
+                  className={`flex items-center gap-2 p-3 rounded-2xl border-2 text-xs font-bold transition-all text-left ${selectedHotelIds.includes(hotel._id) ? "bg-amber-50 border-amber-400 text-amber-700" : "bg-slate-50 border-slate-200 text-slate-600 hover:border-amber-300"}`}>
+                  {selectedHotelIds.includes(hotel._id) && <FaCheck size={10} className="text-amber-500 flex-shrink-0" />}
+                  {hotel.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 8: Itinerary */}
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-800"><FaCalendarAlt className="text-blue-500" /> Itinerary</h2>
               <button type="button" onClick={addItinerary} className="bg-blue-500 text-white px-6 py-3 rounded-2xl font-black hover:bg-blue-600 transition-all flex items-center gap-2 shadow-lg shadow-blue-200"><FaPlus /> Add Day</button>
             </div>
             <div className="space-y-6">
               {itineraries.map((itin, iIdx) => (
-                <div key={iIdx} className="bg-slate-50 border border-slate-200 p-8 rounded-[2rem] relative group shadow-inner">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                    <div className="flex items-end"><span className="bg-[#2D3748] text-white text-xs font-black px-4 py-3 rounded-2xl w-full text-center">Day {itin.day_no}</span></div>
-                    <div className="md:col-span-3"><InputGroup label="Day Title" value={itin.title} onChange={(e) => handleItineraryChange(iIdx, "title", e.target.value)} placeholder="e.g. Arrival · Tea country immersion" /></div>
+                <div key={iIdx} className="bg-slate-50 border border-slate-200 p-6 rounded-[1.5rem] relative shadow-inner">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <InputGroup label={`Day ${itin.day_no}`} value={itin.day_no} readOnly className="w-full p-5 bg-white border border-slate-200 rounded-2xl text-center font-black text-blue-600" />
+                    <div className="md:col-span-3"><InputGroup label="Day Title" value={itin.title} onChange={(e) => handleItineraryChange(iIdx, "title", e.target.value)} placeholder="e.g. Arrival & Exploration" /></div>
                   </div>
                   <div className="space-y-3 mb-4">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Activities</p>
@@ -347,7 +447,7 @@ const AddPackagePage = () => {
             </div>
           </div>
 
-          {/* SECTION 6: Transport */}
+          {/* SECTION 9: Transport */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-800"><FaBus className="text-green-500" /> Transport</h2>
@@ -364,7 +464,7 @@ const AddPackagePage = () => {
             </div>
           </div>
 
-          {/* SECTION 7: Gallery */}
+          {/* SECTION 10: Gallery */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
             <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-800"><FaImage className="text-pink-500" /> Package Gallery</h2>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
@@ -381,7 +481,7 @@ const AddPackagePage = () => {
             </div>
           </div>
 
-          {/* SECTION 8: FAQs */}
+          {/* SECTION 11: FAQs */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-800"><FaQuestionCircle className="text-orange-500" /> FAQs</h2>
@@ -404,7 +504,7 @@ const AddPackagePage = () => {
             </div>
           </div>
 
-          {/* SECTION 9: Traveller Tips */}
+          {/* SECTION 12: Traveller Tips */}
           <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-800"><FaLightbulb className="text-yellow-500" /> Traveller Tips</h2>
@@ -438,10 +538,13 @@ const AddPackagePage = () => {
   );
 };
 
-const InputGroup = ({ label, ...props }) => (
+const InputGroup = ({ label, hasError, ...props }) => (
   <div className="space-y-2">
     {label && <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">{label}</label>}
-    <input {...props} className="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all font-bold text-slate-700 shadow-sm placeholder:text-slate-300" />
+    <input
+      {...props}
+      className={`w-full p-5 bg-slate-50 border rounded-2xl outline-none transition-all font-bold text-slate-700 shadow-sm placeholder:text-slate-300 ${hasError ? "border-red-400 focus:border-red-500" : "border-slate-200 focus:border-blue-500 focus:bg-white"}`}
+    />
   </div>
 );
 

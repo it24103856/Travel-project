@@ -1,24 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   FaMapMarkerAlt, FaCalendarAlt, FaCalendarCheck, FaStar,
   FaChevronDown, FaChevronUp, FaBus, FaTrain, FaCar,
-  FaHotel, FaCamera, FaLightbulb, FaHashtag, FaPhoneAlt
+  FaHotel, FaCamera, FaLightbulb, FaHashtag, FaPhoneAlt,
+  FaUserCircle
 } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
+import { logView } from "../api/interactions";
+
 
 const PackageOverviewPage = () => {
   const { id } = useParams();
   const [pkg, setPkg] = useState(null);
-  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("Travel Itinerary");
   const [openFaq, setOpenFaq] = useState(null);
   const [showAllGallery, setShowAllGallery] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+
+  // ── View tracking ─────────────────────────────────────────────────
+  const arrivalTime = useRef(Date.now());
+
+  useEffect(() => {
+    return () => {
+      const duration = Math.round((Date.now() - arrivalTime.current) / 1000);
+      logView(id, duration);
+    };
+  }, [id]);
 
   const NAV_TABS = [
     "Travel Itinerary",
@@ -40,16 +54,6 @@ const PackageOverviewPage = () => {
         } else {
           toast.error("Package not found");
         }
-
-        // Fetch reviews for this package
-        try {
-          const reviewResponse = await axios.get(`${backendUrl}/reviews/package/${cleanId}`);
-          if (reviewResponse.data?.success) {
-            setReviews(reviewResponse.data.data);
-          }
-        } catch (err) {
-          console.error("Error fetching reviews:", err);
-        }
       } catch (error) {
         console.error("Fetch Error:", error);
         toast.error("Error loading package details");
@@ -58,6 +62,23 @@ const PackageOverviewPage = () => {
       }
     };
     if (id) fetchPackage();
+  }, [id, backendUrl]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const cleanId = id.includes(":") ? id.split(":")[1] : id;
+        const response = await axios.get(`${backendUrl}/reviews/package/${cleanId}`);
+        if (response.data?.success) {
+          setReviews(response.data.data || []);
+        }
+      } catch (error) {
+        console.error("Reviews fetch error:", error);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+    if (id) fetchReviews();
   }, [id, backendUrl]);
 
   const scrollToSection = (section) => {
@@ -82,11 +103,20 @@ const PackageOverviewPage = () => {
   const galleryImages = pkg.gallery || [];
   const visibleGallery = showAllGallery ? galleryImages : galleryImages.slice(0, 3);
 
+  // ── Review stats ──────────────────────────────────────────────────
+  const avgRating = reviews.length
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
+  const ratingCounts = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => r.rating === star).length,
+  }));
+
   return (
     <div className="min-h-screen bg-[#f4f7fc] pt-24 pb-10 px-2 md:px-8">
       <Toaster />
 
-      {/* ── OUTER ROUNDED RECTANGLE (mirrors hotelOverview) ── */}
+      {/* ── OUTER ROUNDED RECTANGLE ── */}
       <div className="max-w-[1400px] mx-auto bg-white rounded-[2rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden border border-white/40">
 
         {/* ── 1. HERO SECTION ── */}
@@ -100,7 +130,6 @@ const PackageOverviewPage = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0b223a] via-[#0b223a]/30 to-transparent z-1"></div>
           <div className="relative z-10 w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div className="space-y-3">
-              {/* Category tags */}
               <div className="flex flex-wrap gap-2">
                 {pkg.categories?.map((cat, i) => (
                   <span key={i} className="bg-amber-400/20 backdrop-blur-sm text-amber-300 border border-amber-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
@@ -115,19 +144,7 @@ const PackageOverviewPage = () => {
                 <FaMapMarkerAlt className="text-amber-400" /> {pkg.location}
               </div>
             </div>
-            {/* Right badges */}
             <div className="flex flex-col gap-3 items-end">
-              <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex flex-col items-center gap-1">
-                <div className="flex items-center gap-2">
-                  <FaStar className="text-rose-400 text-sm md:text-lg fill-rose-400" />
-                  <span className="text-sm md:text-xl font-bold">
-                    {reviews.length > 0 
-                      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-                      : "0"}
-                  </span>
-                </div>
-                <span className="text-[10px] text-white/70 italic">(from reviews)</span>
-              </div>
               <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex items-center gap-2 md:gap-4">
                 <FaCalendarAlt className="text-amber-400 text-sm md:text-2xl" />
                 <span className="text-sm md:text-2xl font-bold">{pkg.no_of_days} Days</span>
@@ -136,6 +153,12 @@ const PackageOverviewPage = () => {
                 <span className="text-amber-400 text-sm md:text-xl font-black">LKR</span>
                 <span className="text-sm md:text-2xl font-bold">{pkg.price?.toLocaleString()}</span>
               </div>
+              {avgRating && (
+                <div className="bg-white/10 backdrop-blur-xl px-4 py-2 md:px-8 md:py-4 rounded-full border border-white/20 shadow-2xl flex items-center gap-2 md:gap-4">
+                  <FaStar className="text-amber-400 text-sm md:text-xl" />
+                  <span className="text-sm md:text-2xl font-bold">{avgRating} <span className="text-white/60 text-xs font-medium">({reviews.length})</span></span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -265,7 +288,6 @@ const PackageOverviewPage = () => {
           {/* ── FAQs & TIPS ── */}
           <section id="faqs---tips" className="scroll-mt-24">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {/* FAQs */}
               {pkg.faqs?.length > 0 && (
                 <div>
                   <SectionTitle title="Frequently Asked Questions" />
@@ -281,7 +303,6 @@ const PackageOverviewPage = () => {
                   </div>
                 </div>
               )}
-              {/* Traveller Tips */}
               {pkg.traveller_tips?.length > 0 && (
                 <div>
                   <SectionTitle title="Traveller Tips" />
@@ -295,64 +316,61 @@ const PackageOverviewPage = () => {
             </div>
           </section>
 
-          {/* ── GUEST REVIEWS ── */}
+          {/* ── REVIEWS ── */}
           <section id="reviews" className="scroll-mt-24">
-            <div className="mb-8">
-              <SectionTitle title="Guest Reviews" />
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col items-start">
-                  <div className="flex items-center gap-2">
-                    <FaStar className="text-rose-400 text-2xl fill-rose-400" />
-                    <span className="text-2xl font-bold text-slate-800">
-                      {reviews.length > 0 
-                        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-                        : "0"}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-neutral-400 italic">({reviews.length} reviews)</span>
-                </div>
-              </div>
-            </div>
+            <SectionTitle title="Reviews" />
 
-            {reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {reviews.map((review, idx) => (
-                  <div key={idx} className="bg-white border border-slate-100 rounded-[1.5rem] p-6 shadow-sm">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <p className="font-black text-slate-800 text-base">
-                          {review.userId?.firstName} {review.userId?.lastName}
-                        </p>
-                        <p className="text-slate-400 text-xs">
-                          {new Date(review.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <FaStar 
-                            key={i} 
-                            className={i < review.rating ? "text-amber-400" : "text-slate-300"} 
-                            size={14}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-slate-600 leading-relaxed text-sm">{review.comment}</p>
-                  </div>
-                ))}
+            {reviewsLoading ? (
+              <div className="flex items-center gap-3 text-slate-400 text-sm font-medium py-8">
+                <div className="w-5 h-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                Loading reviews...
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="text-center py-14 bg-[#fdf8f2] rounded-[2rem] border-2 border-dashed border-[#e8d5b7]">
+                <FaStar className="mx-auto text-4xl text-[#e8d5b7] mb-3" />
+                <p className="text-slate-400 text-sm font-bold">No reviews yet for this package.</p>
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-[1.5rem] border border-slate-100">
-                <FaStar className="text-slate-300 text-4xl mx-auto mb-3" />
-                <p className="text-slate-500 font-semibold">No reviews yet</p>
-                <p className="text-slate-400 text-sm">Be the first to review this package</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                {/* ── Left: Summary ── */}
+                <div className="md:col-span-1 bg-[#fdf8f2] border-2 border-[#e8d5b7] rounded-[2rem] p-8 flex flex-col items-center justify-center gap-4 h-fit">
+                  <p className="text-6xl font-black text-slate-900">{avgRating}</p>
+                  <StarRow rating={parseFloat(avgRating)} size="text-2xl" />
+                  <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                    {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+                  </p>
+                  <div className="w-full space-y-2 mt-2">
+                    {ratingCounts.map(({ star, count }) => (
+                      <div key={star} className="flex items-center gap-3">
+                        <span className="text-xs font-black text-slate-500 w-4">{star}</span>
+                        <FaStar className="text-amber-400 text-xs flex-shrink-0" />
+                        <div className="flex-1 bg-[#e8d5b7] rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-amber-400 h-2 rounded-full transition-all duration-500"
+                            style={{ width: reviews.length ? `${(count / reviews.length) * 100}%` : "0%" }}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-400 font-bold w-4">{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── Right: Review Cards ── */}
+                <div className="md:col-span-2 space-y-5">
+                  {reviews.map((review, idx) => (
+                    <ReviewCard key={idx} review={review} />
+                  ))}
+                </div>
+
               </div>
             )}
           </section>
 
         </div>
 
-        {/* ── 4. FOOTER / BOOK CTA (mirrors hotelOverview footer) ── */}
+        {/* ── 4. FOOTER / BOOK CTA ── */}
         <footer className="bg-[#0b223a] text-white p-8 md:px-14 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 font-bold opacity-80">
             <span className="flex items-center gap-3">
@@ -383,6 +401,50 @@ const PackageOverviewPage = () => {
 const SectionTitle = ({ title }) => (
   <h2 className="text-2xl md:text-4xl font-black text-slate-800 tracking-tight mb-8">{title}</h2>
 );
+
+const StarRow = ({ rating, size = "text-base" }) => (
+  <div className="flex items-center gap-0.5">
+    {[1, 2, 3, 4, 5].map((s) => (
+      <FaStar
+        key={s}
+        className={`${size} ${s <= Math.round(rating) ? "text-amber-400" : "text-slate-200"}`}
+      />
+    ))}
+  </div>
+);
+
+const ReviewCard = ({ review }) => {
+  const userName = review.userId? `${review.userId.firstName || ""} ${review.userId.lastName || ""}`.trim(): "Traveller";
+  const date = review.createdAt
+    ? new Date(review.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+    : "";
+
+  return (
+    <div className="border-2 border-[#e8d5b7] rounded-[1.5rem] p-6 bg-white">
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[#f0dfc0] flex items-center justify-center flex-shrink-0">
+            {review.userId?.image ? (
+            <img
+            src={
+            review.userId.image.includes("googleusercontent") || review.userId.image.startsWith("http")
+            ? review.userId.image: `${import.meta.env.VITE_BACKEND_URL}/${review.userId.image}`
+            }
+            alt={userName} className="w-full h-full rounded-full object-cover"/>) : (
+            <FaUserCircle className="text-[#c87941] text-2xl" />
+)}
+          </div>
+          <div>
+            <p className="font-black text-slate-900 text-sm">{userName}</p>
+            {date && <p className="text-slate-400 text-[10px] font-medium">{date}</p>}
+          </div>
+        </div>
+        <StarRow rating={review.rating} />
+      </div>
+      <p className="text-slate-600 text-sm leading-relaxed">{review.comment}</p>
+    </div>
+  );
+};
 
 const ItineraryCard = ({ itin }) => (
   <div className="border-2 border-[#e8d5b7] rounded-[1.5rem] p-5 md:p-7 bg-white">

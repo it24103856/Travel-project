@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { 
   FaCalendarAlt, FaHotel, FaCreditCard, 
-  FaTrashAlt, FaHistory, FaStar, FaCommentDots, FaTimes, FaMapMarkerAlt
+  FaTrashAlt, FaHistory, FaStar, FaCommentDots, FaTimes, FaMapMarkerAlt,
+  FaClock, FaTag, FaBed
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
+import { logRating } from "../api/interactions"; // ← add this import at the top
+
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -52,7 +55,7 @@ const MyBookings = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${backendUrl}/reviews`, {
+      await axios.post(`${backendUrl}/reviews`, {
         bookingId: selectedBooking._id,
         rating,
         comment
@@ -60,25 +63,17 @@ const MyBookings = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      // ── Log the rating to interaction logs ──────────────────────
+      const packageId = selectedBooking.packageId?._id || selectedBooking.packageId;
+      if (packageId) {
+        logRating(packageId, rating);
+      }
+
       toast.success("Thank you for your review!");
       setIsModalOpen(false);
       setComment("");
       setRating(5);
-      
-      // Redirect to appropriate overview page
-      if (response.data?.redirect) {
-        const { page, id } = response.data.redirect;
-        setTimeout(() => {
-          if (page === 'package_overview') {
-            navigate(`/package-details/${id}`);
-          } else if (page === 'hotel_overview') {
-            navigate(`/hotel-details/${id}`);
-          }
-        }, 1500);
-      } else {
-        // Fallback: refresh bookings
-        fetchBookings();
-      }
+      fetchBookings();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to submit review.");
     } finally {
@@ -128,39 +123,169 @@ const MyBookings = () => {
             {/* Content Section */}
             <div className="flex-1 p-10 lg:p-14 flex flex-col justify-between">
               <div>
-                <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
-                  <div>
-                    <h2 className="text-4xl font-black text-slate-800 uppercase italic leading-none mb-3">{booking.roomType} Suite</h2>
-                    <div className="flex items-center gap-2 text-blue-600 font-black text-[11px] tracking-[0.2em] uppercase"><FaMapMarkerAlt /> {booking.country}</div>
-                  </div>
-                  <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 text-right min-w-[200px]">
-                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Grand Total</p>
-                    <p className="text-4xl font-black text-blue-900 font-mono italic leading-none">LKR {booking.totalPrice?.toLocaleString()}</p>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                  <div className="flex items-center gap-5 text-left">
-                    <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-900 shadow-sm"><FaCalendarAlt size={22}/></div>
-                    <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Check-In — Check-Out</p>
-                      <p className="font-bold text-slate-700 text-lg">{new Date(booking.checkIn).toLocaleDateString()} — {new Date(booking.checkOut).toLocaleDateString()}</p>
+                {/* ── HOTEL-ONLY BOOKING HEADER ── */}
+                {!booking.packageId && (
+                  <>
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
+                      <div>
+                        <h2 className="text-4xl font-black text-slate-800 uppercase italic leading-none mb-3">{booking.roomType} Suite</h2>
+                        <div className="flex items-center gap-2 text-blue-600 font-black text-[11px] tracking-[0.2em] uppercase"><FaMapMarkerAlt /> {booking.country}</div>
+                      </div>
+                      <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 text-right min-w-[200px]">
+                        <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Grand Total</p>
+                        <p className="text-4xl font-black text-blue-900 font-mono italic leading-none">LKR {booking.totalPrice?.toLocaleString()}</p>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                      <div className="flex items-center gap-5 text-left">
+                        <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-900 shadow-sm"><FaCalendarAlt size={22}/></div>
+                        <div>
+                          <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Check-In — Check-Out</p>
+                          <p className="font-bold text-slate-700 text-lg">{new Date(booking.checkIn).toLocaleDateString()} — {new Date(booking.checkOut).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* ── PACKAGE BOOKING LAYOUT ── */}
+                {booking.packageId && (() => {
+                  const matchedRoom = booking.hotelId?.roomTypes?.find(
+                    (r) => r.type === booking.roomType
+                  );
+                  return (
+                    <>
+                      {/* Top header: Package title + location on the left, Grand Total on the right */}
+                      <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
+                        <div>
+                          <h2 className="text-4xl font-black text-slate-800 uppercase italic leading-none mb-3">{booking.packageId.title}</h2>
+                          <div className="flex items-center gap-2 text-blue-600 font-black text-[11px] tracking-[0.2em] uppercase"><FaMapMarkerAlt /> {booking.packageId.location}</div>
+                        </div>
+                        <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 text-right min-w-[200px]">
+                          <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Grand Total</p>
+                          <p className="text-4xl font-black text-blue-900 font-mono italic leading-none">LKR {booking.totalPrice?.toLocaleString()}</p>
+                        </div>
+                      </div>
+
+                      {/* Package Details section: duration + categories */}
+                      <div className="mb-6 bg-blue-50/60 rounded-[2rem] p-8 border border-blue-100">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="h-1 bg-blue-900 w-6"></div>
+                          <span className="text-blue-900 font-black text-[10px] uppercase tracking-widest">Package Details</span>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-start gap-6">
+                          <div className="flex items-start gap-4 flex-1">
+                            <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-blue-900 shadow-sm shrink-0">
+                              <FaClock size={18} />
+                            </div>
+                            <div>
+                              <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Duration</p>
+                              <p className="font-bold text-slate-700 text-base">{booking.packageId.no_of_days} {booking.packageId.no_of_days === 1 ? "Day" : "Days"}</p>
+                            </div>
+                          </div>
+                          {booking.packageId.categories?.length > 0 && (
+                            <div className="flex items-start gap-4 flex-1">
+                              <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-blue-900 shadow-sm shrink-0">
+                                <FaTag size={18} />
+                              </div>
+                              <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Categories</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {booking.packageId.categories.map((cat) => (
+                                    <span key={cat} className="bg-blue-900 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+                                      {cat}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Room Info section: check-in/out + room details */}
+                      {matchedRoom && (
+                        <div className="mb-6 bg-amber-50/50 rounded-[2rem] p-8 border border-amber-100">
+                          <div className="flex items-center gap-3 mb-6">
+                            <div className="h-1 bg-amber-400 w-6"></div>
+                            <span className="text-amber-500 font-black text-[10px] uppercase tracking-widest">Room Info</span>
+                          </div>
+                          <div className="flex flex-col md:flex-row gap-6 flex-wrap">
+                            <div className="flex items-start gap-4 flex-1 min-w-[200px]">
+                              <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-amber-500 shadow-sm shrink-0">
+                                <FaCalendarAlt size={18} />
+                              </div>
+                              <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Check-In — Check-Out</p>
+                                <p className="font-bold text-slate-700 text-base">{new Date(booking.checkIn).toLocaleDateString()} — {new Date(booking.checkOut).toLocaleDateString()}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-4 flex-1 min-w-[140px]">
+                              <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-amber-500 shadow-sm shrink-0">
+                                <FaBed size={18} />
+                              </div>
+                              <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Room Type</p>
+                                <p className="font-bold text-slate-700 text-base">{matchedRoom.type}</p>
+                              </div>
+                            </div>
+                            <div className="flex-1 min-w-[120px]">
+                              <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Max Guests</p>
+                              <p className="font-bold text-slate-700 text-base">{matchedRoom.maxGuests} Guests</p>
+                            </div>
+                            <div className="flex-1 min-w-[120px]">
+                              <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Availability</p>
+                              <span className={`text-[10px] font-black uppercase px-3 py-1 rounded-full ${matchedRoom.availability ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
+                                {matchedRoom.availability ? "Available" : "Unavailable"}
+                              </span>
+                            </div>
+                            {matchedRoom.features?.length > 0 && (
+                              <div className="flex-1 min-w-[160px]">
+                                <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Features</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {matchedRoom.features.map((f) => (
+                                    <span key={f} className="bg-amber-50 text-amber-700 text-[9px] font-black uppercase tracking-wide px-3 py-1 rounded-full border border-amber-100">
+                                      {f}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Action Buttons */}
               <div className="pt-10 border-t border-slate-50 flex flex-wrap gap-6 items-center justify-between">
                 <div className="flex items-center gap-6">
                   {/* REVIEW BUTTON - මෙතන තමයි වැදගත්ම කොටස */}
-                  {canReview(booking) && (
+                  {canReview(booking) && !booking.review && (
                     <button 
                       onClick={() => { setSelectedBooking(booking); setIsModalOpen(true); }}
                       className="bg-amber-400 text-slate-900 px-10 py-4 rounded-full font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-slate-900 hover:text-white transition-all flex items-center gap-3 active:scale-95"
                     >
                       <FaCommentDots /> Review Trip
                     </button>
+                  )}
+
+                  {/* Submitted review display */}
+                  {booking.review && (
+                    <div className="flex items-start gap-4">
+                      <div className="flex gap-1">
+                        {[1,2,3,4,5].map((star) => (
+                          <FaStar key={star} size={16} className={star <= booking.review.rating ? "text-amber-400" : "text-slate-200"} />
+                        ))}
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Your Review</p>
+                        <p className="text-sm font-medium text-slate-600 italic">"{booking.review.comment}"</p>
+                      </div>
+                    </div>
                   )}
                   
                   {booking.status === "Pending" && (

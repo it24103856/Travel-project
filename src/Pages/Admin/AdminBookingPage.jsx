@@ -84,6 +84,7 @@ export default function AdminBookingPage() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white text-[10px] font-black uppercase tracking-widest">
                 <tr>
+                  <th className="px-8 py-5">Booking ID</th>
                   <th className="px-8 py-5">Customer Details</th>
                   <th className="px-8 py-5">Date & Package</th>
                   <th className="px-8 py-5 text-center">Status</th>
@@ -95,6 +96,12 @@ export default function AdminBookingPage() {
                 {bookings.length > 0 ? (
                   bookings.map((booking) => (
                     <tr key={booking._id} className="hover:bg-[#6366F1]/5 transition-all duration-500 group">
+                      <td className="px-8 py-6">
+                        <div className="font-mono text-sm font-black text-black tracking-tight bg-gray-100 px-4 py-2 rounded-lg w-fit">
+                          {booking._id?.slice(-8).toUpperCase() || 'N/A'}
+                        </div>
+                        <div className="text-xs text-black font-bold mt-2">{booking._id || 'No ID'}</div>
+                      </td>
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-[#6366F1]/5 rounded-full flex items-center justify-center text-[#6366F1] overflow-hidden border-2 border-[#6366F1]/10">
@@ -142,7 +149,7 @@ export default function AdminBookingPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-8 py-20 text-center text-gray-400 font-medium">
+                    <td colSpan="6" className="px-8 py-20 text-center text-gray-400 font-medium">
                       {loading ? "Loading bookings..." : "No bookings found."}
                     </td>
                   </tr>
