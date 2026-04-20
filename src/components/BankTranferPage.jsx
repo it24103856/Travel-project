@@ -10,6 +10,8 @@ const BankTransferPage = () => {
     const navigate = useNavigate();
 
     const { amount, bookingId } = location.state || { amount: 0, bookingId: "N/A" };
+    const today = new Date();
+    const todayDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [preview,      setPreview]      = useState(null);
@@ -54,6 +56,12 @@ const BankTransferPage = () => {
         if (!receiptFile) return toast.error("Please upload the receipt!");
         if (!formData.bankName || !formData.branch) {
             return toast.error("Please fill in all bank details!");
+        }
+        if (!formData.paymentDate) {
+            return toast.error("Please select the transfer date!");
+        }
+        if (formData.paymentDate < todayDate) {
+            return toast.error("Transfer date must be today or a future date.");
         }
 
         setIsSubmitting(true);
@@ -326,6 +334,7 @@ const BankTransferPage = () => {
                                     <label className="text-[10px] font-bold text-slate-400 uppercase ml-2">Transfer Date</label>
                                     <input name="paymentDate" type="date" required
                                         onChange={handleInputChange}
+                                        min={todayDate}
                                         className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all w-full" />
                                 </div>
 

@@ -13,6 +13,8 @@ export default function TravelBookingUI() {
   const location = useLocation();
 
   const isPackageBooking =  type === "package";
+  const today = new Date();
+  const todayDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   const [step, setStep] = useState(1);
   const [details, setDetails]     = useState(null);
@@ -111,6 +113,18 @@ export default function TravelBookingUI() {
     if (!formData.firstName || !formData.email || !formData.checkIn || !formData.checkOut) {
       toast.error("Please fill in all essential details (Name, Email, Dates)!");
       setStep(1);
+      return;
+    }
+
+    if (formData.checkIn < todayDate) {
+      toast.error("Check-in date must be today or a future date.");
+      setStep(2);
+      return;
+    }
+
+    if (formData.checkOut < formData.checkIn) {
+      toast.error("Check-out date must be the same as or after the check-in date.");
+      setStep(2);
       return;
     }
 
@@ -274,11 +288,13 @@ export default function TravelBookingUI() {
                   <div className="bg-white p-3 rounded-2xl border border-gray-100">
                     <p className="text-[8px] text-gray-400 font-bold uppercase ml-1">Check-in</p>
                     <input name="checkIn" value={formData.checkIn} onChange={handleInputChange} type="date"
+                      min={todayDate}
                       className="w-full bg-transparent text-gray-800 text-xs font-bold outline-none" />
                   </div>
                   <div className="bg-white p-3 rounded-2xl border border-gray-100">
                     <p className="text-[8px] text-gray-400 font-bold uppercase ml-1">Check-out</p>
                     <input name="checkOut" value={formData.checkOut} onChange={handleInputChange} type="date"
+                      min={formData.checkIn || todayDate}
                       className="w-full bg-transparent text-gray-800 text-xs font-bold outline-none" />
                   </div>
                 </div>
