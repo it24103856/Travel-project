@@ -24,7 +24,7 @@ const BankTransferPage = () => {
     const [failedTransactionId, setFailedTransactionId] = useState('');
 
     // Hardcoded remark for verification
-    const HARDCODED_REMARK = "Cabs Guide";
+    const HARDCODED_REMARK = "bodima";
 
     const [formData, setFormData] = useState({
         customerName:  '',
@@ -33,7 +33,7 @@ const BankTransferPage = () => {
         branch:        '',
         paymentDate:   '',
         paidAmount:    amount,
-        transactionId: '',   // ← new field
+        transactionId: '',   
     });
 
     const handleInputChange = (e) => {
@@ -54,22 +54,23 @@ const BankTransferPage = () => {
         e.preventDefault();
 
         if (!receiptFile) return toast.error("Please upload the receipt!");
-        if (!formData.bankName || !formData.branch) {
+        if (!formData.bankName) {
             return toast.error("Please fill in all bank details!");
         }
         if (!formData.paymentDate) {
             return toast.error("Please select the transfer date!");
-        }
-        if (formData.paymentDate < todayDate) {
-            return toast.error("Transfer date must be today or a future date.");
         }
 
         setIsSubmitting(true);
         const loadingToast = toast.loading("Uploading your receipt...");
 
         try {
-            if (!formData.transactionId.trim()) {
+            const trimmedTxId = formData.transactionId.trim();
+            if (!trimmedTxId) {
                 return toast.error("Please enter your transaction ID!");
+            }
+            if (trimmedTxId.length < 5) {
+                return toast.error("Transaction ID must be at least 5 characters long!");
             }
 
             const publicUrl = await uploadFile(receiptFile);
@@ -90,11 +91,10 @@ const BankTransferPage = () => {
                 expectedRemark: HARDCODED_REMARK,  // AI will scan receipt for this remark
                 paymentDetails: {
                     customerName: formData.customerName,
-                    country:      formData.country,
                     bankName:     formData.bankName,
-                    branch:       formData.branch,
                     paymentDate:  formData.paymentDate,
                     paidAmount:   Number(formData.paidAmount) || amount,
+                    currency:     "LKR",
                     remark:       HARDCODED_REMARK,
                 },
             };
@@ -176,7 +176,7 @@ const BankTransferPage = () => {
 
                     {/* ── SUCCESS STATUS ── */}
                     {verificationStatus === 'success' && (
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-green-300">
+                        <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-green-300">
                             <div className="flex justify-center mb-6">
                                 <div className="bg-green-500 rounded-full p-4 animate-bounce">
                                     <svg className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,7 +208,7 @@ const BankTransferPage = () => {
 
                     {/* ── DUPLICATE TRANSACTION ID ── */}
                     {verificationStatus === 'duplicate' && (
-                        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-orange-300">
+                        <div className="bg-linear-to-br from-orange-50 to-red-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-orange-300">
                             <div className="flex justify-center mb-6">
                                 <div className="bg-orange-500 rounded-full p-4">
                                     <svg className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -240,7 +240,7 @@ const BankTransferPage = () => {
 
                     {/* ── VERIFICATION FAILED ── */}
                     {verificationStatus === 'failed' && (
-                        <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-red-300">
+                        <div className="bg-linear-to-br from-red-50 to-pink-50 rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-2 border-red-300">
                             <div className="flex justify-center mb-6">
                                 <div className="bg-red-500 rounded-full p-4">
                                     <svg className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -310,14 +310,9 @@ const BankTransferPage = () => {
                         {/* ── Personal + Bank fields ── */}
                         <div>
                             <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-3">Personal Details</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input name="customerName" placeholder="Full Name" required
-                                    onChange={handleInputChange}
-                                    className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all" />
-                                <input name="country" placeholder="Country" required
-                                    onChange={handleInputChange}
-                                    className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all" />
-                            </div>
+                            <input name="customerName" placeholder="Full Name (match receipt name exactly, ignoring dots/spaces/case)" required
+                                onChange={handleInputChange}
+                                className="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all" />
                         </div>
 
                         <div>
@@ -326,15 +321,11 @@ const BankTransferPage = () => {
                                 <input name="bankName" placeholder="Bank Name" required
                                     onChange={handleInputChange}
                                     className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all" />
-                                <input name="branch" placeholder="Branch Name" required
-                                    onChange={handleInputChange}
-                                    className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all" />
 
                                 <div className="flex flex-col gap-1">
                                     <label className="text-[10px] font-bold text-slate-400 uppercase ml-2">Transfer Date</label>
                                     <input name="paymentDate" type="date" required
                                         onChange={handleInputChange}
-                                        min={todayDate}
                                         className="p-4 bg-slate-50 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 transition-all w-full" />
                                 </div>
 
@@ -369,7 +360,7 @@ const BankTransferPage = () => {
                         </div>
 
                         {/* ── Payment Details Section ── */}
-                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-6 border-2 border-blue-200 shadow-md">
+                        <div className="bg-linear-to-br from-blue-50 to-cyan-50 rounded-3xl p-6 border-2 border-blue-200 shadow-md">
                             <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-4">📋 Payment Details</p>
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center bg-white rounded-2xl p-4 shadow-sm">

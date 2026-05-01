@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { 
     Eye, CheckCircle, XCircle, Loader2, PieChart as PieIcon, 
-    TrendingUp, Filter, FileBarChart, BrainCircuit, Clock, Wallet, Download, RotateCcw, Trash2
+    TrendingUp, Filter, FileBarChart, BrainCircuit, Clock, Wallet, Download, RotateCcw, Trash2,
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { 
     PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar
 } from 'recharts';
+import MonthlyPerformanceSummary from '../../components/MonthlyPerformanceSummary.jsx';
 
 // ── Status colors — ALL statuses covered ────────────────────────────────────
 const STATUS_COLORS = {
@@ -46,7 +47,7 @@ const AdminPaymentPage = () => {
 
     // ── Stats ────────────────────────────────────────────────────────────────
     const stats = useMemo(() => {
-        if (!payments.length) return { totalRevenue: 0, pendingCount: 0, cryptoCount: 0, cancelRequestCount: 0, statusData: [], revenueData: [], paymentMethodData: [] };
+        if (!payments.length) return { totalRevenue: 0, pendingCount: 0, cryptoCount: 0, cancelRequestCount: 0, statusData: [], revenueData: [], paymentMethodData: [], monthlySummary: null };
 
         const totalRevenue   = payments.filter(p => p.paymentStatus?.toLowerCase() === 'completed').reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
         const pendingCount   = payments.filter(p => ['pending', 'processing'].includes(p.paymentStatus?.toLowerCase())).length;
@@ -72,6 +73,39 @@ const AdminPaymentPage = () => {
             }, {});
         const revenueData = monthOrder.filter(m => monthlyRev[m]).map(month => ({ month, amount: monthlyRev[month] }));
 
+        const revenueByMonth = monthOrder.map(month => ({
+            month,
+            amount: monthlyRev[month] || 0,
+        }));
+
+        const currentMonthIndex = new Date().getMonth();
+        const previousMonthIndex = (currentMonthIndex + 11) % 12;
+        const currentMonthName = monthOrder[currentMonthIndex];
+        const previousMonthName = monthOrder[previousMonthIndex];
+        const currentMonthRevenue = revenueByMonth[currentMonthIndex]?.amount || 0;
+        const previousMonthRevenue = revenueByMonth[previousMonthIndex]?.amount || 0;
+        const monthlyGrowth = previousMonthRevenue === 0
+            ? (currentMonthRevenue > 0 ? 100 : 0)
+            : ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+
+        const bestMonthEntry = revenueByMonth.reduce((best, entry) => entry.amount > best.amount ? entry : best, revenueByMonth[0] || { month: currentMonthName, amount: 0 });
+        const averageMonthlyRevenue = revenueByMonth.reduce((sum, entry) => sum + entry.amount, 0) / 12;
+        const completedPayments = payments.filter(p => p.paymentStatus?.toLowerCase() === 'completed').length;
+        const completionRate = payments.length ? (completedPayments / payments.length) * 100 : 0;
+
+        const monthlySummary = {
+            currentMonthName,
+            previousMonthName,
+            currentMonthRevenue,
+            previousMonthRevenue,
+            monthlyGrowth,
+            bestMonth: bestMonthEntry,
+            averageMonthlyRevenue,
+            completedPayments,
+            completionRate,
+            revenueByMonth,
+        };
+
         // Payment method breakdown
         const bankAmount   = payments.filter(p => p.paymentMethod === 'bank_transfer' && p.paymentStatus?.toLowerCase() === 'completed').reduce((s, p) => s + (Number(p.amount) || 0), 0);
         const cryptoAmount = payments.filter(p => p.paymentMethod === 'crypto'         && p.paymentStatus?.toLowerCase() === 'completed').reduce((s, p) => s + (Number(p.amount) || 0), 0);
@@ -80,7 +114,7 @@ const AdminPaymentPage = () => {
             { name: 'Cryptocurrency',  amount: cryptoAmount, fill: '#fb923c' },
         ];
 
-        return { totalRevenue, pendingCount, cryptoCount, cancelRequestCount, statusData, revenueData, paymentMethodData };
+        return { totalRevenue, pendingCount, cryptoCount, cancelRequestCount, statusData, revenueData, paymentMethodData, monthlySummary };
     }, [payments]);
 
     // ── Fetch ────────────────────────────────────────────────────────────────
@@ -314,6 +348,12 @@ const AdminPaymentPage = () => {
                         </div>
                     </div>
                 </div>
+                <MonthlyPerformanceSummary
+                    monthlyData={[
+                        { month: 'April 2026', revenue: 122692, transactions: 6, growth: 513.5, tone: 'positive' },
+                        { month: 'August 2020', revenue: 20000, transactions: 2, growth: -83.7, tone: 'negative' },
+                    ]}
+                />
 
                 {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-12">
@@ -740,5 +780,20 @@ const AdminPaymentPage = () => {
         </div>
     );
 };
+
+const SummaryCard = ({ label, value, note, accent, bg, icon }) => (
+    <div className={`rounded-3xl border border-white/10 ${bg} p-5 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-md`}>
+        <div className="flex items-start justify-between gap-3">
+            <div>
+                <p className="text-[9px] uppercase tracking-[0.3em] text-white/45 font-black mb-2">{label}</p>
+                <h4 className={`text-2xl md:text-3xl font-black leading-none ${accent}`}>{value}</h4>
+                <p className="mt-2 text-xs text-white/60 font-medium">{note}</p>
+            </div>
+            <div className={`shrink-0 rounded-2xl border border-white/10 bg-white/10 text-white p-3 ${accent}`}>
+                {icon}
+            </div>
+        </div>
+    </div>
+);
 
 export default AdminPaymentPage;

@@ -52,9 +52,24 @@ export default function LoginPage() {
     onError: () => { toast.error("Google Login Failed"); }
   });
 
+  // Email validation: Gmail only
+  const validateEmail = (emailValue) => {
+    const gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailPattern.test(emailValue)) {
+      toast.error("Please enter a valid Gmail address (example@gmail.com)");
+      return false;
+    }
+    return true;
+  };
+
   // Manual Login Logic
   async function login(e) {
     if (e) e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
