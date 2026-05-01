@@ -386,10 +386,10 @@ export default function TravelBookingUI() {
                         <p className="font-bold text-[11px] uppercase">No Driver Needed</p>
                       </div>
                     </div>
-                    {drivers.map(driver => (
+                    {drivers.filter(driver => driver.isAvailable).map(driver => (
                       <div key={driver._id}
-                        onClick={driver.isAvailable ? () => setFormData(prev => ({ ...prev, selectedDriver: driver, selectedVehicle: null })) : undefined}
-                        className={`${cardBase} ${formData.selectedDriver?._id === driver._id ? cardActive : driver.isAvailable ? cardIdle : cardUnavailable}`}>
+                        onClick={() => setFormData(prev => ({ ...prev, selectedDriver: driver, selectedVehicle: null }))}
+                        className={`${cardBase} ${formData.selectedDriver?._id === driver._id ? cardActive : cardIdle}`}>
                         <div className="flex items-center gap-3">
                           {driver.profileImage
                             ? <img src={driver.profileImage} alt={driver.name} className="w-8 h-8 rounded-full object-cover" />
@@ -399,9 +399,6 @@ export default function TravelBookingUI() {
                             <p className="text-[9px] opacity-60">{driver.vehicleType} — 📞 {driver.phone}</p>
                           </div>
                         </div>
-                        <span className={availabilityBadge(driver.isAvailable)}>
-                          {availabilityLabel(driver.isAvailable)}
-                        </span>
                       </div>
                     ))}
                   </div>
@@ -417,10 +414,10 @@ export default function TravelBookingUI() {
                         <p className="font-bold text-[11px] uppercase">No Vehicle Needed</p>
                       </div>
                     </div>
-                    {vehicles.map(vehicle => (
+                    {vehicles.filter(vehicle => vehicle.isAvailable).map(vehicle => (
                       <div key={vehicle._id}
-                        onClick={vehicle.isAvailable ? () => setFormData(prev => ({ ...prev, selectedVehicle: vehicle })) : undefined}
-                        className={`${cardBase} ${formData.selectedVehicle?._id === vehicle._id ? cardActive : vehicle.isAvailable ? cardIdle : cardUnavailable}`}>
+                        onClick={() => setFormData(prev => ({ ...prev, selectedVehicle: vehicle }))}
+                        className={`${cardBase} ${formData.selectedVehicle?._id === vehicle._id ? cardActive : cardIdle}`}>
                         <div className="flex items-center gap-3">
                           <Car size={16} className={formData.selectedVehicle?._id === vehicle._id ? "text-white" : "text-[#C8813A]"} />
                           <div>
@@ -428,9 +425,6 @@ export default function TravelBookingUI() {
                             <p className="text-[9px] opacity-60">{vehicle.type} · {vehicle.seatingCapacity} seats · LKR {vehicle.pricePerKm}/km</p>
                           </div>
                         </div>
-                        <span className={availabilityBadge(vehicle.isAvailable)}>
-                          {availabilityLabel(vehicle.isAvailable)}
-                        </span>
                       </div>
                     ))}
                   </div>
