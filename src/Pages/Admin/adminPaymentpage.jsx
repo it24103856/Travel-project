@@ -29,6 +29,7 @@ const AdminPaymentPage = () => {
     const [filterMethod, setFilterMethod]       = useState('all');
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [isModalOpen, setIsModalOpen]         = useState(false);
+    const [isReceiptOpen, setIsReceiptOpen]     = useState(false);
     const [loading, setLoading]                 = useState(true);
     // Cancel request modal
     const [cancelModal, setCancelModal]         = useState(false);
@@ -740,7 +741,12 @@ const AdminPaymentPage = () => {
                             </div>
                             <div className="mb-7 flex justify-center">
                                 {selectedPayment.paymentMethod === 'bank_transfer' ? (
-                                    <img src={selectedPayment.receiptUrl} alt="Receipt" className="max-h-[220px] rounded-2xl border border-gray-200 shadow-lg hover:scale-[1.02] transition-transform duration-500" />
+                                    <img
+                                        src={selectedPayment.receiptUrl}
+                                        onClick={() => setIsReceiptOpen(true)}
+                                        alt="Receipt"
+                                        className="max-h-[220px] rounded-2xl border border-gray-200 shadow-lg hover:scale-[1.02] transition-transform duration-500 cursor-pointer"
+                                    />
                                 ) : (
                                     <div className="h-44 w-full bg-gradient-to-br from-[#6366F1]/5 to-[#6366F1]/10 rounded-2xl flex flex-col items-center justify-center border border-[#6366F1]/20">
                                         <Wallet size={44} className="mb-4 text-[#6366F1] animate-pulse"/>
@@ -775,6 +781,25 @@ const AdminPaymentPage = () => {
                             )}
                         </div>
                     </div>
+
+                    {/* Full-screen receipt preview (opened when thumbnail clicked) */}
+                    {isReceiptOpen && selectedPayment && (
+                        <div className="fixed inset-0 bg-black/70 z-[70] flex items-center justify-center p-4">
+                            <div className="max-w-4xl w-full">
+                                <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                                    <div className="p-4 flex justify-end">
+                                        <button onClick={() => setIsReceiptOpen(false)} className="text-gray-700 font-bold text-2xl">×</button>
+                                    </div>
+                                    <div className="p-4">
+                                        <img src={selectedPayment.receiptUrl} alt="Receipt full" className="w-full h-auto rounded-xl" />
+                                    </div>
+                                    <div className="p-4">
+                                        <a href={selectedPayment.receiptUrl} target="_blank" rel="noreferrer" className="block w-full text-center bg-[#6366F1] text-white py-3 rounded-2xl font-bold">Open in new tab</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

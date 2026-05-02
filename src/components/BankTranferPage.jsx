@@ -16,6 +16,7 @@ const BankTransferPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [preview,      setPreview]      = useState(null);
     const [receiptFile,  setReceiptFile]  = useState(null);
+    const [isImageOpen,  setIsImageOpen]  = useState(false);
 
     // ── Verification Status States ──
     const [verificationStatus, setVerificationStatus] = useState(null); // 'verifying', 'success', 'duplicate', 'failed', null
@@ -398,17 +399,48 @@ const BankTransferPage = () => {
                                 ) : (
                                     <div className="text-center w-full">
                                         <div className="relative inline-block">
-                                            <img src={preview} className="h-48 rounded-2xl mb-3 mx-auto shadow-2xl border-4 border-white" alt="Preview" />
+                                            <img
+                                                src={preview}
+                                                onClick={() => setIsImageOpen(true)}
+                                                className="h-48 rounded-2xl mb-3 mx-auto shadow-2xl border-4 border-white cursor-pointer"
+                                                alt="Preview"
+                                            />
                                             <div className="absolute -top-2 -right-2 bg-green-500 text-white p-1 rounded-full shadow-lg">✅</div>
                                         </div>
-                                        <br />
-                                        <button
-                                            type="button"
-                                            onClick={() => { setPreview(null); setReceiptFile(null); }}
-                                            className="text-red-500 text-[10px] font-black uppercase hover:underline tracking-widest mt-2"
-                                        >
-                                            Remove & Replace
-                                        </button>
+                                        <div className="mt-2 flex items-center justify-center gap-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsImageOpen(true)}
+                                                className="bg-slate-900 text-white px-4 py-2 rounded-2xl font-bold text-sm hover:opacity-90"
+                                            >
+                                                View Receipt
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => { setPreview(null); setReceiptFile(null); }}
+                                                className="text-red-500 text-[10px] font-black uppercase hover:underline tracking-widest"
+                                            >
+                                                Remove & Replace
+                                            </button>
+                                        </div>
+
+                                        {isImageOpen && (
+                                            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                                                <div className="max-w-3xl w-full">
+                                                    <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                                                        <div className="p-4 flex justify-end">
+                                                            <button onClick={() => setIsImageOpen(false)} className="text-gray-600 font-bold text-2xl">×</button>
+                                                        </div>
+                                                        <div className="p-4">
+                                                            <img src={preview} alt="Receipt full" className="w-full h-auto rounded-xl" />
+                                                        </div>
+                                                        <div className="p-4">
+                                                            <a href={preview} target="_blank" rel="noreferrer" className="block w-full text-center bg-slate-900 text-white py-3 rounded-2xl font-bold">Open in new tab</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

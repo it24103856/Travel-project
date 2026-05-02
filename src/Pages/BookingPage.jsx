@@ -57,10 +57,14 @@ export default function TravelBookingUI() {
           }
         }
 
+        const driversUrl = `${base}/driver/customer/get-all` + (formData.checkIn && formData.checkOut ? `?checkIn=${formData.checkIn}&checkOut=${formData.checkOut}` : "");
+
+        const vehiclesUrl = `${base}/vehicles` + (formData.checkIn && formData.checkOut ? `?checkIn=${formData.checkIn}&checkOut=${formData.checkOut}` : "");
+
         const [driversRes, vehiclesRes] = await Promise.allSettled([
-                axios.get(`${base}/driver/customer/get-all`), // 👈 This matches your router.get('/customer/get-all')
-                 axios.get(`${base}/vehicles`),
-                      ]);
+          axios.get(driversUrl), // fetch drivers with optional date range
+          axios.get(vehiclesUrl),
+        ]);
 
         if (driversRes.status === "fulfilled") {
           const d = driversRes.value.data;
@@ -86,6 +90,34 @@ export default function TravelBookingUI() {
 
     if (id) fetchAll();
   }, [id, isPackageBooking]);
+
+  // Re-fetch drivers when user selects dates so availability updates
+  useEffect(() => {
+    const fetchDriversOnDateChange = async () => {
+      if (!id) return;
+      try {
+        setLoading(true);
+        const base = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+        const driversUrl = `${base}/driver/customer/get-all` + (formData.checkIn && formData.checkOut ? `?checkIn=${formData.checkIn}&checkOut=${formData.checkOut}` : "");
+        const driversRes = await axios.get(driversUrl);
+        setDrivers(driversRes.data.data || driversRes.data || []);
+
+        // fetch vehicles availability for same dates
+        const vehiclesUrl = `${base}/vehicles` + (formData.checkIn && formData.checkOut ? `?checkIn=${formData.checkIn}&checkOut=${formData.checkOut}` : "");
+        try {
+          const vehiclesRes = await axios.get(vehiclesUrl);
+          setVehicles(vehiclesRes.data.data || vehiclesRes.data || []);
+        } catch (ve) {
+          console.warn("Vehicle refresh failed:", ve.message);
+        }
+      } catch (err) {
+        console.error("Driver refresh error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDriversOnDateChange();
+  }, [formData.checkIn, formData.checkOut]);
 
   const handleHotelSelect = (hotel) => {
     setFormData(prev => ({
@@ -386,21 +418,42 @@ export default function TravelBookingUI() {
                         <p className="font-bold text-[11px] uppercase">No Driver Needed</p>
                       </div>
                     </div>
-                    {drivers.filter(driver => driver.isAvailable).map(driver => (
-                      <div key={driver._id}
-                        onClick={() => setFormData(prev => ({ ...prev, selectedDriver: driver, selectedVehicle: null }))}
-                        className={`${cardBase} ${formData.selectedDriver?._id === driver._id ? cardActive : cardIdle}`}>
-                        <div className="flex items-center gap-3">
-                          {driver.profileImage
-                            ? <img src={driver.profileImage} alt={driver.name} className="w-8 h-8 rounded-full object-cover" />
-                            : <User size={16} className={formData.selectedDriver?._id === driver._id ? "text-white" : "text-[#C8813A]"} />}  
-                          <div>
-                            <p className="font-bold text-[11px] uppercase">{driver.name}</p>
-                            <p className="text-[9px] opacity-60">{driver.vehicleType} — 📞 {driver.phone}</p>
+                    {drivers.map(driver => {
+                      const available = driver.isAvailable !== false;
+                      const selected = formData.selectedDriver?._id === driver._id;
+                      return (
+                        <div
+                          key={driver._id}
+                          onClick={available ? () => setFormData(prev => ({ ...prev, selectedDriver: driver, selectedVehicle: null })) : undefined}
+                          className={`${cardBase} ${selected ? cardActive : cardIdle} ${!available ? "opacity-60 grayscale pointer-events-none" : "cursor-pointer"}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            {driver.profileImage
+                              ? <img src={driver.profileImage} alt={driver.name} className="w-8 h-8 rounded-full object-cover" />
+                              : <User size={16} className={selected ? "text-white" : "text-[#C8813A]"} />}
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 justify-between">
+                                   <div>
+                                  <p className="font-bold text-[11px] uppercase">{driver.name}</p>
+                                  <p className="text-[9px] opacity-60">{driver.vehicleType} — 📞 {driver.phone}</p>
+                                </div>
+                                <div className="flex-shrink-0">
+                                  {available ? (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                      Available
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-red-100 text-red-700">
+                                      Unavailable
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -414,19 +467,38 @@ export default function TravelBookingUI() {
                         <p className="font-bold text-[11px] uppercase">No Vehicle Needed</p>
                       </div>
                     </div>
-                    {vehicles.filter(vehicle => vehicle.isAvailable).map(vehicle => (
-                      <div key={vehicle._id}
-                        onClick={() => setFormData(prev => ({ ...prev, selectedVehicle: vehicle }))}
-                        className={`${cardBase} ${formData.selectedVehicle?._id === vehicle._id ? cardActive : cardIdle}`}>
-                        <div className="flex items-center gap-3">
-                          <Car size={16} className={formData.selectedVehicle?._id === vehicle._id ? "text-white" : "text-[#C8813A]"} />
-                          <div>
-                            <p className="font-bold text-[11px] uppercase">{vehicle.make} {vehicle.model}</p>
-                            <p className="text-[9px] opacity-60">{vehicle.type} · {vehicle.seatingCapacity} seats · LKR {vehicle.pricePerKm}/km</p>
+                    {vehicles.map(vehicle => {
+                      const available = vehicle.isAvailable !== false;
+                      const selected = formData.selectedVehicle?._id === vehicle._id;
+                      return (
+                        <div key={vehicle._id}
+                          onClick={available ? () => setFormData(prev => ({ ...prev, selectedVehicle: vehicle })) : undefined}
+                          className={`${cardBase} ${selected ? cardActive : cardIdle} ${!available ? "opacity-60 grayscale pointer-events-none" : "cursor-pointer"}`}>
+                          <div className="flex items-center gap-3">
+                            <Car size={16} className={selected ? "text-white" : "text-[#C8813A]"} />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 justify-between">
+                                <div>
+                                  <p className="font-bold text-[11px] uppercase">{vehicle.make} {vehicle.model}</p>
+                                  <p className="text-[9px] opacity-60">{vehicle.type} · {vehicle.seatingCapacity} seats · LKR {vehicle.pricePerKm}/km</p>
+                                </div>
+                                <div className="flex-shrink-0">
+                                  {available ? (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                      Available
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-red-100 text-red-700">
+                                      Unavailable
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </motion.div>

@@ -42,6 +42,7 @@ export default function AdminDriverPage() {
     const token = localStorage.getItem("token");
     setDeleting(true);
     try {
+      console.log("Deleting driver email (request):", selectedDriver.email);
       await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/driver/delete/${selectedDriver.email}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

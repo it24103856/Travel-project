@@ -25,6 +25,7 @@ const EditDriverPage = () => {
   useEffect(() => {
     const fetchDriverData = async () => {
       try {
+        console.log("Fetching driver by email (request):", driverEmail);
         const response = await axios.get(`${backendUrl}/driver/get/${driverEmail}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -59,6 +60,7 @@ const EditDriverPage = () => {
     setLoading(true);
 
     try {
+      console.log("Updating driver (email):", driverEmail);
       let finalImageUrl = formData.profileImage;
 
       if (imageFile) {
